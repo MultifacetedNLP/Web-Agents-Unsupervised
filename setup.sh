@@ -22,7 +22,9 @@ if [ -z "$data" ]; then
 fi
 
 # Install Python Dependencies
-pip install -r requirements.txt;
+# pip install -r requirements.txt;
+cd $HOME/PPO_webshop/web_agent_site
+pip install -e .
 
 # Install Environment Dependencies via `conda`
 # conda install -c pytorch faiss-cpu;
@@ -30,8 +32,9 @@ pip install -r requirements.txt;
 conda install -c conda-forge openjdk=11;
 
 # Download dataset into `data` folder via `gdown` command
-mkdir -p data;
-cd data;
+# mkdir -p data;
+# cd data;
+cd $SCRATCH
 if [ "$data" == "small" ]; then
   gdown https://drive.google.com/uc?id=1EgHdxQ_YxqIQlvvq5iKlCrkEKR6-j0Ib; # items_shuffle_1000 - product scraped info
   gdown https://drive.google.com/uc?id=1IduG0xl544V_A_jv3tHXC0kyFi7PnyBu; # items_ins_v2_1000 - product attributes
@@ -43,7 +46,8 @@ else
   helpFunction
 fi
 gdown https://drive.google.com/uc?id=14Kb5SPBk_jfdLZ_CDBNitW98QLDlKR5O # items_human_ins
-cd ..
+# cd ..
+cd $HOME/PPO_webshop/web_agent_site
 
 # Download spaCy large NLP model
 python -m spacy download en_core_web_lg
@@ -68,7 +72,9 @@ EOF
 }
 mkdir -p user_session_logs/
 cd user_session_logs/
+cd $SCRATCH
 echo "Downloading 50 example human trajectories..."
 get_human_trajs
 echo "Downloading example trajectories complete"
-cd ..
+cd $HOME/PPO_webshop/web_agent_site
+# cd ..
