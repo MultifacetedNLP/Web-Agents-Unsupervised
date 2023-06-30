@@ -5,6 +5,7 @@ slurm_logs/
 plots/
 outputs/
 envs/
+lamorel/
 web_agent_site/data
 web_agent_site/search_engine/indexes
 web_agent_site/search_engine/indexes_1k
