@@ -1,0 +1,57 @@
+lamorel_args:
+  log_level: info
+  allow_subgraph_use_whith_gradient: true
+  distributed_setup_args:
+    n_rl_processes: 1
+    n_llm_processes: 2
+  accelerate_args:
+    config_file: accelerate/default_config.yaml
+    machine_rank: 0
+    num_machines: 1
+    num_processes: ???
+    main_process_ip: ???
+    main_process_port: 12345
+  llm_args:
+    model_type: seq2seq
+    model_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/llms/flan-t5-large
+    pretrained: true
+    minibatch_size: 3
+    parallelism:
+      use_gpu: true
+      model_parallelism_size: 2
+      synchronize_gpus_after_scoring: false
+      empty_cuda_cache_after_scoring: false
+  updater_args:
+rl_script_args:
+  path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py
+  seed: 1
+  number_envs: 32
+  num_steps: 1500000
+  max_episode_steps: 3
+  simplification_str: easy
+  frames_per_proc: 40
+  reward_shaping_beta: 0
+  discount: 0.99
+  lr: 1e-6
+  beta1: 0.9
+  beta2: 0.999
+  gae_lambda: 0.99
+  entropy_coef: 0.01
+  value_loss_coef: 0.5
+  max_grad_norm: 0.5
+  adam_eps: 1e-5
+  clip_eps: 0.2
+  epochs: 4
+  batch_size: 64
+  action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
+  saving_path_logs: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs
+  name_experiment: 'llm_mtrl'
+  name_model: 'Flan_T5large'
+  saving_path_model: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/models
+  name_environment: 'BabyAI-MixedTrainLocal-v0'
+  nbr_obs: 3
+  language: 'english'
+  load_embedding: false
+  use_action_heads: false
+  template_test: 1
+  spm_path: ''

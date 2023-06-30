@@ -1,0 +1,82 @@
+lamorel_args:
+  log_level: info
+  allow_subgraph_use_whith_gradient: true
+  distributed_setup_args:
+    n_rl_processes: 1
+    n_llm_processes: 1
+  accelerate_args:
+    config_file: accelerate/default_config.yaml
+    machine_rank: 0
+    num_machines: 1
+    num_processes: 2
+  llm_args:
+    model_type: seq2seq
+    model_path: t5-base
+    pretrained: true
+    minibatch_size: 8
+    pre_encode_inputs: true
+    parallelism:
+      use_gpu: true
+      model_parallelism_size: 2
+      synchronize_gpus_after_scoring: false
+      empty_cuda_cache_after_scoring: false
+  updater_args:
+rl_script_args:
+  path: ???
+  seed: 1
+  number_envs: 3
+  num_steps: 500000
+  max_episode_steps: 3
+  simplification_str: easy
+  frames_per_proc: 60
+  reward_shaping_beta: 0
+  discount: 0.99
+  lr: 1e-6
+  beta1: 0.9
+  beta2: 0.999
+  gae_lambda: 0.99
+  entropy_coef: 0.01
+  value_loss_coef: 0.5
+  max_grad_norm: 0.5
+  adam_eps: 1e-5
+  clip_eps: 0.2
+  epochs: 4
+  batch_size: 2
+  action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
+  saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
+  name_experiment: 'llm_mtrl'
+  name_model: 'T5-base'
+  saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
+  name_environment: 'Webshop'
+  number_episodes: 10
+  language: 'english'
+  load_embedding: true
+  use_action_heads: false
+  template_test: 1
+  zero_shot: true
+  modified_action_space: false
+  new_action_space: #["rotate_left","rotate_right","move_ahead","take","release","switch"]
+  spm_path: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/agents/drrn/spm_models/unigram_8k.model"
+  random_agent: true
+  get_example_trajectories: false
+  nbr_obs: 2
+  im_learning: false
+  im_path: ""
+  bot: false
+  environment_args:
+    state_format: 'text_rich'
+    num: null
+    human_goals: 1
+    get_image: 1
+    num_prev_obs: 0
+    num_prev_actions: 0
+    step_limit: 150
+    click_item_name: 1
+    harsh_reward: 0
+    go_to_item: 0
+    go_to_search: 0
+    ban_buy: 0
+    extra_search_path: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/goal_query_predict.json"
+    button_version: 1
+
+

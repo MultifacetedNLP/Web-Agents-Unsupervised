@@ -1,0 +1,40 @@
+/* {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Train language Agent",
+            "type": "python",
+            "request": "launch",
+            "program": "${cwd}/experiments/train_language_agent.py",
+            "cwd": "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL",
+            "console": "integratedTerminal",
+            "args": []
+        }
+    ]
+} */
+
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: luanch train language agent",
+            "type": "python",
+            "request": "launch",
+            "cwd": "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL",
+            "program": "${cwd}/lamorel/lamorel/src/lamorel_launcher/launch.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--config-path","${cwd}/experiments/configs",
+                "--config-name","my_local_config.yaml",
+                "rl_script_args.path=${cwd}/experiments/train_language_agent.py"
+            ],
+            "stopOnEntry": false,
+            "showReturnValue": true
+        }
+    ]
+}
