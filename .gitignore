@@ -4,7 +4,7 @@ outputs/
 slurm_logs/
 plots/
 outputs/
-envs/
+/envs/
 lamorel/
 web_agent_site/data
 web_agent_site/search_engine/indexes
