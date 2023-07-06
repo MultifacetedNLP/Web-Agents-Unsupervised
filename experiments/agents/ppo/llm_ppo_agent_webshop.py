@@ -114,8 +114,10 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             
             values = torch.stack([_o["value"][0] for _o in output])
             
+            actions_str = []
             for j in range(self.num_procs):
-                self.acts_queue[j].append(self.subgoals[j][int(a[j])])
+                actions_str.append(self.subgoals[j][int(a[j])])
+                self.acts_queue[j].append(actions_str[j])
 
             
             
@@ -124,7 +126,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             self.infos, self.subgoals = [], []
             self.rewards_envs, self.dones_envs = [], []
             for j, env in enumerate(self.env):
-                obs, reward, done, info = env.step(self.acts_queue[j][-1])
+                obs, reward, done, info = env.step(actions_str[j])
                 self.rewards_envs.append(reward)
                 self.dones_envs.append(done)
                 self.infos.append(info)
