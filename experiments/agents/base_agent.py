@@ -48,13 +48,6 @@ class BaseAgent(ABC):
         ldo = len(deque_obs)
         lda = len(deque_actions)
 
-        # head_prompt = "Possible action of the agent:"
-        # for sg in subgoals:
-        #    head_prompt += " {},".format(sg)
-        # head_prompt = head_prompt[:-1]
-
-        # g = " \n Goal of the agent: {}".format(goal)
-        g = "Goal of the agent: {}".format(goal)
         obs = ""
         for i in range(ldo):
             obs += " \n Observation {}: ".format(i)
@@ -62,8 +55,9 @@ class BaseAgent(ABC):
             obs += "\n Action {}: ".format(i)
             if i < lda:
                 obs += "{}".format(deque_actions[i])
-        return g + obs
-        # return head_prompt + g + obs
+        
+        return goal + ", " + obs
+
 
     def generate_prompt_french(self, goal, subgoals, deque_obs, deque_actions):
         ldo = len(deque_obs)

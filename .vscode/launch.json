@@ -35,6 +35,22 @@
             ],
             "stopOnEntry": false,
             "showReturnValue": true
+        },
+        {
+            "name": "Python: luanch test language agent",
+            "type": "python",
+            "request": "launch",
+            "cwd": "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL",
+            "program": "${cwd}/lamorel/lamorel/src/lamorel_launcher/launch.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--config-path","${cwd}/experiments/configs",
+                "--config-name","my_local_test_config.yaml",
+                "rl_script_args.path=${cwd}/experiments/test_webshop.py"
+            ],
+            "stopOnEntry": false,
+            "showReturnValue": true
         }
     ]
 }

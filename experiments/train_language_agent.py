@@ -136,35 +136,6 @@ class ActionHeadsModuleFn(BaseModuleFunction):
 
 
 class PPOUpdater(BaseUpdater):
-    def get_test_prompts(self, subgoals, template_test):
-        head_prompt = "Possible action of the agent:"
-        for sg in subgoals:
-            head_prompt += " {},".format(sg)
-        head_prompt = head_prompt[:-1]
-
-        if template_test == 1:
-            # expected answers: go forward, turn left, turn left, toggle
-            templated_prompts = [
-                ' \n Goal of the agent: go to the green ball \n Observation 0: A wall 2 step left, A purple key 1 step left and 2 steps forward, A yellow key 1 step left and 1 step forward, A green ball 3 steps forward, A grey ball 1 step right and 5 steps forward, A green key 1 step right and 2 steps forward, A grey ball 1 step right and 1 step forward, A green key 2 steps right and 4 steps forward, A red box 2 steps right and 2 steps forward, \n Action 0: ',
-                ' \n Goal of the agent: go to the green ball \n Observation 0: A wall 2 step left, A purple key 1 step left and 2 steps forward, A yellow key 1 step left and 1 step forward, A green ball 3 steps forward, A grey ball 1 step right and 5 steps forward, A green key 1 step right and 2 steps forward, A grey ball 1 step right and 1 step forward, A green key 2 steps right and 4 steps forward, A red box 2 steps right and 2 steps forward, \n Action 0: go forward \n Observation 1: A purple key 1 step left and 1 step forward, A yellow key 1 step left, A green ball 2 steps forward, A grey ball 1 step right and 4 steps forward, A green key 1 step right and 1 step forward, A grey ball 1 step right, A green key 2 steps right and 3 steps forward, A red box 2 steps right and 1 step forward, \n Action 1: turn right \n Observation 2: A wall 2 step right, A green key 3 steps left and 2 steps forward, A green ball 2 steps left, A red box 1 step left and 2 steps forward, A green key 1 step left and 1 step forward, A grey ball 1 step forward, \n Action 2: ',
-                ' \n Goal of the agent: open the purple door \n Observation 0: You see a wall 3 steps forward, You see a wall 3 steps left, You see a yellow key 1 step right and 1 step forward, You see a locked purple door 2 steps right and 3 steps forward, You see a purple ball 3 steps right and 1 step forward, You see a green box 3 steps right, You see a purple key 2 steps left \n Action 0: ',
-                ' \n Goal of the agent: open the purple door \n Observation 0: You see a wall 3 steps forward, You see a wall 3 steps left, You see a yellow key 1 step right and 1 step forward, You see a locked purple door 2 steps right and 3 steps forward, You see a purple ball 3 steps right and 1 step forward, You see a green box 3 steps right, You see a purple key 2 steps left \n Action 0: turn left \n Observation 1: You see a wall 3 steps forward, You see a wall 3 steps right, You see a purple key 2 steps forward \n Action 1: go forward \n Observation 2: You see a wall 2 steps forward, You see a wall 3 steps right, You see a purple key 1 step forward \n Action 2: ',
-                ' \n Goal of the agent: open the purple door \n Observation 0: You carry a purple key, You see a wall 3 steps forward, You see a wall 5 steps left, You see a yellow key 1 step left and 1 step forward, You see a locked purple door 3 steps forward, You see a purple ball 1 step right and 1 step forward, You see a green box 1 step right \n Action 0: go forward \n Observation 1: You carry a purple key, You see a wall 2 steps forward, You see a wall 5 steps left, You see a yellow key 1 step left, You see a locked purple door 2 steps forward, You see a purple ball 1 step right \n Action 1: go forward \n Observation 2: You carry a purple key, You see a wall 1 step forward, You see a wall 5 steps left, You see a locked purple door 1 step forward \n Action 2: ',
-                ' \n Goal of the agent: pick up green box \n Observation 0: You see a wall 2 steps forward, You see a wall 2 steps left, You see a yellow ball 1 step left and 1 step forward, You see a green box 2 steps right \n Action 0: ',
-                ' \n Goal of the agent: pick up green box \n Observation 0: You see a wall 2 steps forward, You see a wall 2 steps left, You see a yellow ball 1 step left and 1 step forward, You see a green box 2 steps right \n Action 0: turn right \n Observation 1: You see a wall 2 steps left, You see a blue key 1 step right, You see a red ball 2 steps right and 1 step forward, You see a green box 2 steps forward \n Action 1: go forward \n Observation 2: You see a wall 2 steps left, You see a red ball 2 steps right, You see a green box 1 step forward \n Action 2: ',
-                ' \n Goal of the agent: put blue ball next to red box \n Observation 0: You carry a blue ball, You see a wall 5 steps forward, You see a wall 2 steps left, You see a grey key 1 step right and 2 steps forward, You see a red box 3 steps forward \n Action 0: go forward \n Observation 1: You carry a blue ball, You see a wall 4 steps forward, You see a wall 2 steps left, You see a grey key 1 step right and 1 step forward, You see a red box 2 steps forward \n Action 1: ',
-                ' \n Goal of the agent: pick up the blue ball then go to the red box \n Observation 0: You see a wall 3 steps forward, You see a wall 4 steps right, You see a purple key 2 steps forward, You see a red box 2 steps right, You see a blue ball 2 steps left \n Action 0: ',
-                ' \n Goal of the agent: go to the red box after you pick up the blue ball \n Observation 0: You see a wall 3 steps forward, You see a wall 4 steps right, You see a purple key 2 steps forward, You see a red box 2 steps right, You see a blue ball 2 steps left \n Action 0: ',
-                ' \n Goal of the agent: pick up the green key then pick up the the red box \n Observation 0: You carry a green key, You see a wall 4 steps forward, You see a wall 4 steps left, You see a red box 1 step left, You see a purple ball 2 steps left and 1 step forward \n Action 0:  ']
-        elif template_test == 2:
-            # expected answers: go forward, turn left
-            templated_prompts = [
-                ' \n Goal of the agent: go to the green ball \n Observation 0: A wall 2 step left, A purple key 1 step left and 2 steps forward, A yellow key 1 step left and 1 step forward, A green ball 3 steps forward, A grey ball 1 step right and 5 steps forward, A green key 1 step right and 2 steps forward, A grey ball 1 step right and 1 step forward, A green key 2 steps right and 4 steps forward, A red box 2 steps right and 2 steps forward, \n Action 0: ',
-                ' \n Goal of the agent: go to the green ball \n Observation 0: A wall 2 step left, A purple key 1 step left and 2 steps forward, A yellow key 1 step left and 1 step forward, A green ball 3 steps forward, A grey ball 1 step right and 5 steps forward, A green key 1 step right and 2 steps forward, A grey ball 1 step right and 1 step forward, A green key 2 steps right and 4 steps forward, A red box 2 steps right and 2 steps forward, \n Action 0: go forward \n Observation 1: A purple key 1 step left and 1 step forward, A yellow key 1 step left, A green ball 2 steps forward, A grey ball 1 step right and 4 steps forward, A green key 1 step right and 1 step forward, A grey ball 1 step right, A green key 2 steps right and 3 steps forward, A red box 2 steps right and 1 step forward, \n Action 1: turn right \n Observation 2: A wall 2 step right, A green key 3 steps left and 2 steps forward, A green ball 2 steps left, A red box 1 step left and 2 steps forward, A green key 1 step left and 1 step forward, A grey ball 1 step forward, \n Action 2: ']
-
-        for j in range(len(templated_prompts)):
-            templated_prompts[j] = head_prompt + templated_prompts[j]
-        return templated_prompts
 
     def perform_update(self, contexts, candidates, _current_batch_ids, **kwargs):
         # Initialize model if asked + optimizer
@@ -221,21 +192,6 @@ class PPOUpdater(BaseUpdater):
             return {}
 
         else:
-            # save the proba_dist over actions every n updates
-            if accelerator.process_index == 1 and kwargs["lm_server_update_first_call"]:
-                if kwargs["number_updates"] % 1 == 0 and candidates is not None:
-                    prompts = self.get_test_prompts(candidates[0], kwargs['template_test'])
-                    subgoals = [candidates[0] for i in range(len(prompts))]
-
-                    # Avoid calling DDP model and get stuck gathering buffers from all LLMs
-                    output = self._llm_module.module([kwargs["scoring_module_key"], 'value'],
-                                                     contexts=prompts, candidates=subgoals, require_grad=False)
-                    scores = torch.stack([_o[kwargs["scoring_module_key"]] for _o in output]).squeeze()
-                    proba_dist = list(scores.cpu().numpy().flatten())
-
-                    csv_distrib_path = os.path.join(kwargs["experiment_path"], 'distrib.csv')
-                    csv_writer = csv.writer(open(csv_distrib_path, 'a', 1))
-                    csv_writer.writerow(proba_dist)
 
             sb = {}
             for k in ['action', 'value', 'log_prob', 'advantage', 'returnn']:
@@ -353,7 +309,7 @@ def run_agent(args, algo, id_expe):
         fps = logs["num_frames"] / (update_end_time - update_start_time)
         return_per_episode = utils.synthesize(logs["return_per_episode"])
         success_per_episode = utils.synthesize(
-            [1 if r > 0 else 0 for r in logs["return_per_episode"]])
+            [1 if r == 100.0 else 0 for r in logs["return_per_episode"]])
         reshaped_return_per_episode = utils.synthesize(logs["reshaped_return_per_episode"])
         reshaped_return_bonus_per_episode = utils.synthesize(logs["reshaped_return_bonus_per_episode"])
         num_frames_per_episode = utils.synthesize(logs["num_frames_per_episode"])
@@ -361,7 +317,7 @@ def run_agent(args, algo, id_expe):
         data = [status['i'], status['num_episodes'], status['num_frames'],
                 fps, total_ellapsed_time,
                 *return_per_episode.values(),
-                success_per_episode['mean'],
+                success_per_episode['mean'] * 100,
                 *reshaped_return_per_episode.values(),
                 *reshaped_return_bonus_per_episode.values(),
                 *num_frames_per_episode.values(),
@@ -448,11 +404,6 @@ def main(config_args):
     if config_args.rl_script_args.nbr_obs != 3:
         id_expe += 'nbr_obs_{}_'.format(config_args.rl_script_args.nbr_obs)
 
-    id_expe += 'nbr_actions_{}_'.format(len(config_args.rl_script_args.action_space))
-
-    for a in config_args.rl_script_args.action_space:
-        id_expe += a + '_'
-
     id_expe += 'shape_reward_beta_{}_'.format(config_args.rl_script_args.reward_shaping_beta) + \
                'seed_{}'.format(config_args.rl_script_args.seed)
 
@@ -518,7 +469,7 @@ def main(config_args):
                             config_args.rl_script_args.value_loss_coef, config_args.rl_script_args.max_grad_norm,
                             config_args.rl_script_args.adam_eps, config_args.rl_script_args.clip_eps,
                             config_args.rl_script_args.epochs, config_args.rl_script_args.batch_size,
-                            reshape_reward,
+                            None,
                             config_args.rl_script_args.name_experiment,
                             config_args.rl_script_args.saving_path_model,
                             config_args.rl_script_args.saving_path_logs, number_envs, None,

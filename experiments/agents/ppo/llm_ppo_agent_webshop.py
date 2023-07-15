@@ -17,7 +17,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                  lr=7e-4, beta1=0.9, beta2=0.999, gae_lambda=0.95, entropy_coef=0.01, value_loss_coef=0.5,
                  max_grad_norm=0.5, adam_eps=1e-5, clip_eps=0.2, epochs=4, batch_size=64, reshape_reward=None,
                  name_experiment=None, saving_path_model=None, saving_path_logs=None, number_envs=None, subgoals=None,
-                 nbr_obs=3, id_expe=None, template_test=1, aux_info=None, debug=False):
+                 nbr_obs=3, id_expe=None, template_test=1, aux_info=None, debug=False, test=False):
         super().__init__(envs, num_frames_per_proc, discount, lr, gae_lambda, entropy_coef, value_loss_coef,
                          max_grad_norm, reshape_reward, aux_info, device=torch.device("cpu"))
 
@@ -41,7 +41,11 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         self.subgoalss = [None] * (shape[0])
         logging.info("resetting environment")
         for i, env in enumerate(self.env):
-            ob, info = env.reset()
+            if test:
+                print(i)
+                ob, info = env.reset(i)
+            else:
+                ob, info = env.reset()
             self.infos.append(info)
             self.obs_queue[i].append(ob)
             self.subgoals.append(info['valid'])
@@ -70,7 +74,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         self.template_test = template_test
         self.number_updates = 0
 
-        self.experiment_path = os.path.join(self.saving_path_logs, id_expe)
+        if self.saving_path_logs and id_expe:
+            self.experiment_path = os.path.join(self.saving_path_logs, id_expe)
 
     def collect_experiences(self, debug=False):
         """Collects rollouts and computes advantages.
@@ -187,8 +192,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             for i, done_ in enumerate(self.dones_envs):
                 if done_:
                     self.log_done_counter += 1
-                    self.log_return.append(self.log_episode_return[i].item())
-                    self.log_reshaped_return.append(self.log_episode_reshaped_return[i].item())
+                    self.log_return.append(self.log_episode_return[i].item() * 10)
+                    self.log_reshaped_return.append(self.log_episode_reshaped_return[i].item() * 10)
                     self.log_reshaped_return_bonus.append(self.log_episode_reshaped_return_bonus[i].item())
                     self.log_num_frames.append(self.log_episode_num_frames[i].item())
 
@@ -346,8 +351,9 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         batches_starting_indexes = [indexes[i:i + num_indexes] for i in range(0, len(indexes), num_indexes)]
 
         return batches_starting_indexes
+    
 
-    def generate_trajectories(self, dict_modifier, n_tests, language='english', im_learning=False, debug=False):
+    def generate_trajectories(self, n_tests):
         """Generates trajectories and calculates relevant metrics.
         Runs several environments concurrently.
         Returns
@@ -363,134 +369,85 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             Useful stats about the training process, including the average
             reward, policy loss, value loss, etc.
         """
-
-        if language == "english":
-            generate_prompt = self.generate_prompt
-            subgoals = self.subgoals
-        elif language == "french":
-            generate_prompt = self.generate_prompt_french
-            subgoals = [[LLMPPOAgentWebshop.prompt_modifier(sg, self.dict_translation_action) for sg in sgs] for sgs in self.subgoals]
-
-        nbr_frames = self.num_procs
+        
         pbar = tqdm(range(n_tests), ascii=" " * 9 + ">", ncols=100)
-        while self.log_done_counter < n_tests:
+        reset_index = self.num_procs
+        while self.log_done_counter <= n_tests:
             # Do one agent-environment interaction
-            nbr_frames += self.num_procs
-            prompt = [self.prompt_modifier(generate_prompt(goal=self.obs[j]['mission'], subgoals=subgoals[j],
+            prompt = [self.generate_prompt_webshop(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
                                                            deque_obs=self.obs_queue[j],
-                                                           deque_actions=self.acts_queue[j]), dict_modifier)
+                                                           deque_actions=self.acts_queue[j])
                       for j in range(self.num_procs)]
 
-            if im_learning:
-                output = self.lm_server.custom_module_fns(
-                    module_function_keys=[self.llm_scoring_module_key],
-                    contexts=prompt,
-                    candidates=self.filter_candidates_fn(self.subgoals))
-                scores = torch.stack([_o[self.llm_scoring_module_key] for _o in output])
-            else:
-                output = self.lm_server.custom_module_fns(
-                    module_function_keys=[self.llm_scoring_module_key, 'value'],
-                    contexts=prompt,
-                    candidates=self.filter_candidates_fn(self.subgoals))
-                scores = torch.stack([_o[self.llm_scoring_module_key] for _o in output])
-                vals = torch.stack([_o["value"][0] for _o in output]).cpu().numpy()
+            output = self.lm_server.custom_module_fns(
+                module_function_keys=[self.llm_scoring_module_key], # 'value'
+                contexts=prompt,
+                candidates=self.filter_candidates_fn(self.subgoals))
+            scores = [_o[self.llm_scoring_module_key] for _o in output]
+            # vals = torch.stack([_o["value"][0] for _o in output]).cpu().numpy()
 
-            dist = Categorical(logits=scores)
-            action = dist.sample()
-            # action = proba_dist.argmax(dim=1)
-            a = action.cpu().numpy()
+            
+            # dists = [Categorical(logits=score) for score in scores]
+            # action = torch.stack([dist.sample() for dist in dists])
+            # a = action.cpu().numpy()
+            a = [torch.argmax(score).item() for score in scores]
+            
 
+            actions_str = []
             for j in range(self.num_procs):
-                self.actions.append(subgoals[j][int(a[j])])
-                self.acts_queue[j].append(subgoals[j][int(a[j])])
+                actions_str.append(self.subgoals[j][int(a[j])])
+                # self.actions.append(self.subgoals[j][int(a[j])])
+                self.acts_queue[j].append(actions_str[j])
 
-            obs, reward, done, self.infos = self.env.step(a)
 
-            for j in range(self.num_procs):
-                if not im_learning:
-                    self.vals.append(vals[j][0])
-                self.prompts.append(prompt[j])
-                if done[j]:
+            # take a step based on the calculated action
+            self.infos, self.subgoals = [], []
+            self.rewards_envs, self.dones_envs = [], []
+            for j, env in enumerate(self.env):
+                # self.vals.append(vals[j][0])
+                # self.prompts.append(prompt[j])
+                obs, reward, done, info = env.step(actions_str[j])
+                self.rewards_envs.append(reward)
+                self.dones_envs.append(done)
+                self.infos.append(info)
+                self.subgoals.append(info['valid'])
+                self.obs_queue[j].append(obs)
+                if done:
                     # reinitialise memory of past observations and actions
                     self.obs_queue[j].clear()
                     self.acts_queue[j].clear()
-                self.obs_queue[j].append(self.infos[j]['descriptions'])
+                    print("reset_index: ", reset_index)
+                    print("reward: ", reward)
+                    obs, info = env.reset(reset_index)
+                    reset_index += 1
+                    self.infos[-1] = info
+                    self.subgoals[-1] = info['valid']
+                    self.obs_queue[j].append(obs)
 
-            info = self.infos
+            # self.obs = obs
 
-            if debug:
-                babyai.utils.viz(self.env)
-                print(babyai.utils.info(reward, heading="Reward"))
-                print(babyai.utils.info(info, "Subtasks"))
+            self.mask = 1 - torch.tensor(self.dones_envs, device=self.device, dtype=torch.float)
 
-            self.obs = obs
 
-            self.mask = 1 - torch.tensor(done, device=self.device, dtype=torch.float)
-
-            if self.reshape_reward is not None:
-                rewards_shaped = torch.tensor([
-                    self.reshape_reward(subgoal_proba=None, reward=reward_, policy_value=None, llm_0=None)
-                    for reward_ in reward
-                ], device=self.device)
-                self.rewards.append(rewards_shaped[:, 0])
-                self.rewards_bonus.append(rewards_shaped[:, 1])
-            else:
-                self.rewards.append(torch.tensor(reward, device=self.device))
-
-            # Update log values
-
-            self.log_episode_return += torch.tensor(reward, device=self.device, dtype=torch.float)
-            self.log_episode_reshaped_return += self.rewards[-1]
-            self.log_episode_reshaped_return_bonus += self.rewards_bonus[-1]
+            self.log_episode_return += torch.tensor(self.rewards_envs, device=self.device, dtype=torch.float)
             self.log_episode_num_frames += torch.ones(self.num_procs, device=self.device)
 
-            for i, done_ in enumerate(done):
-                if done_:
+            for i, done_ in enumerate(self.dones_envs):
+                if done_ and self.log_done_counter <= n_tests:
                     self.log_done_counter += 1
                     pbar.update(1)
-                    self.log_return.append(self.log_episode_return[i].item())
-                    if self.log_episode_return[i].item() > 0:
-                        print(self.obs[i]['mission'])
-                    self.log_reshaped_return.append(self.log_episode_reshaped_return[i].item())
-                    self.log_reshaped_return_bonus.append(self.log_episode_reshaped_return_bonus[i].item())
+                        
+                    self.log_return.append(self.log_episode_return[i].item() * 10)
                     self.log_num_frames.append(self.log_episode_num_frames[i].item())
 
             self.log_episode_return *= self.mask
-            self.log_episode_reshaped_return *= self.mask
-            self.log_episode_reshaped_return_bonus *= self.mask
             self.log_episode_num_frames *= self.mask
 
         pbar.close()
 
-        exps = DictList()
-        exps.prompts = np.array(self.prompts)
-        # exps.images = np.stack(self.images)
-
-        # In commments below T is self.num_frames_per_proc, P is self.num_procs,
-        # D is the dimensionality
-
-        # for all tensors below, T x P -> P x T -> P * T
-        exps.actions = np.array(self.actions)
-
-        exps.vals = np.array(self.vals)
-
-        # Log some values
-
-        keep = max(self.log_done_counter, self.num_procs)
-
         log = {
-            "return_per_episode": self.log_return[-keep:],
-            "reshaped_return_per_episode": self.log_reshaped_return[-keep:],
-            "reshaped_return_bonus_per_episode": self.log_reshaped_return_bonus[-keep:],
-            "num_frames_per_episode": self.log_num_frames[-keep:],
-            "episodes_done": self.log_done_counter,
-            "nbr_frames": nbr_frames
+            "return_per_episode": self.log_return,
+            "num_frames_per_episode": self.log_num_frames
         }
 
-        self.log_done_counter = 0
-        self.log_return = self.log_return[-self.num_procs:]
-        self.log_reshaped_return = self.log_reshaped_return[-self.num_procs:]
-        self.log_reshaped_return_bonus = self.log_reshaped_return_bonus[-self.num_procs:]
-        self.log_num_frames = self.log_num_frames[-self.num_procs:]
-
-        return exps, log
+        return log

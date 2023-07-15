@@ -16,16 +16,16 @@ lamorel_args:
     pre_encode_inputs: true
     parallelism:
       use_gpu: true
-      model_parallelism_size: 2
+      model_parallelism_size: 1
       synchronize_gpus_after_scoring: false
       empty_cuda_cache_after_scoring: false
   updater_args:
 rl_script_args:
   path: ???
   seed: 1
-  number_envs: 16
-  num_steps: 200000
-  max_episode_steps: 3
+  number_envs: 10
+  num_steps: 100000
+  number_episodes: 500
   simplification_str: easy
   frames_per_proc: 40
   reward_shaping_beta: 0
@@ -46,9 +46,8 @@ rl_script_args:
   name_experiment: 'llm_flan_t5'
   name_model: 'google-flan-t5-base'
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
+  id_expe: 'llm_flan_t5_nbr_env_16_google-flan-t5-base_pretrained_True_nbr_obs_1_shape_reward_beta_0_seed_1'
   name_environment: 'Webshop'
-  number_episodes: 10
-  language: 'english'
   load_embedding: false
   use_action_heads: false
   template_test: 1

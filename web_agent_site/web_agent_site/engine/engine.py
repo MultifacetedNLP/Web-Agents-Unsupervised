@@ -154,6 +154,8 @@ def get_top_n_product_from_keywords(
     ):
     if keywords[0] == '<r>':
         top_n_products = random.sample(all_products, k=SEARCH_RETURN_N)
+    elif keywords[0] == '<all>':
+        top_n_products = all_products
     elif keywords[0] == '<a>':
         attribute = ' '.join(keywords[1:]).strip()
         asins = attribute_to_asins[attribute]
