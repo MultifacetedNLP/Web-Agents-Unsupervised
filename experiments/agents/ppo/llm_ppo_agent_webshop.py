@@ -11,6 +11,8 @@ import numpy as np
 from tqdm import tqdm
 from collections import deque
 import logging
+from transformers import BartForConditionalGeneration, BartTokenizer
+bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
 
 class LLMPPOAgentWebshop(BasePPOAgent):
     def __init__(self, envs, lm_server, llm_scoring_module_key, nbr_llms=None, num_frames_per_proc=None, discount=0.99,
@@ -25,7 +27,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         self.llm_scoring_module_key = llm_scoring_module_key
         # Useful filter to avoid computing score of each candidate when using additional heads directly
         if llm_scoring_module_key == "score":
-            self.filter_candidates_fn = lambda candidates: candidates
+            self.filter_candidates_fn = lambda candidates: [[valid_action[7:-1] if valid_action.startswith('search[') else valid_action[6:-1] \
+                                                            for valid_action in valid_actions] for valid_actions in candidates]
         elif llm_scoring_module_key == "policy_head":
             self.filter_candidates_fn = lambda candidates: None
         else:
@@ -95,13 +98,16 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             Useful stats about the training process, including the average
             reward, policy loss, value loss, etc.
         """
+        # self.lm_server.generate(contexts=[""], do_sample=True, top_k=2)
 
         for i in tqdm(range(self.num_frames_per_proc), ascii=" " * 9 + ">", ncols=100):
             # Do one agent-environment interaction
 
-            prompt = [self.generate_prompt_webshop(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
+            prompt = [self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
                                            deque_obs=self.obs_queue[j], deque_actions=self.acts_queue[j])
                       for j in range(self.num_procs)]
+            
+            # [[self.lm_server.generate(contexts=[promp], do_sample=True, top_k=2)[0][0]['text']] if valid_actions[0].startswith('search[') else valid_actions for valid_actions, promp in zip(self.subgoals, prompt)]
 
             output = self.lm_server.custom_module_fns(module_function_keys=[self.llm_scoring_module_key, 'value'],
                                                       contexts=prompt,
@@ -203,7 +209,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             self.log_episode_num_frames *= self.mask
 
         # Add advantage and return to experiences
-        prompt = [self.generate_prompt_webshop(goal=self.infos[i]['goal'], subgoals=self.subgoals[i],
+        prompt = [self.generate_prompt_webshop_v2(goal=self.infos[i]['goal'], subgoals=self.subgoals[i],
                                        deque_obs=self.obs_queue[i], deque_actions=self.acts_queue[i])
                   for i in range(self.num_procs)]
         output = self.lm_server.custom_module_fns(module_function_keys=['value'], contexts=prompt)
@@ -340,7 +346,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         the model and the experiences used to compute the loss at first.
         Returns
         -------
-        batches_starting_indexes : list of lists of int
+        batches_starting_indexes : list of lists filter_candidates_fnof int
             the indexes of the experiences to be used at first for each batch
         """
 
@@ -352,8 +358,24 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
         return batches_starting_indexes
     
+    def process_goal(self, state):
+        state = state.lower().replace('"', '').replace("'", "")
+        state = state.replace('amazon shopping game\ninstruction:', '').replace('instruction:', '')
+        state = state.replace('\n[button] search [button_]', '').strip()
+        if ', and price lower than' in state:
+            state = state.split(', and price lower than')[0]
+        return state
+    
+    
+    def bart_predict(self, input, model, skip_special_tokens=True, **kwargs):
+        input_ids = bart_tokenizer(input)['input_ids']
+        input_ids = torch.tensor(input_ids).unsqueeze(0)
+        output = model.generate(input_ids, max_length=512, **kwargs)
+        return bart_tokenizer.batch_decode(output.tolist(), skip_special_tokens=skip_special_tokens)
 
-    def generate_trajectories(self, n_tests):
+    
+
+    def generate_trajectories(self, n_tests, sample=False, deactivte_RL_for_search=False, bart_path="", generate_query=False):
         """Generates trajectories and calculates relevant metrics.
         Runs several environments concurrently.
         Returns
@@ -370,34 +392,88 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             reward, policy loss, value loss, etc.
         """
         
+        if bart_path:
+            bart_model = BartForConditionalGeneration.from_pretrained(bart_path)
+            print('bart model loaded', bart_path)
+        
         pbar = tqdm(range(n_tests), ascii=" " * 9 + ">", ncols=100)
         reset_index = self.num_procs
-        while self.log_done_counter <= n_tests:
-            # Do one agent-environment interaction
-            prompt = [self.generate_prompt_webshop(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
-                                                           deque_obs=self.obs_queue[j],
-                                                           deque_actions=self.acts_queue[j])
-                      for j in range(self.num_procs)]
-
-            output = self.lm_server.custom_module_fns(
-                module_function_keys=[self.llm_scoring_module_key], # 'value'
-                contexts=prompt,
-                candidates=self.filter_candidates_fn(self.subgoals))
-            scores = [_o[self.llm_scoring_module_key] for _o in output]
-            # vals = torch.stack([_o["value"][0] for _o in output]).cpu().numpy()
-
+        while self.log_done_counter < n_tests:
             
-            # dists = [Categorical(logits=score) for score in scores]
-            # action = torch.stack([dist.sample() for dist in dists])
-            # a = action.cpu().numpy()
-            a = [torch.argmax(score).item() for score in scores]
-            
+            if bart_path or generate_query:
+                actions_str = []
+                for j, subgoal in enumerate(self.subgoals):
+                    if subgoal[0].startswith('search['):
+                        if bart_path:
+                            goal = self.process_goal(self.infos[j]['goal'])
+                            query = self.bart_predict(goal, bart_model, num_return_sequences=5, num_beams=5)
+                            query = query[0]
+                            actions_str.append(f'search[{query}]')
+                            self.acts_queue[j].append(actions_str[j])
+                        else:
+                            
+                            prompt = self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
+                                                            deque_obs=self.obs_queue[j],
+                                                            deque_actions=self.acts_queue[j])
+                            
+                            
+                            query = self.lm_server.generate(contexts=[prompt], num_beams=5)
+                            query = query[0][0]["text"].replace("[", "").replace("]", "")
+                            print(query)
+                            actions_str.append(f'search[{query}]')
+                            self.acts_queue[j].append(actions_str[j])
+                    else:
+                        prompt = self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
+                                                            deque_obs=self.obs_queue[j],
+                                                            deque_actions=self.acts_queue[j])
+                        
+                        output = self.lm_server.custom_module_fns(
+                            module_function_keys=[self.llm_scoring_module_key], # 'value'
+                            contexts=[prompt],
+                            candidates=self.filter_candidates_fn([self.subgoals[j]]))
+                        
+                        scores = output[0][self.llm_scoring_module_key]
+                        
+                        if sample:
+                            dist = Categorical(logits=scores)
+                            action = dist.sample()
+                            a = action.cpu().numpy()
+                        else:
+                            a = torch.argmax(scores).item()
+                            
+                        actions_str.append(self.subgoals[j][int(a)])
+                        self.acts_queue[j].append(actions_str[j])
+            else:
+                # Do one agent-environment interaction
+                prompt = [self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
+                                                            deque_obs=self.obs_queue[j],
+                                                            deque_actions=self.acts_queue[j])
+                        for j in range(self.num_procs)]
 
-            actions_str = []
-            for j in range(self.num_procs):
-                actions_str.append(self.subgoals[j][int(a[j])])
-                # self.actions.append(self.subgoals[j][int(a[j])])
-                self.acts_queue[j].append(actions_str[j])
+                output = self.lm_server.custom_module_fns(
+                    module_function_keys=[self.llm_scoring_module_key], # 'value'
+                    contexts=prompt,
+                    candidates=self.filter_candidates_fn(self.subgoals))
+                scores = [_o[self.llm_scoring_module_key] for _o in output]
+                # vals = torch.stack([_o["value"][0] for _o in output]).cpu().numpy()
+                
+                if sample:
+                    # a = [torch.multinomial(F.softmax(score, dim=0), 1)[0].item() for score in scores]
+                    dists = [Categorical(logits=score) for score in scores]
+                    action = torch.stack([dist.sample() for dist in dists])
+                    a = action.cpu().numpy()
+                else:
+                    a = [torch.argmax(score).item() for score in scores]
+                
+                if deactivte_RL_for_search:
+                    a = [-1 if subgoal[0].startswith('search[') else action for (action, subgoal) in zip(a, self.subgoals)]
+                
+
+                actions_str = []
+                for j in range(self.num_procs):
+                    actions_str.append(self.subgoals[j][int(a[j])])
+                    # self.actions.append(self.subgoals[j][int(a[j])])
+                    self.acts_queue[j].append(actions_str[j])
 
 
             # take a step based on the calculated action
@@ -433,7 +509,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             self.log_episode_num_frames += torch.ones(self.num_procs, device=self.device)
 
             for i, done_ in enumerate(self.dones_envs):
-                if done_ and self.log_done_counter <= n_tests:
+                if done_ and self.log_done_counter < n_tests:
                     self.log_done_counter += 1
                     pbar.update(1)
                         
@@ -446,8 +522,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         pbar.close()
 
         log = {
-            "return_per_episode": self.log_return,
-            "num_frames_per_episode": self.log_num_frames
+            "return_per_episode": self.log_return[-self.log_done_counter:],
+            "num_frames_per_episode": self.log_num_frames[-self.log_done_counter:]
         }
 
         return log

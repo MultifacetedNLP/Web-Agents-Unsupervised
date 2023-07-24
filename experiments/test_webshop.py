@@ -39,7 +39,7 @@ class LoadSpecificWeightsUpdater(BaseUpdater):
                 print("Backup")
 
 
-def run_agent(algo, saving_path_logs, id_expe, n_tests):
+def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
         format_str = ("Reward: {: .2f} +- {: .2f}  (Min: {: .2f} Max: {: .2f}) |\
         Success Rate: {: .2f} |")
 
@@ -53,7 +53,8 @@ def run_agent(algo, saving_path_logs, id_expe, n_tests):
             csv_writer.writerow(["return_per_episode", "success_per_episode"])
 
         
-        logs = algo.generate_trajectories(n_tests)
+        logs = algo.generate_trajectories(n_tests, sample=args.rl_script_args.sample, deactivte_RL_for_search=args.rl_script_args.deactivte_RL_for_search,
+                                          bart_path=args.rl_script_args.bart_path, generate_query=args.rl_script_args.generate_query)
 
         return_per_episode = utils.synthesize(logs["return_per_episode"])
         success_rates = [1 if r == 100.0 else 0 for r in logs["return_per_episode"]]
@@ -120,10 +121,11 @@ def main(config_args):
     
     
     algo = LLMPPOAgentWebshop(envs = envs, lm_server = lm_server, llm_scoring_module_key=lamorel_scoring_module_key,
-                              num_frames_per_proc=config_args.rl_script_args.number_episodes, test=True)
+                              num_frames_per_proc=config_args.rl_script_args.number_episodes,
+                              nbr_obs=config_args.rl_script_args.nbr_obs, test=True)
     
     
-    run_agent(algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe,
+    run_agent(config_args, algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe,
               config_args.rl_script_args.number_episodes)
     
     if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:

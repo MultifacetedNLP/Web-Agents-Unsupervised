@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import re
 
 class BaseAgent(ABC):
     def __init__(self, envs):
@@ -56,6 +57,36 @@ class BaseAgent(ABC):
             if i < lda:
                 obs += "{}".format(deque_actions[i])
         
+        return goal + ", " + obs
+    
+    
+    def remove_additional_buttons(self, observation, available_actions):
+        btns_ids_start = [m.start() for m in re.finditer("\[button\]", observation)]
+        if len(btns_ids_start) > 13:
+            keep_btns_ids_start = [observation.lower().find(f"[button] {action[6:-1].lower()} [button_]") for action in available_actions]
+            btns_ids_end = [m.end() for m in re.finditer("\[button_\]", observation)]
+            temp = observation
+            for btn_id_start, btn_id_end in zip(btns_ids_start, btns_ids_end):
+                if btn_id_start not in keep_btns_ids_start:
+                    observation = observation.replace(temp[btn_id_start:btn_id_end+2], "")
+        return observation
+    
+    def generate_prompt_webshop_v2(self, goal, subgoals, deque_obs, deque_actions):
+        ldo = len(deque_obs)
+        lda = len(deque_actions)
+
+        obs = ""
+        for i in range(ldo):
+            obs += f" \n <Observation> {i}: {deque_obs[i]}"
+            
+            if i < lda:
+                obs += f"\n <Action> {i}: search for {deque_actions[i][7:-1]}" if deque_actions[i].startswith('search[') \
+                    else f"\n <Action> {i}: click on {deque_actions[i][6:-1]}"
+            else:
+                obs += f"\n <Action> {i}: search for " if subgoals[0].startswith('search[') \
+                    else f"\n <Action> {i}: click on "
+    
+                
         return goal + ", " + obs
 
 
