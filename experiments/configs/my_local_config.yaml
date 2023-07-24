@@ -11,6 +11,7 @@ lamorel_args:
   llm_args:
     model_type: seq2seq
     model_path: google/flan-t5-base
+    new_tokens: ["[button]", "[button_]", "[clicked button]", "[clicked button_]", "<Observation>", "<Action>"]
     pretrained: true
     minibatch_size: 3
     pre_encode_inputs: true
@@ -24,7 +25,7 @@ rl_script_args:
   path: ???
   seed: 1
   number_envs: 16
-  num_steps: 200000
+  num_steps: 300000
   max_episode_steps: 3
   simplification_str: easy
   frames_per_proc: 40
@@ -56,7 +57,7 @@ rl_script_args:
   spm_path: ""
   random_agent: false
   get_example_trajectories: false
-  nbr_obs: 1
+  nbr_obs: 2
   im_learning: false
   im_path: ""
   bot: false
