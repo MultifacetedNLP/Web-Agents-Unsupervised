@@ -1,514 +1,0 @@
-/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel_launcher/launch.py:15: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path='', config_name='')
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-[2023-06-28 14:43:24,133][accelerate.commands.launch][WARNING] - The following values were not passed to `accelerate launch` and had defaults used instead:
-	`--num_cpu_threads_per_process` was set to `6` to improve out-of-box performance
-To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
-[2023-06-28 14:43:24,135][root][INFO] - Using nproc_per_node=2.
-[2023-06-28 14:43:24,140][torch.distributed.elastic.rendezvous.static_tcp_rendezvous][INFO] - Creating TCPStore as the c10d::Store implementation
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-BossLevel-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-BossLevelNoUnlock-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-BossLevel-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoTo-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-BossLevelNoUnlock-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToFrench-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoTo-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToImpUnlock-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToFrench-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLargeOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToImpUnlock-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocal2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLargeOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS5N2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS6N2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS6N3-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocal2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS6N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS5N2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS7N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS7N5-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS6N2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N16-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS6N3-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N3-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS6N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS7N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N5-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS7N5-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N6-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N16-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N7-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N3-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToMediumOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObj-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N5-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMaze-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N6-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToLocalS8N7-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS4R2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS5-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToMediumOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS6-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObj-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS7-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMaze-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjS4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjS6-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToRedBall-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS4R2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToRedBallGrey-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS5-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToRedBallNoDists-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS6-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToSeq-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjMazeS7-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToSeqS5R2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjS4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-MiniBossLevel-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToObjS6-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Open-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToOpen-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenAndPickupLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToRedBall-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenAndPickupMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToRedBallGrey-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenGoToLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToRedBallNoDists-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenGoToMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToSeq-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-GoToSeqS5R2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickUpSeqPickUpLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-MiniBossLevel-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Pickup-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Open-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenAndPickupLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupLoc-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenAndPickupMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenGoToLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-OpenGoToMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickUpSeqPickUpLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenPutNextLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Pickup-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenPutNextMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNext-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupLoc-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLocalS5N3-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLocalS6N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenPutNextLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Synth-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PickupOpenPutNextMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthLoc-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNext-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthS5R2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLocal-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthSeq-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLocalS5N3-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthThenSynthLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextLocalS6N4-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthThenSynthMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-PutNextMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-UnblockPickup-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Synth-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Unlock-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthLoc-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-UnlockMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthS5R2-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthSeq-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthThenSynthLarge-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-SynthThenSynthMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-UnblockPickup-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-Unlock-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/gym/envs/registration.py:498: UserWarning: [33mWARN: Overriding environment BabyAI-UnlockMedium-v0 already in registry.[0m
-  logger.warn(f"Overriding environment {new_spec.id} already in registry.")
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/thefuzz/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
-  warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/thefuzz/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
-  warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py:382: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path='configs', config_name='my_local_config')
-/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py:382: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path='configs', config_name='my_local_config')
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-[2023-06-28 14:43:37,358][lamorel_logger][INFO] - Successfully initialized distributed process on process 1
-[2023-06-28 14:43:37,358][lamorel_logger][INFO] - Init rl group for process 1
-[2023-06-28 14:43:37,361][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:2 to store for rank: 1
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-[2023-06-28 14:43:37,479][lamorel_logger][INFO] - Successfully initialized distributed process on process 0
-[2023-06-28 14:43:37,480][lamorel_logger][INFO] - Init rl group for process 0
-[2023-06-28 14:43:37,485][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:2 to store for rank: 0
-[2023-06-28 14:43:37,487][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:2 with 2 nodes.
-[2023-06-28 14:43:37,487][lamorel_logger][INFO] - Init llm group for process 0
-[2023-06-28 14:43:37,487][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:3 to store for rank: 0
-[2023-06-28 14:43:37,495][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:2 with 2 nodes.
-[2023-06-28 14:43:37,495][lamorel_logger][INFO] - Init llm group for process 1
-[2023-06-28 14:43:37,497][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:3 to store for rank: 1
-[2023-06-28 14:43:37,497][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:3 with 2 nodes.
-[2023-06-28 14:43:37,498][lamorel_logger][INFO] - Init rl-llm group for process 0
-[2023-06-28 14:43:37,498][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:3 with 2 nodes.
-[2023-06-28 14:43:37,498][lamorel_logger][INFO] - Init rl-llm group for process 1
-[2023-06-28 14:43:37,509][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:4 to store for rank: 0
-[2023-06-28 14:43:37,509][torch.distributed.distributed_c10d][INFO] - Added key: store_based_barrier_key:4 to store for rank: 1
-[2023-06-28 14:43:37,509][torch.distributed.distributed_c10d][INFO] - Rank 0: Completed store-based barrier for key:store_based_barrier_key:4 with 2 nodes.
-[2023-06-28 14:43:37,509][torch.distributed.distributed_c10d][INFO] - Rank 1: Completed store-based barrier for key:store_based_barrier_key:4 with 2 nodes.
-[2023-06-28 14:43:37,514][lamorel_logger][INFO] - Devices on process 1 (index 0): [0]
-Parallelising HF LLM on 1 devices
-Loading model t5-base
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/transformers/models/t5/tokenization_t5_fast.py:155: FutureWarning: This tokenizer was incorrectly instantiated with a model max length of 512 which will be corrected in Transformers v5.
-For now, this behavior is kept to avoid breaking backwards compatibility when padding/encoding with `truncation is True`.
-- Be aware that you SHOULD NOT rely on t5-base automatically truncating your input to 512 when padding/encoding.
-- If you want to encode/pad to sequences longer than 512 you can either instantiate this tokenizer with `model_max_length` or pass `max_length` when encoding/padding.
-- To avoid this warning, please instantiate this tokenizer with `model_max_length` set to your preferred value.
-  warnings.warn(
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py:1566: FutureWarning: `T5ForConditionalGeneration.parallelize` is deprecated and will be removed in v5 of Transformers, you should load your model with `device_map='balanced'` in the call to `from_pretrained`. You can also provide your own `device_map` but it needs to be a dictionary module_name to device, so for instance {'encoder.block.0': 0, 'encoder.block.1': 1, ...}
-  warnings.warn(
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py:897: FutureWarning: `T5Stack.parallelize` is deprecated and will be removed in v5 of Transformers, you should load your model with `device_map='balanced'` in the call to `from_pretrained`. You can also provide your own `device_map` but it needs to be a dictionary module_name to device, so for instance {'block.0': 0, 'block.1': 1, ...}
-  warnings.warn(
-[2023-06-28 14:43:41,666][lamorel_logger][INFO] - Launching LLM server process 1
-Products loaded.
-Keys cleaned.
-Attributes loaded.
-  0%|          | 0/1181436 [00:00<?, ?it/s]  1%|          | 7018/1181436 [00:00<00:16, 70177.22it/s]  1%|▏         | 16970/1181436 [00:00<00:13, 87432.54it/s]  2%|▏         | 27878/1181436 [00:00<00:11, 97314.45it/s]  3%|▎         | 38952/1181436 [00:00<00:11, 102611.64it/s]  4%|▍         | 49997/1181436 [00:00<00:10, 105435.68it/s]  5%|▌         | 61125/1181436 [00:00<00:10, 107417.04it/s]  6%|▌         | 72325/1181436 [00:00<00:10, 108912.12it/s]  7%|▋         | 83264/1181436 [00:00<00:10, 109062.62it/s]  8%|▊         | 94365/1181436 [00:00<00:09, 109669.03it/s]  9%|▉         | 105452/1181436 [00:01<00:09, 110030.82it/s] 10%|▉         | 116462/1181436 [00:01<00:09, 110050.25it/s] 11%|█         | 127490/1181436 [00:01<00:09, 110118.10it/s] 12%|█▏        | 138534/1181436 [00:01<00:09, 110212.85it/s] 13%|█▎        | 149649/1181436 [00:01<00:09, 110493.70it/s] 14%|█▎        | 160699/1181436 [00:01<00:09, 110240.46it/s] 15%|█▍        | 171935/1181436 [00:01<00:09, 110875.35it/s] 15%|█▌        | 183023/1181436 [00:05<01:57, 8523.82it/s]   16%|█▋        | 193527/1181436 [00:05<01:25, 11605.75it/s] 17%|█▋        | 204030/1181436 [00:05<01:02, 15681.53it/s] 18%|█▊        | 214554/1181436 [00:05<00:46, 20935.65it/s] 19%|█▉        | 224895/1181436 [00:06<00:35, 27312.85it/s] 20%|█▉        | 235287/1181436 [00:06<00:27, 34933.47it/s] 21%|██        | 245471/1181436 [00:06<00:21, 43258.07it/s] 22%|██▏       | 255969/1181436 [00:06<00:17, 52572.49it/s] 23%|██▎       | 266537/1181436 [00:06<00:14, 61991.37it/s] 23%|██▎       | 277230/1181436 [00:06<00:12, 71075.18it/s] 24%|██▍       | 287785/1181436 [00:06<00:11, 78798.73it/s] 25%|██▌       | 298361/1181436 [00:06<00:10, 85335.06it/s] 26%|██▌       | 308922/1181436 [00:06<00:09, 90548.35it/s] 27%|██▋       | 319436/1181436 [00:07<00:09, 93703.75it/s] 28%|██▊       | 330002/1181436 [00:07<00:08, 96998.93it/s] 29%|██▉       | 340633/1181436 [00:07<00:08, 99627.73it/s] 30%|██▉       | 351247/1181436 [00:07<00:08, 101497.62it/s] 31%|███       | 362349/1181436 [00:07<00:07, 104268.94it/s] 32%|███▏      | 373358/1181436 [00:07<00:07, 105974.19it/s] 33%|███▎      | 384494/1181436 [00:07<00:07, 107563.65it/s] 33%|███▎      | 395551/1181436 [00:07<00:07, 108453.47it/s] 34%|███▍      | 406692/1181436 [00:07<00:07, 109332.41it/s] 35%|███▌      | 417718/1181436 [00:07<00:06, 109605.17it/s] 36%|███▋      | 428742/1181436 [00:08<00:06, 109793.63it/s] 37%|███▋      | 439929/1181436 [00:08<00:06, 110413.27it/s] 38%|███▊      | 450996/1181436 [00:08<00:06, 110306.13it/s] 39%|███▉      | 462045/1181436 [00:08<00:06, 109360.51it/s] 40%|████      | 473175/1181436 [00:08<00:06, 109934.89it/s] 41%|████      | 484222/1181436 [00:08<00:06, 110092.04it/s] 42%|████▏     | 495252/1181436 [00:08<00:06, 110150.76it/s] 43%|████▎     | 506312/1181436 [00:08<00:06, 110279.28it/s] 44%|████▍     | 517344/1181436 [00:08<00:06, 110244.84it/s] 45%|████▍     | 528372/1181436 [00:08<00:05, 109997.00it/s] 46%|████▌     | 539374/1181436 [00:09<00:05, 109381.36it/s] 47%|████▋     | 550315/1181436 [00:09<00:05, 108860.28it/s] 48%|████▊     | 561311/1181436 [00:09<00:05, 109185.41it/s] 48%|████▊     | 572236/1181436 [00:09<00:05, 109203.63it/s] 49%|████▉     | 583250/1181436 [00:09<00:05, 109480.64it/s] 50%|█████     | 594319/1181436 [00:09<00:05, 109839.93it/s] 51%|█████     | 605321/1181436 [00:09<00:05, 109890.51it/s] 52%|█████▏    | 616311/1181436 [00:09<00:05, 109813.14it/s] 53%|█████▎    | 627327/1181436 [00:09<00:05, 109913.39it/s] 54%|█████▍    | 638319/1181436 [00:09<00:05, 105037.24it/s] 55%|█████▍    | 649374/1181436 [00:10<00:04, 106635.05it/s] 56%|█████▌    | 660418/1181436 [00:10<00:04, 107747.63it/s] 57%|█████▋    | 671412/1181436 [00:10<00:04, 108392.51it/s] 58%|█████▊    | 682501/1181436 [00:10<00:04, 109131.77it/s] 59%|█████▊    | 693602/1181436 [00:10<00:04, 109688.53it/s] 60%|█████▉    | 704666/1181436 [00:10<00:04, 109970.60it/s] 61%|██████    | 715730/1181436 [00:10<00:04, 110168.39it/s] 62%|██████▏   | 726753/1181436 [00:10<00:04, 110123.15it/s] 62%|██████▏   | 737788/1181436 [00:10<00:04, 110189.82it/s] 63%|██████▎   | 748882/1181436 [00:10<00:03, 110314.41it/s] 64%|██████▍   | 760075/1181436 [00:11<00:03, 110793.35it/s] 65%|██████▌   | 771156/1181436 [00:11<00:03, 110433.12it/s] 66%|██████▌   | 782314/1181436 [00:11<00:03, 110772.80it/s] 67%|██████▋   | 793393/1181436 [00:11<00:03, 110565.65it/s] 68%|██████▊   | 804451/1181436 [00:11<00:03, 109668.90it/s] 69%|██████▉   | 815420/1181436 [00:11<00:03, 109541.11it/s] 70%|██████▉   | 826376/1181436 [00:11<00:03, 108792.70it/s] 71%|███████   | 837257/1181436 [00:11<00:03, 108165.20it/s] 72%|███████▏  | 848075/1181436 [00:11<00:03, 107523.64it/s] 73%|███████▎  | 858829/1181436 [00:11<00:03, 106704.29it/s] 74%|███████▎  | 869802/1181436 [00:12<00:02, 107589.85it/s] 75%|███████▍  | 880708/1181436 [00:12<00:02, 108025.26it/s] 75%|███████▌  | 891513/1181436 [00:17<00:42, 6816.56it/s]   76%|███████▋  | 902478/1181436 [00:17<00:29, 9506.41it/s] 77%|███████▋  | 913441/1181436 [00:17<00:20, 13112.92it/s] 78%|███████▊  | 924316/1181436 [00:17<00:14, 17793.44it/s] 79%|███████▉  | 935421/1181436 [00:17<00:10, 23887.28it/s] 80%|████████  | 946469/1181436 [00:17<00:07, 31280.50it/s] 81%|████████  | 957526/1181436 [00:17<00:05, 39899.91it/s] 82%|████████▏ | 968615/1181436 [00:17<00:04, 49442.49it/s] 83%|████████▎ | 979726/1181436 [00:18<00:03, 59373.39it/s] 84%|████████▍ | 990696/1181436 [00:18<00:02, 68784.67it/s] 85%|████████▍ | 1001797/1181436 [00:18<00:02, 77688.06it/s] 86%|████████▌ | 1012756/1181436 [00:18<00:02, 83918.51it/s] 87%|████████▋ | 1023566/1181436 [00:18<00:01, 89866.00it/s] 88%|████████▊ | 1034421/1181436 [00:18<00:01, 94719.81it/s] 88%|████████▊ | 1045297/1181436 [00:18<00:01, 98520.67it/s] 89%|████████▉ | 1056239/1181436 [00:18<00:01, 101556.70it/s] 90%|█████████ | 1067136/1181436 [00:18<00:01, 103667.94it/s] 91%|█████████ | 1078008/1181436 [00:18<00:00, 105097.45it/s] 92%|█████████▏| 1088877/1181436 [00:19<00:00, 106130.23it/s] 93%|█████████▎| 1099821/1181436 [00:19<00:00, 107101.81it/s] 94%|█████████▍| 1110711/1181436 [00:19<00:00, 107297.56it/s] 95%|█████████▍| 1121719/1181436 [00:19<00:00, 108119.75it/s] 96%|█████████▌| 1132643/1181436 [00:19<00:00, 108447.22it/s] 97%|█████████▋| 1143551/1181436 [00:19<00:00, 108487.64it/s] 98%|█████████▊| 1154518/1181436 [00:19<00:00, 108839.12it/s] 99%|█████████▊| 1165649/1181436 [00:19<00:00, 109575.16it/s]100%|█████████▉| 1176629/1181436 [00:19<00:00, 109597.91it/s]100%|██████████| 1181436/1181436 [00:19<00:00, 59441.26it/s] 
-164 skipped
-Loaded 12087 goals.
-range(1500, 12087)
-range(1500, 12087)
-range(1500, 12087)
-range(1500, 12087)
-[2023-06-28 14:45:22,183][root][INFO] - resetting environment
-[2023-06-28 14:45:22,218][root][INFO] - reset environment
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:01<00:09,  1.08s/it]Token indices sequence length is longer than the specified maximum sequence length for this model (1255 > 512). Running this sequence through the model will result in indexing errors
- 20%|>>>>>>>>>>>>                                                    | 2/10 [00:01<00:06,  1.27it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:02<00:05,  1.31it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:03<00:04,  1.32it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:03<00:03,  1.31it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:04<00:02,  1.36it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:04<00:01,  1.76it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:04<00:00,  2.27it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:05<00:00,  2.83it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:05<00:00,  3.37it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:05<00:00,  1.88it/s]
-/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/agents/ppo/llm_ppo_agent_webshop.py:220: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-  exps.subgoal = np.array([self.subgoalss[i][j]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][W reducer.cpp:1251] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
-[2023-06-28 14:45:29,533][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:45:29,546][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [00:47<02:23, 47.74s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:01<00:55, 27.88s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:15<00:21, 21.44s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:29<00:00, 18.36s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:29<00:00, 22.29s/it]
-[2023-06-28 14:46:56,750][__main__][INFO] - [33m
-Update: 1 | Episodes Done: 0 | Frames Seen: 000030 | FPS: 0000 | Ellapsed: 94                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.135 | Policy Loss: -0.008 | Value Loss:  0.00003 | Loss: -0.009 | Grad Norm:  0.151[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:01,  6.13it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:00<00:01,  6.09it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:00<00:01,  6.14it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:00<00:00,  6.10it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:00<00:00,  6.04it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:00<00:00,  6.01it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:01<00:00,  6.04it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:01<00:00,  6.04it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:01<00:00,  6.01it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:01<00:00,  6.08it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:01<00:00,  6.06it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 14:46:59,134][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:47:28,057][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:16<03:50, 76.69s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:24<01:12, 36.29s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:33<00:23, 23.59s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:41<00:00, 17.46s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:41<00:00, 25.31s/it]
-[2023-06-28 14:48:39,691][__main__][INFO] - [33m
-Update: 2 | Episodes Done: 0 | Frames Seen: 000060 | FPS: 0000 | Ellapsed: 197                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.256 | Policy Loss: -0.004 | Value Loss:  0.00000 | Loss: -0.006 | Grad Norm:  0.261[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:01,  6.20it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:00<00:01,  6.33it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:00<00:01,  6.57it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:00<00:00,  6.68it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:00<00:00,  6.72it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:00<00:00,  6.78it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:01<00:00,  6.85it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:01<00:00,  6.81it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:01<00:00,  6.82it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:01<00:00,  6.81it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:01<00:00,  6.73it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 14:48:41,916][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:49:11,321][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:18<03:54, 78.13s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:26<01:13, 36.95s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:34<00:23, 23.78s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:42<00:00, 17.64s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:42<00:00, 25.65s/it]
-[2023-06-28 14:50:23,807][__main__][INFO] - [33m
-Update: 3 | Episodes Done: 0 | Frames Seen: 000090 | FPS: 0000 | Ellapsed: 301                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.455 | Policy Loss: -0.004 | Value Loss:  0.00001 | Loss: -0.008 | Grad Norm:  0.390[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:01,  6.48it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:00<00:01,  6.42it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:00<00:01,  6.45it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:00<00:00,  6.40it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:00<00:00,  6.44it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:00<00:00,  6.40it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:01<00:00,  6.33it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:01<00:00,  6.40it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:01<00:00,  6.32it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:01<00:00,  6.40it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:01<00:00,  6.40it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 14:50:26,093][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:50:55,054][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:19<03:59, 79.91s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:28<01:16, 38.11s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:37<00:24, 24.75s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:45<00:00, 18.22s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [01:45<00:00, 26.45s/it]
-[2023-06-28 14:52:11,240][__main__][INFO] - [33m
-Update: 4 | Episodes Done: 0 | Frames Seen: 000120 | FPS: 0000 | Ellapsed: 409                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.634 | Policy Loss: -0.003 | Value Loss:  0.00000 | Loss: -0.010 | Grad Norm:  0.316[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:01,  6.06it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:00<00:01,  6.96it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:01<00:04,  1.47it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:02<00:03,  1.75it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:02<00:02,  1.75it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:05<00:05,  1.26s/it] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:05<00:03,  1.08s/it] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:06<00:01,  1.04it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:07<00:00,  1.14it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:07<00:00,  1.21it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:07<00:00,  1.25it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 14:52:21,391][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:52:48,907][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:22<04:08, 82.69s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:37<01:25, 42.63s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:51<00:29, 29.74s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:06<00:00, 23.84s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:06<00:00, 31.62s/it]
-[2023-06-28 14:54:25,944][__main__][INFO] - [33m
-Update: 5 | Episodes Done: 0 | Frames Seen: 000150 | FPS: 0000 | Ellapsed: 543                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.699 | Policy Loss: -0.001 | Value Loss:  0.00001 | Loss: -0.008 | Grad Norm:  0.230[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:06,  1.41it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:01<00:05,  1.51it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:01<00:04,  1.54it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:02<00:03,  1.52it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:03<00:03,  1.54it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:05<00:04,  1.05s/it] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:05<00:02,  1.09it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:06<00:01,  1.22it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:07<00:00,  1.29it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:07<00:00,  1.38it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:07<00:00,  1.31it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 14:54:35,428][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:55:02,868][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:24<04:13, 84.66s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:40<01:28, 44.27s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:57<00:31, 31.55s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:13<00:00, 25.57s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:13<00:00, 33.37s/it]
-[2023-06-28 14:56:47,292][__main__][INFO] - [33m
-Update: 6 | Episodes Done: 0 | Frames Seen: 000180 | FPS: 0000 | Ellapsed: 685                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.729 | Policy Loss: -0.001 | Value Loss:  0.00001 | Loss: -0.009 | Grad Norm:  0.232[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:05,  1.52it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:01<00:05,  1.59it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:01<00:03,  1.88it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:02<00:03,  1.84it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:02<00:02,  1.80it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:03<00:02,  1.95it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:03<00:01,  1.88it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:04<00:01,  1.78it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:05<00:00,  1.75it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:05<00:00,  1.85it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:05<00:00,  1.82it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 14:56:54,255][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:57:23,921][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:25<04:16, 85.64s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:40<01:27, 43.95s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:55<00:30, 30.62s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:10<00:00, 24.46s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:10<00:00, 32.55s/it]
-[2023-06-28 14:59:03,212][__main__][INFO] - [33m
-Update: 7 | Episodes Done: 0 | Frames Seen: 000210 | FPS: 0000 | Ellapsed: 820                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.645 | Policy Loss: -0.002 | Value Loss:  0.00002 | Loss: -0.009 | Grad Norm:  0.191[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:05,  1.59it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:01<00:05,  1.60it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:01<00:04,  1.62it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:02<00:03,  1.62it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:03<00:03,  1.58it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:03<00:02,  1.52it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:04<00:01,  1.54it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:05<00:01,  1.61it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:05<00:00,  1.85it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:05<00:00,  2.12it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:05<00:00,  1.75it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 14:59:10,582][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 14:59:37,862][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:22<04:07, 82.39s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:37<01:25, 42.86s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:52<00:30, 30.25s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:08<00:00, 24.32s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:08<00:00, 32.02s/it]
-[2023-06-28 15:01:17,153][__main__][INFO] - [33m
-Update: 8 | Episodes Done: 0 | Frames Seen: 000240 | FPS: 0000 | Ellapsed: 954                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.634 | Policy Loss: -0.004 | Value Loss:  0.00003 | Loss: -0.011 | Grad Norm:  0.442[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:02<00:20,  2.31s/it] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:03<00:10,  1.36s/it] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:03<00:07,  1.02s/it] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:04<00:05,  1.18it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:04<00:03,  1.31it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:05<00:02,  1.36it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:06<00:02,  1.42it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:06<00:01,  1.45it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:07<00:00,  1.47it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:08<00:00,  1.49it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:08<00:00,  1.23it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 15:01:28,099][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 15:01:56,671][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:26<04:20, 86.76s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:43<01:30, 45.32s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:58<00:31, 31.77s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:15<00:00, 25.69s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:15<00:00, 33.77s/it]
-[2023-06-28 15:03:40,907][__main__][INFO] - [33m
-Update: 9 | Episodes Done: 0 | Frames Seen: 000270 | FPS: 0000 | Ellapsed: 1098                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 0.0 +- 0.0  (Min: 0, Max 0)                               
-Entropy:  0.782 | Policy Loss: -0.002 | Value Loss:  0.00001 | Loss: -0.010 | Grad Norm:  0.321[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s] 10%|>>>>>>                                                          | 1/10 [00:00<00:08,  1.05it/s] 20%|>>>>>>>>>>>>                                                    | 2/10 [00:01<00:04,  1.68it/s] 30%|>>>>>>>>>>>>>>>>>>>                                             | 3/10 [00:01<00:03,  1.84it/s] 40%|>>>>>>>>>>>>>>>>>>>>>>>>>                                       | 4/10 [00:02<00:03,  1.75it/s] 50%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                | 5/10 [00:03<00:02,  1.68it/s] 60%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                          | 6/10 [00:03<00:02,  1.69it/s] 70%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                    | 7/10 [00:04<00:01,  1.67it/s] 80%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>             | 8/10 [00:04<00:01,  1.68it/s] 90%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       | 9/10 [00:05<00:00,  1.62it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:06<00:00,  1.62it/s]100%|>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| 10/10 [00:06<00:00,  1.64it/s]
-  0%|                                                                         | 0/4 [00:00<?, ?it/s][2023-06-28 15:03:49,177][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/optimizer.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
-[2023-06-28 15:04:18,385][root][INFO] - copying /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/last/model.checkpoint -> /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/llm_mtrl_nbr_env_3_T5-base_pretrained_True_nbr_obs_2_nbr_actions_6_turn_left_turn_right_go_forward_pick_up_drop_toggle_shape_reward_beta_0_seed_1/backup
- 25%|<<<<<<<<<<<<<<<<                                                 | 1/4 [01:24<04:14, 84.99s/it] 50%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                                 | 2/4 [01:39<01:26, 43.39s/it] 75%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<                 | 3/4 [01:53<00:30, 30.23s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:08<00:00, 23.98s/it]100%|<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| 4/4 [02:08<00:00, 32.06s/it]
-[2023-06-28 15:05:55,313][__main__][INFO] - [33m
-Update: 10 | Episodes Done: 3 | Frames Seen: 000300 | FPS: 0000 | Ellapsed: 1233                               
-Reward:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Success Rate:  0.00                               
-Reshaped:  0.00 +-  0.00  (Min:  0.00 Max:  0.00) | Bonus:  0.00 +-  0.00  (Min:  0.00 Max:  0.00)                               
-Frames/Eps: 100.0 +- 0.0  (Min: 100.0, Max 100.0)                               
-Entropy:  0.669 | Policy Loss: -0.053 | Value Loss:  0.00003 | Loss: -0.060 | Grad Norm:  2.909[39m
-  0%|                                                                        | 0/10 [00:00<?, ?it/s]Error executing job with overrides: ['rl_script_args.path=/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py']
-Traceback (most recent call last):
-  File "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py", line 402, in main
-    lm_server = Caller(config_args.lamorel_args, custom_updater=PPOUpdater(),
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel/caller.py", line 54, in __init__
-    Server(
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel/server/server.py", line 65, in __init__
-    self.run()
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel/server/server.py", line 131, in run
-    current_process_results = self._process_calls(calls_to_process)
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel/server/server.py", line 109, in _process_calls
-    llm_results.append(self._model(**_call))
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1130, in _call_impl
-    return forward_call(*input, **kwargs)
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel/server/llms/hf_llm.py", line 193, in forward
-    padded_input = self.__pad_sequence(tokenized_contexts[_w], contexts_max_size)
-IndexError: list index out of range
-
-Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
-  0%|                                                                        | 0/10 [00:02<?, ?it/s]
-Error executing job with overrides: ['rl_script_args.path=/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py']
-Traceback (most recent call last):
-  File "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py", line 531, in main
-    run_agent(config_args.rl_script_args, algo, id_expe)
-  File "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/train_language_agent.py", line 345, in run_agent
-    logs = algo.update_parameters()
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/agents/ppo/llm_ppo_agent_webshop.py", line 261, in update_parameters
-    exps, logs = self.collect_experiences(debug=self.debug)
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/agents/ppo/llm_ppo_agent_webshop.py", line 101, in collect_experiences
-    output = self.lm_server.custom_module_fns(module_function_keys=[self.llm_scoring_module_key, 'value'],
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel/caller.py", line 96, in custom_module_fns
-    return self.__call_model(InstructionsEnum.FORWARD, True, module_function_keys=module_function_keys,
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel/caller.py", line 109, in __call_model
-    dist.broadcast_object_list(object_list=results, src=self._llm_master_process, group=self._rl_llm_group)
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py", line 1877, in broadcast_object_list
-    broadcast(object_sizes_tensor, src=src, group=group)
-  File "/mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py", line 1201, in broadcast
-    work.wait()
-RuntimeError: [/opt/conda/conda-bld/pytorch_1659484808560/work/third_party/gloo/gloo/transport/tcp/pair.cc:598] Connection closed by peer [172.31.40.251]:22912
-
-Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
-[2023-06-28 15:06:00,267][torch.distributed.elastic.multiprocessing.api][WARNING] - Sending process 4191239 closing signal SIGTERM
-[2023-06-28 15:06:01,936][torch.distributed.elastic.multiprocessing.api][ERROR] - failed (exitcode: 1) local_rank: 1 (pid: 4191240) of binary: /mounts/u-spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/envs/bin/python
