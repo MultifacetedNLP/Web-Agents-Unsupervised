@@ -57,7 +57,7 @@ rl_script_args:
   spm_path: ""
   random_agent: false
   get_example_trajectories: false
-  nbr_obs: 2
+  nbr_obs: 5
   im_learning: false
   im_path: ""
   bot: false
