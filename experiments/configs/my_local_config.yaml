@@ -10,6 +10,8 @@ lamorel_args:
     num_machines: 1
   llm_args:
     model_type: seq2seq
+    encoder_max_size: 512
+    decoder_max_size: 128
     model_path: google/flan-t5-base
     new_tokens: ["[button]", "[button_]", "[clicked button]", "[clicked button_]", "<Observation>", "<Action>"]
     pretrained: true
