@@ -1,4 +1,8 @@
-__pycache__/
+**/__pycache__/
+*nohup*
+experiments/length_prompts_analysis/
+experiments/length_prompts_analysis_save/
+experiments/length_prompts_analysis_save_2/
 useless/
 storage/
 outputs/
