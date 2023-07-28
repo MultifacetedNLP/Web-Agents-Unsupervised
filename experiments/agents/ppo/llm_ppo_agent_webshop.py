@@ -17,7 +17,7 @@ bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
 class LLMPPOAgentWebshop(BasePPOAgent):
     def __init__(self, envs, lm_server, llm_scoring_module_key, nbr_llms=None, num_frames_per_proc=None, discount=0.99,
                  lr=7e-4, beta1=0.9, beta2=0.999, gae_lambda=0.95, entropy_coef=0.01, value_loss_coef=0.5,
-                 max_grad_norm=0.5, adam_eps=1e-5, clip_eps=0.2, epochs=4, batch_size=64, reshape_reward=None,
+                 max_grad_norm=0.5, adam_eps=1e-5, clip_eps=0.2, epochs=4, prioritization_best_trajectories=2, batch_size=64, reshape_reward=None,
                  name_experiment=None, saving_path_model=None, saving_path_logs=None, number_envs=None, subgoals=None,
                  nbr_obs=3, id_expe=None, template_test=1, aux_info=None, debug=False, test=False):
         super().__init__(envs, num_frames_per_proc, discount, lr, gae_lambda, entropy_coef, value_loss_coef,
@@ -61,6 +61,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
         self.clip_eps = clip_eps
         self.epochs = epochs
+        self.prioritization_best_trajectories = prioritization_best_trajectories
         self.batch_size = batch_size
         self.debug = debug
 
@@ -164,6 +165,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
             self.prompts[i] = prompt
 
+            self.dones[i] = torch.tensor(self.dones_envs, device=self.device, dtype=torch.float)
             self.masks[i] = self.mask
             self.mask = 1 - torch.tensor(self.dones_envs, device=self.device, dtype=torch.float)
 
@@ -244,6 +246,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         exps.advantage = self.advantages.transpose(0, 1).reshape(-1)
         exps.returnn = exps.value + exps.advantage
         exps.log_prob = self.log_probs.transpose(0, 1).reshape(-1)
+        self.dones[-1, :] = 1
+        exps.dones = self.dones.transpose(0, 1).reshape(-1)
 
         if self.aux_info:
             exps = self.aux_info_collector.end_collection(exps)
@@ -260,6 +264,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             "num_frames": self.num_frames,
             "episodes_done": self.log_done_counter,
         }
+        
 
         self.log_done_counter = 0
         self.log_return = self.log_return[-self.num_procs:]
@@ -268,6 +273,20 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         self.log_num_frames = self.log_num_frames[-self.num_procs:]
 
         return exps, log
+    
+    def best_trajectories_indexs(self, rewards, dones, best_reward=10):
+        last_reward = 0
+        rewards_length = len(rewards)
+
+        best_indexes = []
+        for i in range(rewards_length - 1, -1, -1):
+            if dones[i] == 1:
+                last_reward = rewards[i]
+                    
+            if last_reward == best_reward:
+                best_indexes.append(i)
+
+        return best_indexes
 
     def update_parameters(self):
         # Collect experiences
@@ -283,6 +302,13 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         being the added information. They are either (n_procs * n_frames_per_proc) 1D tensors or
         (n_procs * n_frames_per_proc) x k 2D tensors where k is the number of classes for multiclass classification
         '''
+        
+        if self.prioritization_best_trajectories>0:
+            best_indexes = self.best_trajectories_indexs(exps.reward, exps.dones) * \
+                            self.prioritization_best_trajectories
+        else:
+            best_indexes = []
+        
         lm_server_update_first_call = True
         for _ in tqdm(range(self.epochs), ascii=" " * 9 + "<", ncols=100):
             # Initialize log values
@@ -296,7 +322,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
             # Create minibatch of size self.batch_size*self.nbr_llms
             # each llm receive a batch of size batch_size
-            for inds in self._get_batches_starting_indexes():
+            for inds in self._get_batches_starting_indexes(best_indexes):
                 # inds is a numpy array of indices that correspond to the beginning of a sub-batch
                 # there are as many inds as there are batches
 
@@ -341,7 +367,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
         return logs
 
-    def _get_batches_starting_indexes(self):
+    def _get_batches_starting_indexes(self, best_indexes=[]):
         """Gives, for each batch, the indexes of the observations given to
         the model and the experiences used to compute the loss at first.
         Returns
@@ -351,12 +377,15 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         """
 
         indexes = np.arange(0, self.num_frames)
+        if best_indexes:
+            indexes.extend(best_indexes)
         indexes = np.random.permutation(indexes)
 
         num_indexes = self.batch_size
         batches_starting_indexes = [indexes[i:i + num_indexes] for i in range(0, len(indexes), num_indexes)]
 
         return batches_starting_indexes
+
     
     def process_goal(self, state):
         state = state.lower().replace('"', '').replace("'", "")

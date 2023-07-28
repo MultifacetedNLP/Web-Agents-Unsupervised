@@ -60,6 +60,7 @@ class BasePPOAgent(BaseAgent):
 
         self.mask = torch.ones(shape[1], device=self.device)
         self.masks = torch.zeros(*shape, device=self.device)
+        self.dones = torch.zeros(*shape, device=self.device)
 
         self.values = torch.zeros(*shape, device=self.device)
         self.rewards = torch.zeros(*shape, device=self.device)

@@ -43,6 +43,7 @@ rl_script_args:
   adam_eps: 1e-5
   clip_eps: 0.2
   epochs: 2
+  prioritization_best_trajectories: 2
   batch_size: 2
   action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
