@@ -468,7 +468,7 @@ def main(config_args):
                             config_args.rl_script_args.gae_lambda, config_args.rl_script_args.entropy_coef,
                             config_args.rl_script_args.value_loss_coef, config_args.rl_script_args.max_grad_norm,
                             config_args.rl_script_args.adam_eps, config_args.rl_script_args.clip_eps,
-                            config_args.rl_script_args.epochs, config_args.prioritization_best_trajectories,
+                            config_args.rl_script_args.epochs, config_args.rl_script_args.prioritization_best_trajectories,
                             config_args.rl_script_args.batch_size, None,
                             config_args.rl_script_args.name_experiment,
                             config_args.rl_script_args.saving_path_model,
