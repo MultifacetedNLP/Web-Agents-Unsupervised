@@ -30,7 +30,7 @@ rl_script_args:
   num_steps: 300000
   max_episode_steps: 3
   simplification_str: easy
-  frames_per_proc: 40
+  frames_per_proc: 50
   reward_shaping_beta: 0
   discount: 0.99
   lr: 1e-6
@@ -42,7 +42,7 @@ rl_script_args:
   max_grad_norm: 0.5
   adam_eps: 1e-5
   clip_eps: 0.2
-  epochs: 2
+  epochs: 1
   prioritization_best_trajectories: 2
   batch_size: 2
   action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
