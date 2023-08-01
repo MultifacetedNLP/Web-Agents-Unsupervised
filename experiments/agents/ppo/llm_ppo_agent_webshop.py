@@ -274,19 +274,23 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
         return exps, log
     
-    def best_trajectories_indexs(self, rewards, dones, best_reward=10):
+    def extract_trajectories_indexs(self, rewards, dones, best_reward=10, neutral_reward=0):
         last_reward = 0
         rewards_length = len(rewards)
 
         best_indexes = []
+        target_indexes = []
         for i in range(rewards_length - 1, -1, -1):
             if dones[i] == 1:
                 last_reward = rewards[i]
                     
             if last_reward == best_reward:
                 best_indexes.append(i)
+                
+            if last_reward != neutral_reward:
+                target_indexes.append(i)
 
-        return best_indexes
+        return target_indexes, best_indexes
 
     def update_parameters(self):
         # Collect experiences
@@ -303,11 +307,13 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         (n_procs * n_frames_per_proc) x k 2D tensors where k is the number of classes for multiclass classification
         '''
         
+        
+        target_indexes, best_indexes = self.extract_trajectories_indexs(exps.reward, exps.dones)
+        
         if self.prioritization_best_trajectories>0:
-            best_indexes = self.best_trajectories_indexs(exps.reward, exps.dones) * \
-                            self.prioritization_best_trajectories
+            all_indexes = target_indexes + best_indexes * self.prioritization_best_trajectories
         else:
-            best_indexes = []
+            all_indexes = target_indexes
         
         lm_server_update_first_call = True
         for _ in tqdm(range(self.epochs), ascii=" " * 9 + "<", ncols=100):
@@ -322,7 +328,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
             # Create minibatch of size self.batch_size*self.nbr_llms
             # each llm receive a batch of size batch_size
-            for inds in self._get_batches_starting_indexes(best_indexes):
+            for inds in self._get_batches_starting_indexes(all_indexes):
                 # inds is a numpy array of indices that correspond to the beginning of a sub-batch
                 # there are as many inds as there are batches
 
@@ -367,7 +373,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
         return logs
 
-    def _get_batches_starting_indexes(self, best_indexes=[]):
+    def _get_batches_starting_indexes(self, indexes):
         """Gives, for each batch, the indexes of the observations given to
         the model and the experiences used to compute the loss at first.
         Returns
@@ -375,10 +381,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         batches_starting_indexes : list of lists filter_candidates_fnof int
             the indexes of the experiences to be used at first for each batch
         """
-
-        indexes = np.arange(0, self.num_frames)
-        if best_indexes:
-            indexes.extend(best_indexes)
+        # indexes = np.arange(0, self.num_frames)
+        indexes = np.array(indexes)
         indexes = np.random.permutation(indexes)
 
         num_indexes = self.batch_size
