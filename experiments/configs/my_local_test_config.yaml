@@ -10,6 +10,8 @@ lamorel_args:
     num_machines: 1
   llm_args:
     model_type: seq2seq
+    encoder_max_size: 2048
+    decoder_max_size: 128
     model_path: google/flan-t5-large
     pretrained: true
     minibatch_size: 3
@@ -46,11 +48,11 @@ rl_script_args:
   name_experiment: 'llm_flan_t5_large'
   name_model: 'google-flan-t5-large'
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
-  id_expe: 'llm_flan_t5_nbr_env_16_google-flan-t5-large_pretrained_True_nbr_obs_1_shape_reward_beta_0_seed_1_v5'
+  id_expe: 'llm_flan_t5_large_nbr_env_16_google-flan-t5-large_pretrained_True_shape_reward_beta_0_seed_1'
   sample: false
   deactivte_RL_for_search: false
   bart_path: ''
-  generate_query: false
+  generate_query: true
   name_environment: 'Webshop'
   load_embedding: false
   use_action_heads: false
@@ -59,7 +61,7 @@ rl_script_args:
   spm_path: ""
   random_agent: false
   get_example_trajectories: false
-  nbr_obs: 1
+  nbr_obs: 3
   im_learning: false
   im_path: ""
   bot: false

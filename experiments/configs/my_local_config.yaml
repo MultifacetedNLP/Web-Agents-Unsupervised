@@ -13,7 +13,6 @@ lamorel_args:
     encoder_max_size: 512
     decoder_max_size: 128
     model_path: google/flan-t5-base
-    new_tokens: ["[button]", "[button_]", "[clicked button]", "[clicked button_]", "<Observation>", "<Action>"]
     pretrained: true
     minibatch_size: 3
     pre_encode_inputs: true
@@ -30,7 +29,7 @@ rl_script_args:
   num_steps: 300000
   max_episode_steps: 3
   simplification_str: easy
-  frames_per_proc: 50
+  frames_per_proc: 40
   reward_shaping_beta: 0
   discount: 0.99
   lr: 1e-6
@@ -43,12 +42,12 @@ rl_script_args:
   adam_eps: 1e-5
   clip_eps: 0.2
   epochs: 1
-  prioritization_best_trajectories: 2
+  prioritization_best_trajectories: 3
   batch_size: 2
   action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
-  name_experiment: 'llm_flan_t5'
-  name_model: 'google-flan-t5-base'
+  name_experiment: 'llm_flan_t5_targeted'
+  name_model: 'google-flan-t5-base-targeted'
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
   name_environment: 'Webshop'
   number_episodes: 10
@@ -60,7 +59,7 @@ rl_script_args:
   spm_path: ""
   random_agent: false
   get_example_trajectories: false
-  nbr_obs: 5
+  nbr_obs: 1
   im_learning: false
   im_path: ""
   bot: false

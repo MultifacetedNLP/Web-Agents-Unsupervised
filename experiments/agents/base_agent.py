@@ -77,14 +77,14 @@ class BaseAgent(ABC):
 
         obs = ""
         for i in range(ldo):
-            obs += f" \n <Observation> {i}: {deque_obs[i]}"
+            obs += f" \n Observation {i}: {deque_obs[i]}"
             
             if i < lda:
-                obs += f"\n <Action> {i}: search for {deque_actions[i][7:-1]}" if deque_actions[i].startswith('search[') \
-                    else f"\n <Action> {i}: click on {deque_actions[i][6:-1]}"
+                obs += f"\n Action{i}: search for {deque_actions[i][7:-1]}" if deque_actions[i].startswith('search[') \
+                    else f"\n Action {i}: click on {deque_actions[i][6:-1]}"
             else:
-                obs += f"\n <Action> {i}: search for " if subgoals[0].startswith('search[') \
-                    else f"\n <Action> {i}: click on "
+                obs += f"\n Action {i}: search for " if subgoals[0].startswith('search[') \
+                    else f"\n Action {i}: click on "
     
                 
         return goal + ", " + obs
