@@ -11,9 +11,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --nodes=1
 
-
-
-python /home/mfe261/PPO_webshop/lamorel/lamorel/src/lamorel_launcher/launch.py \
-        --config-path=/home/mfe261/PPO_webshop/experiments/configs \
-        --config-name=my_local_config \
-        rl_script_args.path=/home/mfe261/PPO_webshop/experiments/train_language_agent.py
+python /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/lamorel/lamorel/src/lamorel_launcher/launch.py \
+        --config-path=/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/configs \
+        --config-name=my_local_test_config \
+        rl_script_args.path=/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/test_webshop.py
