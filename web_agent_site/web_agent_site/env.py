@@ -22,6 +22,7 @@ class WebEnv:
                                    filter_goals=None, limit_goals=-1,
                                    num_products=args.num, human_goals=args.human_goals,
                                    get_image=args.get_image,
+                                   return_image_feature=args.return_image_feature,
                                    num_prev_obs=args.num_prev_obs, num_prev_actions=args.num_prev_actions,
                                    session_prefix=id, button_version=args.button_version)
         if args.num is None:
@@ -53,6 +54,7 @@ class WebEnv:
         self.ban_buy = args.ban_buy
         self.prev_ob = self.cur_ob = None
         self.get_image = args.get_image
+        self.return_image_feature = args.return_image_feature
         self.item_rank = -1
         self.reduce_click = 1
         self.button_version = args.button_version
@@ -253,8 +255,12 @@ class WebEnv:
                      })
 
         if self.get_image:
-            image_feat = self.env.get_image()
-            info['image_feat'] = image_feat
+            if self.return_image_feature:
+                image_feat = self.env.get_image()
+                info['image_feat'] = image_feat
+            else:
+                image_url = self.env.get_image_url()
+                info['image_url'] = image_url
 
         return ob, (reward + r_visit) * 10, done, info
 
@@ -281,6 +287,14 @@ class WebEnv:
                 if asin in self.env.get_available_actions()['clickables']:
                     ob, _, _, info = self.step(f'click[{asin}]')
                     self.stats['action_go_to_item'] += 1
+                    
+        if self.get_image:
+            if self.return_image_feature:
+                image_feat = self.env.get_image()
+                info['image_feat'] = image_feat
+            else:
+                image_url = self.env.get_image_url()
+                info['image_url'] = image_url
 
         self.item_rank = -1
         return ob, info

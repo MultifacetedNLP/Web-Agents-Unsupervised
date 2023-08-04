@@ -71,7 +71,7 @@ class WebAgentTextEnv(gym.Env):
 
         self.session = self.kwargs.get('session')
         self.session_prefix = self.kwargs.get('session_prefix')
-        if self.kwargs.get('get_image', 0):
+        if self.kwargs.get('get_image', 0) and self.kwargs.get('return_image_feature', 0):
             self.feats = torch.load(FEAT_CONV)
             self.ids = torch.load(FEAT_IDS)
             self.ids = {url: idx for idx, url in enumerate(self.ids)}
@@ -177,6 +177,15 @@ class WebAgentTextEnv(gym.Env):
                 image = self.feats[image_idx]
                 return image
         return torch.zeros(512)
+    
+    def get_image_url(self):
+        """Scrape image from page HTML and return as a list of pixel values"""
+        html_obj = self._parse_html(self.browser.page_source)
+        image_url = html_obj.find(id='product-image')
+        if image_url is not None:
+            image_url = image_url['src']
+            return image_url
+        return ""
 
     def get_instruction_text(self):
         """Get corresponding instruction text for current environment session"""
