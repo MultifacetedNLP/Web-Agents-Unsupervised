@@ -13,6 +13,9 @@ lamorel_args:
     encoder_max_size: 512
     decoder_max_size: 128
     model_path: google/flan-t5-base
+    image: true
+    feat_conv_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
+    feat_ids_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
     pretrained: true
     minibatch_size: 3
     pre_encode_inputs: true
@@ -46,8 +49,8 @@ rl_script_args:
   batch_size: 2
   action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
-  name_experiment: 'llm_flan_t5_targeted'
-  name_model: 'google-flan-t5-base-targeted'
+  name_experiment: 'google_flan_t5_base'
+  name_model: 'google_flan_t5_base'
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
   name_environment: 'Webshop'
   number_episodes: 10
@@ -67,7 +70,8 @@ rl_script_args:
     state_format: 'text_rich'
     num: null
     human_goals: 1
-    get_image: 0
+    get_image: 1
+    return_image_feature: 0
     num_prev_obs: 0
     num_prev_actions: 0
     step_limit: 100
