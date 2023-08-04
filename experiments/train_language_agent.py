@@ -194,12 +194,12 @@ class PPOUpdater(BaseUpdater):
         else:
 
             sb = {}
-            for k in ['action', 'value', 'log_prob', 'advantage', 'returnn']:
+            for k in ['action', 'value', 'log_prob', 'advantage', 'returnn', 'image']:
                 sb[k] = kwargs["exps"][k][_current_batch_ids]
 
             # PPO update
             output = self._llm_module([kwargs["scoring_module_key"], 'value'],
-                                      contexts=contexts, candidates=candidates, require_grad=True)
+                                      contexts=contexts, candidates=candidates, images=sb['image'] if sb['image'][0] is not None else None, require_grad=True)
             # scores = torch.stack([_o[kwargs["scoring_module_key"]] for _o in output]).squeeze()
             # dist = Categorical(logits=scores)
             scores = [_o[kwargs["scoring_module_key"]] for _o in output]

@@ -40,12 +40,12 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         # self.subgoals = subgoals
         shape = (self.num_frames_per_proc, self.num_procs)
         self.rewards_envs, self.dones_envs = [], []
-        self.obs, self.infos, self.subgoals = [], [], []
+        self.obs, self.infos, self.subgoals= [], [], []
         self.subgoalss = [None] * (shape[0])
+        self.imagess = [None] * (shape[0])
         logging.info("resetting environment")
         for i, env in enumerate(self.env):
             if test:
-                print(i)
                 ob, info = env.reset(i)
             else:
                 ob, info = env.reset()
@@ -112,7 +112,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
             output = self.lm_server.custom_module_fns(module_function_keys=[self.llm_scoring_module_key, 'value'],
                                                       contexts=prompt,
-                                                      candidates=self.filter_candidates_fn(self.subgoals))
+                                                      candidates=self.filter_candidates_fn(self.subgoals),
+                                                      images=[info['image_url'] for info in self.infos] if "image_url" in self.infos[0].keys() else None)
             
             # scores = torch.stack([_o[self.llm_scoring_module_key] for _o in output]).squeeze()
             # dist = Categorical(logits=scores)
@@ -135,6 +136,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             
             # take a step based on the calculated action
             self.subgoalss[i] = self.subgoals
+            if "image_url" in self.infos[0].keys():
+                self.imagess[i] = [info['image_url'] for info in self.infos]
             self.infos, self.subgoals = [], []
             self.rewards_envs, self.dones_envs = [], []
             for j, env in enumerate(self.env):
@@ -214,7 +217,8 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         prompt = [self.generate_prompt_webshop_v2(goal=self.infos[i]['goal'], subgoals=self.subgoals[i],
                                        deque_obs=self.obs_queue[i], deque_actions=self.acts_queue[i])
                   for i in range(self.num_procs)]
-        output = self.lm_server.custom_module_fns(module_function_keys=['value'], contexts=prompt)
+        output = self.lm_server.custom_module_fns(module_function_keys=['value'], contexts=prompt, 
+                                                  images=[info['image_url'] for info in self.infos] if "image_url" in self.infos[0].keys() else None)
         next_value = torch.stack([_o["value"] for _o in output]).squeeze()
 
         for i in reversed(range(self.num_frames_per_proc)):
@@ -235,6 +239,14 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         exps.subgoal = np.array([self.subgoalss[i][j]
                                  for j in range(self.num_procs)
                                  for i in range(self.num_frames_per_proc)])
+        
+        if self.imagess[0] is not None:
+            exps.image = np.array([self.imagess[i][j]
+                                    for j in range(self.num_procs)
+                                    for i in range(self.num_frames_per_proc)])
+        else:
+            exps.image = np.array([None for _ in range(self.num_procs)
+                                    for _ in range(self.num_frames_per_proc)])
         # In commments below T is self.num_frames_per_proc, P is self.num_procs,
         # D is the dimensionality
 
