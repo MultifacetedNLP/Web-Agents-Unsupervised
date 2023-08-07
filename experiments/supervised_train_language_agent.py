@@ -34,14 +34,8 @@ from accelerate.utils import set_seed
 from huggingface_hub import Repository
 from transformers import (
     AdamW,
-    AutoConfig,
-    AutoModelForSequenceClassification,
     AutoTokenizer,
-    BertModel,
-    BertConfig,
-    DataCollatorWithPadding,
-    PretrainedConfig,
-    PreTrainedModel,
+    AutoModelForSeq2SeqLM,
     SchedulerType,
     default_data_collator,
     get_scheduler,
@@ -75,15 +69,12 @@ task_to_keys = {
 }
 
 tokenizer = AutoTokenizer.from_pretrained(
-    'bert-base-uncased', truncation_side='left')
-print(len(tokenizer))
-tokenizer.add_tokens(['[button]', '[button_]', '[clicked button]',
-                     '[clicked button_]'], special_tokens=True)
+    'google/flan-t5-base', truncation_side='left') # TODO: change the flan-t5-base to an argument
 print(len(tokenizer))
 
-PATH = "./data/il_trajs_finalized_images.jsonl"
-MEM_PATH = "./data/il_trajs_mem_finalized_images.jsonl"
-HUMAN_GOAL_PATH = './data/human_goals.json'
+PATH = "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl" # TODO: change these to arguments
+# MEM_PATH = "./data/il_trajs_mem_finalized_images.jsonl" # TODO: change these to arguments
+HUMAN_GOAL_PATH = '/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json' # TODO: change these to arguments
 
 
 def process(s):
@@ -102,7 +93,8 @@ def process_goal(state):
 
 
 def get_data(split, mem=False, filter_search=True):
-    path = MEM_PATH if mem else PATH
+    # path = MEM_PATH if mem else PATH
+    path = PATH
     print('Loading data from {}'.format(path))
     with open(path, 'r') as json_file:
         json_list = list(json_file)
@@ -130,7 +122,7 @@ def get_data(split, mem=False, filter_search=True):
 
     bad = cnt = 0
     state_list, action_list, idx_list, size_list = [], [], [], []
-    image_list = []
+    # image_list = []
     num_trajs = 0
     for json_str in json_list:
         result = json.loads(json_str)
@@ -140,14 +132,14 @@ def get_data(split, mem=False, filter_search=True):
         if goal_idx not in goal_range:
             continue
         num_trajs += 1
-        if 'images' not in result:
-            result['images'] = [0] * len(result['states'])
-        for state, valid_acts, idx, image in zip(result['states'], result['available_actions'], result['action_idxs'], result['images']):
+        # if 'images' not in result:
+        #     result['images'] = [0] * len(result['states'])
+        for state, valid_acts, idx in zip(result['states'], result['available_actions'], result['action_idxs']): #  result['images']
             cnt += 1
             if filter_search and idx == -1:
                 continue
             state_list.append(state)
-            image_list.append([0.] * 512 if image == 0 else image)
+            # image_list.append([0.] * 512 if image == 0 else image)
             if len(valid_acts) > 20:  # do some action space reduction...
                 bad += 1
                 new_idxs = list(range(6)) + \
@@ -160,12 +152,11 @@ def get_data(split, mem=False, filter_search=True):
                 # print(valid_acts)
             action_list.extend(valid_acts)
             idx_list.append(idx)
-            size_list.append(len(valid_acts))
     print('num of {} trajs: {}'.format(split, num_trajs))
     print('total transitions and bad transitions: {} {}'.format(cnt, bad))
     state_list, action_list = list(
         map(process, state_list)), list(map(process, action_list))
-    return state_list, action_list, idx_list, size_list, image_list
+    return state_list, action_list, idx_list #, image_list
 
 
 def get_dataset(split, mem=False):
@@ -390,10 +381,11 @@ def main():
     # In distributed training, the .from_pretrained methods guarantee that only one local process can concurrently
     # download model & vocab.
     # tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
-    config = BertConfigForWebshop(
-        image=args.image, pretrain_bert=args.pretrain)
-    model = BertModelForWebshop(config)
+    # config = BertConfigForWebshop(
+    #    image=args.image, pretrain_bert=args.pretrain)
+    # model = BertModelForWebshop(config)
     # model.bert.resize_token_embeddings(len(tokenizer))
+    model = AutoModelForSeq2SeqLM.from_pretrained('google/flan-t5-base') # TODO: change the flan-t5-base to an argument
 
     train_dataset = get_dataset("train", mem=args.mem)
     eval_dataset = get_dataset("eval", mem=args.mem)
