@@ -12,6 +12,7 @@ plots/
 outputs/
 /envs/
 web_agent_site/data
+experiments/data/
 web_agent_site/search_engine/indexes
 web_agent_site/search_engine/indexes_1k
 web_agent_site/search_engine/indexes_100
