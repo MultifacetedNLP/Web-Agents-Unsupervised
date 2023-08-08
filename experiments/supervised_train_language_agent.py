@@ -103,8 +103,8 @@ def generate_prompt_webshop_v2(goal, subgoals, deque_obs, deque_actions):
     return goal + "," + obs
 
 
-def remove_action_names(actions):
-    return [action[7:-1] if action.startswith('search[') else action[6:-1] for action in actions]
+def remove_action_name(action):
+    return action[7:-1] if action.startswith('search[') else action[6:-1]
 
 def extract_instruction(state):
     instruction_start_id = state.find('Instruction:')
@@ -178,11 +178,11 @@ def get_data(split, mem=False, filter_search=False):
                 valid_acts = [chosen_act]
             
             context_list.append(generate_prompt_webshop_v2(instruction, valid_acts, observation_list, chosen_action_list))
-            
             chosen_action_list.append(chosen_act)
             
-        
-        final_chosen_action_list.extend(result['actions_translate'])
+            chosen_act = remove_action_name(chosen_act)
+            final_chosen_action_list.append(chosen_act)
+
         
     print('num of {} trajs: {}'.format(split, num_trajs))
     print('total transitions: {}'.format(cnt))
