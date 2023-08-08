@@ -76,6 +76,7 @@ print(len(tokenizer))
 PATH = "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl" # TODO: change these to arguments
 # MEM_PATH = "./data/il_trajs_mem_finalized_images.jsonl" # TODO: change these to arguments
 HUMAN_GOAL_PATH = '/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json' # TODO: change these to arguments
+IGNORE_INDEX = -100
 
 
 def process(s):
@@ -194,30 +195,30 @@ def get_dataset(split, mem=False):
         input_text, padding='max_length', max_length=512, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
     output_encodings = tokenizer(
         output_text, padding='max_length', max_length=128, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
+    
+    labels = output_encodings['input_ids']
+    labels[labels == tokenizer.pad_token_id] = IGNORE_INDEX # replace padding token id's of the labels by -100 so it's ignored by the loss
+    
     dataset = {
         'input_ids': input_encodings['input_ids'],
         'attention_mask': input_encodings['attention_mask'],
-        'decoder_input_ids': output_encodings['input_ids'],
-        'decoder_attention_mask': output_encodings['attention_mask'],
+        'labels': labels,
     }
     return Dataset.from_dict(dataset)
 
 
 def data_collator(batch):
-    input_ids, attention_mask, decoder_input_ids, decoder_attention_mask  = [], [], [], []
+    input_ids, attention_mask, labels  = [], [], []
     for sample in batch:
         input_ids.append(sample['input_ids'])
         attention_mask.append(sample['attention_mask'])
-        decoder_input_ids.append(sample['decoder_input_ids'])
-        decoder_attention_mask.append(sample['decoder_attention_mask'])
-        # images.append(sample['images'])
+        labels.append(sample['labels'])
     max_encoder_len = max(sum(x) for x in attention_mask)
-    max_decoder_len = max(sum(x) for x in decoder_attention_mask)
+    max_decoder_len = max(sum([0 if item == IGNORE_INDEX else 1 for item in x]) for x in labels)
     return {
         'input_ids': torch.tensor(input_ids)[:, :max_encoder_len],
         'attention_mask': torch.tensor(attention_mask)[:, :max_encoder_len],
-        'decoder_input_ids': torch.tensor(decoder_input_ids)[:, :max_decoder_len],
-        'decoder_attention_mask': torch.tensor(decoder_attention_mask)[:, :max_decoder_len],
+        'labels': torch.tensor(labels)[:, :max_decoder_len],
     }
 
 
@@ -479,7 +480,7 @@ def main():
         accelerator.init_trackers("glue_no_trainer", experiment_config)
 
     # Get the metric function
-    metric = load_metric("accuracy")
+    # metric = load_metric("bleu")
 
     # Train!
     total_batch_size = args.per_device_train_batch_size * \
@@ -544,11 +545,11 @@ def main():
             loss = loss / args.gradient_accumulation_steps
             accelerator.backward(loss)
 
-            metric.add_batch(
-                predictions=torch.stack([logit.argmax(dim=0)
-                                        for logit in outputs.logits]),
-                references=batch["labels"]
-            )
+            # metric.add_batch(
+            #    predictions=torch.stack([logit.argmax(dim=1)
+            #                            for logit in outputs.logits]).squeeze(dim=0),
+            #    references=batch["labels"].squeeze(dim=1).squeeze(dim=0)
+            # )
 
             if step % args.gradient_accumulation_steps == 0 or step == len(train_dataloader) - 1:
                 optimizer.step()
@@ -558,10 +559,10 @@ def main():
                 completed_steps += 1
 
                 if args.with_tracking and args.logging_steps > 0 and completed_steps % args.logging_steps == 0:
-                    train_metric = metric.compute()
+                    # train_metric = metric.compute()
                     wandb.log(
                         {
-                            "train_accuracy": train_metric,
+                            # "train_accuracy": train_metric,
                             "train_loss": total_loss / total_step,
                             "train_step": completed_steps,
                         },
@@ -581,8 +582,8 @@ def main():
         model.eval()
         samples_seen = 0
         total_loss = total_step = 0
-        if len(metric) > 0:
-            metric.compute()
+        # if len(metric) > 0:
+        #    metric.compute()
 
         for step, batch in enumerate(eval_dataloader):
             with torch.no_grad():
@@ -600,21 +601,21 @@ def main():
                         eval_dataloader.dataset) - samples_seen]
                 else:
                     samples_seen += references.shape[0]
-            metric.add_batch(
-                predictions=predictions,
-                references=references,
-            )
+            # metric.add_batch(
+            #    predictions=predictions,
+            #    references=references,
+            # )
 
             total_loss += outputs.loss.detach().float()
             total_step += 1
 
-        eval_metric = metric.compute()
-        logger.info(f"epoch {epoch}: {eval_metric}")
+        # eval_metric = metric.compute()
+        # logger.info(f"epoch {epoch}: {eval_metric}")
 
         if args.with_tracking:
             wandb.log(
                 {
-                    "eval_accuracy": eval_metric,
+                    # "eval_accuracy": eval_metric,
                     "eval_loss": total_loss / total_step,
                     "epoch": epoch,
                     "epoch_step": completed_steps,
@@ -632,9 +633,9 @@ def main():
 
             # accelerator.save_state(output_dir)
 
-    if args.output_dir is not None:
-        with open(os.path.join(args.output_dir, "all_results.json"), "w") as f:
-            json.dump({"eval_accuracy": eval_metric["accuracy"]}, f)
+    # if args.output_dir is not None:
+    #    with open(os.path.join(args.output_dir, "all_results.json"), "w") as f:
+    #        json.dump({"eval_accuracy": eval_metric["accuracy"]}, f)
 
 
 if __name__ == "__main__":
