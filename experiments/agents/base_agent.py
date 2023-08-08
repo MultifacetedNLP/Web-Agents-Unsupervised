@@ -80,7 +80,7 @@ class BaseAgent(ABC):
             obs += f" \n Observation {i}: {deque_obs[i]}"
             
             if i < lda:
-                obs += f"\n Action{i}: search for {deque_actions[i][7:-1]}" if deque_actions[i].startswith('search[') \
+                obs += f"\n Action {i}: search for {deque_actions[i][7:-1]}" if deque_actions[i].startswith('search[') \
                     else f"\n Action {i}: click on {deque_actions[i][6:-1]}"
             else:
                 obs += f"\n Action {i}: search for " if subgoals[0].startswith('search[') \
