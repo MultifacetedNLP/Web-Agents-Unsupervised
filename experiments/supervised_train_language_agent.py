@@ -204,12 +204,12 @@ def get_dataset(split, mem=False):
 
 
 def data_collator(batch):
-    input_ids, attention_mask, decoder_input_ids, decoder_attention_mask  = [], [], [], [] # sizes, labels, images
+    input_ids, attention_mask, decoder_input_ids, decoder_attention_mask  = [], [], [], []
     for sample in batch:
         input_ids.append(sample['input_ids'])
         attention_mask.append(sample['attention_mask'])
-        decoder_input_ids.extend(sample['decoder_input_ids'])
-        decoder_attention_mask.extend(sample['decoder_attention_mask'])
+        decoder_input_ids.append(sample['decoder_input_ids'])
+        decoder_attention_mask.append(sample['decoder_attention_mask'])
         # images.append(sample['images'])
     max_encoder_len = max(sum(x) for x in attention_mask)
     max_decoder_len = max(sum(x) for x in decoder_attention_mask)
