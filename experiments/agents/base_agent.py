@@ -87,7 +87,7 @@ class BaseAgent(ABC):
                     else f"\n Action {i}: click on "
     
                 
-        return goal + ", " + obs
+        return goal + "," + obs
 
 
     def generate_prompt_french(self, goal, subgoals, deque_obs, deque_actions):
