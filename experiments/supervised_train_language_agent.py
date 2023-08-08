@@ -41,6 +41,7 @@ from transformers import (
     get_scheduler,
 )
 from transformers.utils.versions import require_version
+from collections import deque
 
 
 from datasets import Dataset
@@ -82,6 +83,36 @@ def process(s):
     s = s.replace('[sep]', '[SEP]')
     return s
 
+def generate_prompt_webshop_v2(goal, subgoals, deque_obs, deque_actions):
+    ldo = len(deque_obs)
+    lda = len(deque_actions)
+
+    obs = ""
+    for i in range(ldo):
+        obs += f" \n Observation {i}: {deque_obs[i]}"
+            
+        if i < lda:
+            obs += f"\n Action {i}: search for {deque_actions[i][7:-1]}" if deque_actions[i].startswith('search[') \
+                else f"\n Action {i}: click on {deque_actions[i][6:-1]}"
+        else:
+            obs += f"\n Action {i}: search for " if subgoals[0].startswith('search[') \
+                else f"\n Action {i}: click on "
+    
+                
+    return goal + "," + obs
+
+
+def remove_action_names(actions):
+    return [action[7:-1] if action.startswith('search[') else action[6:-1] for action in actions]
+
+def extract_instruction(state):
+    instruction_start_id = state.find('Instruction:')
+    instruction_end_id = state.find('\n[button]')
+    return state[instruction_start_id:instruction_end_id].strip()
+
+def remove_instruction(state):
+    instruction_end_id = state.find('\n[button]')
+    return state[instruction_end_id:].strip()
 
 def process_goal(state):
     state = state.lower().replace('"', '').replace("'", "")
@@ -92,7 +123,7 @@ def process_goal(state):
     return state
 
 
-def get_data(split, mem=False, filter_search=True):
+def get_data(split, mem=False, filter_search=False):
     # path = MEM_PATH if mem else PATH
     path = PATH
     print('Loading data from {}'.format(path))
@@ -120,84 +151,73 @@ def get_data(split, mem=False, filter_search=True):
     elif split == 'test':
         goal_range = range(0, 500)
 
-    bad = cnt = 0
-    state_list, action_list, idx_list, size_list = [], [], [], []
-    # image_list = []
+    cnt = 0
+    observation_list = deque([], maxlen=2) # TODO: change the 2 to argument
+    chosen_action_list = deque([], maxlen=1) # TODO: change the 1 to argument
+    context_list, final_chosen_action_list = [], []
     num_trajs = 0
     for json_str in json_list:
         result = json.loads(json_str)
+        instruction = extract_instruction(result['states'][0])
         s = process_goal(result['states'][0])
         assert s in human_goals, s
         goal_idx = human_goals.index(s)
         if goal_idx not in goal_range:
             continue
         num_trajs += 1
-        # if 'images' not in result:
-        #     result['images'] = [0] * len(result['states'])
-        for state, valid_acts, idx in zip(result['states'], result['available_actions'], result['action_idxs']): #  result['images']
+        observation_list.clear()
+        chosen_action_list.clear()
+        for state, valid_acts, chosen_act in zip(result['states'], result['available_actions'], result['actions_translate']): #  result['images']
             cnt += 1
-            if filter_search and idx == -1:
+            if filter_search and chosen_act.startswith('search['):
                 continue
-            state_list.append(state)
-            # image_list.append([0.] * 512 if image == 0 else image)
-            if len(valid_acts) > 20:  # do some action space reduction...
-                bad += 1
-                new_idxs = list(range(6)) + \
-                    random.sample(range(6, len(valid_acts)), 10)
-                if idx not in new_idxs:
-                    new_idxs += [idx]
-                new_idxs = sorted(new_idxs)
-                valid_acts = [valid_acts[i] for i in new_idxs]
-                idx = new_idxs.index(idx)
-                # print(valid_acts)
-            action_list.extend(valid_acts)
-            idx_list.append(idx)
+            
+            observation_list.append(remove_instruction(state))
+            if len(valid_acts) == 0:
+                valid_acts = [chosen_act]
+            
+            context_list.append(generate_prompt_webshop_v2(instruction, valid_acts, observation_list, chosen_action_list))
+            
+            chosen_action_list.append(chosen_act)
+            
+        
+        final_chosen_action_list.extend(result['actions_translate'])
+        
     print('num of {} trajs: {}'.format(split, num_trajs))
-    print('total transitions and bad transitions: {} {}'.format(cnt, bad))
-    state_list, action_list = list(
-        map(process, state_list)), list(map(process, action_list))
-    return state_list, action_list, idx_list #, image_list
+    print('total transitions: {}'.format(cnt))
+    return context_list, final_chosen_action_list
 
 
 def get_dataset(split, mem=False):
-    states, actions, idxs, sizes, images = get_data(split, mem)
-    state_encodings = tokenizer(
-        states, padding='max_length', max_length=512, truncation=True, return_tensors='pt')
-    action_encodings = tokenizer(
-        actions, padding='max_length', max_length=128, truncation=True, return_tensors='pt')
+    contexts, candidates = get_data(split, mem)
+    context_encodings = tokenizer(
+        contexts, padding='max_length', max_length=512, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
+    candidate_encodings = tokenizer(
+        candidates, padding='max_length', max_length=128, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
     dataset = {
-        'state_input_ids': state_encodings['input_ids'],
-        'state_attention_mask': state_encodings['attention_mask'],
-        'action_input_ids': action_encodings['input_ids'].split(sizes),
-        'action_attention_mask': action_encodings['attention_mask'].split(sizes),
-        'sizes': sizes,
-        'images': torch.tensor(images),
-        'labels': idxs,
+        'input_ids': context_encodings['input_ids'],
+        'attention_mask': context_encodings['attention_mask'],
+        'decoder_input_ids': candidate_encodings['input_ids'],
+        'decoder_attention_mask': candidate_encodings['attention_mask'],
     }
     return Dataset.from_dict(dataset)
 
 
 def data_collator(batch):
-    state_input_ids, state_attention_mask, action_input_ids, action_attention_mask, sizes, labels, images = [
-    ], [], [], [], [], [], []
+    input_ids, attention_mask, decoder_input_ids, decoder_attention_mask  = [], [], [], [] # sizes, labels, images
     for sample in batch:
-        state_input_ids.append(sample['state_input_ids'])
-        state_attention_mask.append(sample['state_attention_mask'])
-        action_input_ids.extend(sample['action_input_ids'])
-        action_attention_mask.extend(sample['action_attention_mask'])
-        sizes.append(sample['sizes'])
-        labels.append(sample['labels'])
-        images.append(sample['images'])
-    max_state_len = max(sum(x) for x in state_attention_mask)
-    max_action_len = max(sum(x) for x in action_attention_mask)
+        input_ids.append(sample['input_ids'])
+        attention_mask.append(sample['attention_mask'])
+        decoder_input_ids.extend(sample['decoder_input_ids'])
+        decoder_attention_mask.extend(sample['decoder_attention_mask'])
+        # images.append(sample['images'])
+    max_encoder_len = max(sum(x) for x in attention_mask)
+    max_decoder_len = max(sum(x) for x in decoder_attention_mask)
     return {
-        'state_input_ids': torch.tensor(state_input_ids)[:, :max_state_len],
-        'state_attention_mask': torch.tensor(state_attention_mask)[:, :max_state_len],
-        'action_input_ids': torch.tensor(action_input_ids)[:, :max_action_len],
-        'action_attention_mask': torch.tensor(action_attention_mask)[:, :max_action_len],
-        'sizes': torch.tensor(sizes),
-        'images': torch.tensor(images),
-        'labels': torch.tensor(labels),
+        'input_ids': torch.tensor(input_ids)[:, :max_encoder_len],
+        'attention_mask': torch.tensor(attention_mask)[:, :max_encoder_len],
+        'decoder_input_ids': torch.tensor(decoder_input_ids)[:, :max_decoder_len],
+        'decoder_attention_mask': torch.tensor(decoder_attention_mask)[:, :max_decoder_len],
     }
 
 
