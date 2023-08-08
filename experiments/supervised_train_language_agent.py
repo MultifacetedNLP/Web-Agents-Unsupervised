@@ -189,16 +189,16 @@ def get_data(split, mem=False, filter_search=False):
 
 
 def get_dataset(split, mem=False):
-    contexts, candidates = get_data(split, mem)
-    context_encodings = tokenizer(
-        contexts, padding='max_length', max_length=512, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
-    candidate_encodings = tokenizer(
-        candidates, padding='max_length', max_length=128, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
+    input_text, output_text = get_data(split, mem)
+    input_encodings = tokenizer(
+        input_text, padding='max_length', max_length=512, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
+    output_encodings = tokenizer(
+        output_text, padding='max_length', max_length=128, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
     dataset = {
-        'input_ids': context_encodings['input_ids'],
-        'attention_mask': context_encodings['attention_mask'],
-        'decoder_input_ids': candidate_encodings['input_ids'],
-        'decoder_attention_mask': candidate_encodings['attention_mask'],
+        'input_ids': input_encodings['input_ids'],
+        'attention_mask': input_encodings['attention_mask'],
+        'decoder_input_ids': output_encodings['input_ids'],
+        'decoder_attention_mask': output_encodings['attention_mask'],
     }
     return Dataset.from_dict(dataset)
 
