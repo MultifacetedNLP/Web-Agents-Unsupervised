@@ -196,29 +196,33 @@ def get_dataset(split, mem=False):
     output_encodings = tokenizer(
         output_text, padding='max_length', max_length=128, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
     
-    labels = output_encodings['input_ids']
+    decoder_input_ids = output_encodings['input_ids']
+    labels = output_encodings['input_ids'].clone()
     labels[labels == tokenizer.pad_token_id] = IGNORE_INDEX # replace padding token id's of the labels by -100 so it's ignored by the loss
     
     dataset = {
         'input_ids': input_encodings['input_ids'],
         'attention_mask': input_encodings['attention_mask'],
         'labels': labels,
+        'decoder_input_ids': decoder_input_ids
     }
     return Dataset.from_dict(dataset)
 
 
 def data_collator(batch):
-    input_ids, attention_mask, labels  = [], [], []
+    input_ids, attention_mask, labels, decoder_input_ids  = [], [], [], []
     for sample in batch:
         input_ids.append(sample['input_ids'])
         attention_mask.append(sample['attention_mask'])
         labels.append(sample['labels'])
+        decoder_input_ids.append(sample['decoder_input_ids'])
     max_encoder_len = max(sum(x) for x in attention_mask)
     max_decoder_len = max(sum([0 if item == IGNORE_INDEX else 1 for item in x]) for x in labels)
     return {
         'input_ids': torch.tensor(input_ids)[:, :max_encoder_len],
         'attention_mask': torch.tensor(attention_mask)[:, :max_encoder_len],
         'labels': torch.tensor(labels)[:, :max_decoder_len],
+        'decoder_input_ids': torch.tensor(decoder_input_ids)[:, :max_decoder_len]
     }
 
 
@@ -294,7 +298,7 @@ def parse_args():
     parser.add_argument(
         "--gradient_accumulation_steps",
         type=int,
-        default=32,
+        default=16,
         help="Number of updates steps to accumulate before performing a backward/update pass.",
     )
     parser.add_argument(
@@ -481,6 +485,7 @@ def main():
 
     # Get the metric function
     # metric = load_metric("bleu")
+    scores = []
 
     # Train!
     total_batch_size = args.per_device_train_batch_size * \
@@ -536,7 +541,8 @@ def main():
                 if resume_step is not None and step < resume_step:
                     completed_steps += 1
                     continue
-            outputs = model(**batch)
+                
+            outputs = model(input_ids = batch['input_ids'], attention_mask = batch['attention_mask'], labels = batch['labels'])
             loss = outputs.loss
             # We keep track of the loss at each epoch
             if args.with_tracking:
@@ -550,6 +556,18 @@ def main():
             #                            for logit in outputs.logits]).squeeze(dim=0),
             #    references=batch["labels"].squeeze(dim=1).squeeze(dim=0)
             # )
+            
+            # calculate the score
+            with torch.no_grad():
+                tokens_logprobs = torch.gather(outputs["logits"], 2, batch["decoder_input_ids"][:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
+                mask = torch.ones(tokens_logprobs.shape, dtype=torch.bool, device=tokens_logprobs.device)
+                for i, _output in enumerate(batch["decoder_input_ids"]):
+                    for j, _token in enumerate(_output):
+                        if _token == 0:
+                            mask[i, j] = False
+                
+                score = (tokens_logprobs * mask).sum(-1) / mask.sum(-1)
+                scores.extend(score.cpu().tolist())
 
             if step % args.gradient_accumulation_steps == 0 or step == len(train_dataloader) - 1:
                 optimizer.step()
@@ -563,6 +581,7 @@ def main():
                     wandb.log(
                         {
                             # "train_accuracy": train_metric,
+                            "train_score": sum(scores) / len(scores),
                             "train_loss": total_loss / total_step,
                             "train_step": completed_steps,
                         },
@@ -582,25 +601,34 @@ def main():
         model.eval()
         samples_seen = 0
         total_loss = total_step = 0
+        scores = []
         # if len(metric) > 0:
         #    metric.compute()
 
         for step, batch in enumerate(eval_dataloader):
             with torch.no_grad():
                 outputs = model(**batch)
-            predictions = torch.stack([logit.argmax(dim=0)
-                                      for logit in outputs.logits])
-            predictions, references = accelerator.gather(
-                (predictions, batch["labels"]))
+                
+                
+            tokens_logprobs = torch.gather(outputs["logits"], 2, batch["decoder_input_ids"][:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
+            mask = torch.ones(tokens_logprobs.shape, dtype=torch.bool, device=tokens_logprobs.device)
+            for i, _output in enumerate(batch["decoder_input_ids"]):
+                for j, _token in enumerate(_output):
+                    if _token == 0:
+                        mask[i, j] = False
+                
+            score = (tokens_logprobs * mask).sum(-1) / mask.sum(-1)
+            score = accelerator.gather(score)
+            
             # If we are in a multiprocess environment, the last batch has duplicates
             if accelerator.num_processes > 1:
                 if step == len(eval_dataloader):
-                    predictions = predictions[: len(
-                        eval_dataloader.dataset) - samples_seen]
-                    references = references[: len(
-                        eval_dataloader.dataset) - samples_seen]
+                    score = score[: len(eval_dataloader.dataset) - samples_seen]
                 else:
-                    samples_seen += references.shape[0]
+                    samples_seen += score.shape[0]
+                    
+            scores.extend(score.cpu().tolist())
+                
             # metric.add_batch(
             #    predictions=predictions,
             #    references=references,
@@ -616,6 +644,7 @@ def main():
             wandb.log(
                 {
                     # "eval_accuracy": eval_metric,
+                    "eval_score": sum(scores) / len(scores),
                     "eval_loss": total_loss / total_step,
                     "epoch": epoch,
                     "epoch_step": completed_steps,
@@ -633,9 +662,9 @@ def main():
 
             # accelerator.save_state(output_dir)
 
-    # if args.output_dir is not None:
-    #    with open(os.path.join(args.output_dir, "all_results.json"), "w") as f:
-    #        json.dump({"eval_accuracy": eval_metric["accuracy"]}, f)
+    if args.output_dir is not None:
+        with open(os.path.join(args.output_dir, "all_results.json"), "w") as f:
+            json.dump({"eval_score": scores}, f)
 
 
 if __name__ == "__main__":
