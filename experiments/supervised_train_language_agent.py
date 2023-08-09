@@ -599,7 +599,7 @@ def main():
 
         for step, batch in enumerate(eval_dataloader):
             with torch.no_grad():
-                outputs = model(**batch)
+                outputs = model(input_ids = batch['input_ids'], attention_mask = batch['attention_mask'], labels = batch['labels'])
                 
                 
             tokens_logprobs = torch.gather(outputs["logits"], 2, batch["decoder_input_ids"][:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
