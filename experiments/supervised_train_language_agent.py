@@ -312,7 +312,7 @@ def parse_args():
     parser.add_argument(
         "--num_warmup_steps", type=int, default=0, help="Number of steps for the warmup in the lr scheduler."
     )
-    parser.add_argument("--output_dir", type=str, default="./ckpts/web_click",
+    parser.add_argument("--output_dir", type=str, default="./ckpts/web_click_t5",
                         help="Where to store the final model.")
     parser.add_argument("--seed", type=int, default=None,
                         help="A seed for reproducible training.")
@@ -484,7 +484,6 @@ def main():
         accelerator.init_trackers("glue_no_trainer", experiment_config)
 
     # Get the metric function
-    # metric = load_metric("bleu")
     scores = []
 
     # Train!
@@ -534,6 +533,7 @@ def main():
         model.train()
         if args.with_tracking:
             total_loss = total_step = 0
+            scores = []
 
         for step, batch in enumerate(train_dataloader):
             # We need to skip steps until we reach the resumed step
@@ -551,11 +551,6 @@ def main():
             loss = loss / args.gradient_accumulation_steps
             accelerator.backward(loss)
 
-            # metric.add_batch(
-            #    predictions=torch.stack([logit.argmax(dim=1)
-            #                            for logit in outputs.logits]).squeeze(dim=0),
-            #    references=batch["labels"].squeeze(dim=1).squeeze(dim=0)
-            # )
             
             # calculate the score
             with torch.no_grad():
@@ -577,16 +572,15 @@ def main():
                 completed_steps += 1
 
                 if args.with_tracking and args.logging_steps > 0 and completed_steps % args.logging_steps == 0:
-                    # train_metric = metric.compute()
                     wandb.log(
                         {
-                            # "train_accuracy": train_metric,
                             "train_score": sum(scores) / len(scores),
                             "train_loss": total_loss / total_step,
                             "train_step": completed_steps,
                         },
                     )
                     total_loss = total_step = 0
+                    scores = []
 
             if isinstance(checkpointing_steps, int):
                 if completed_steps % checkpointing_steps == 0:
@@ -602,8 +596,6 @@ def main():
         samples_seen = 0
         total_loss = total_step = 0
         scores = []
-        # if len(metric) > 0:
-        #    metric.compute()
 
         for step, batch in enumerate(eval_dataloader):
             with torch.no_grad():
@@ -628,23 +620,17 @@ def main():
                     samples_seen += score.shape[0]
                     
             scores.extend(score.cpu().tolist())
-                
-            # metric.add_batch(
-            #    predictions=predictions,
-            #    references=references,
-            # )
 
             total_loss += outputs.loss.detach().float()
             total_step += 1
 
-        # eval_metric = metric.compute()
-        # logger.info(f"epoch {epoch}: {eval_metric}")
+        score = sum(scores) / len(scores)
+        logger.info(f"epoch {epoch}: {score}")
 
         if args.with_tracking:
             wandb.log(
                 {
-                    # "eval_accuracy": eval_metric,
-                    "eval_score": sum(scores) / len(scores),
+                    "eval_score": score,
                     "eval_loss": total_loss / total_step,
                     "epoch": epoch,
                     "epoch_step": completed_steps,
