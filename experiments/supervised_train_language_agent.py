@@ -50,8 +50,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import wandb
 
-# from models.bert import BertModelForWebshop, BertConfigForWebshop
-
 logger = get_logger(__name__)
 
 require_version("datasets>=1.8.0",
@@ -258,7 +256,7 @@ def parse_args():
     )
     parser.add_argument(
         "--model_name_or_path",
-        default="bert-base-uncased",
+        default="google/flan-t5-base",
         type=str,
         help="Path to pretrained model or model identifier from huggingface.co/models.",
     )
@@ -346,7 +344,7 @@ def parse_args():
     parser.add_argument("--image", type=int, default=1,
                         help="State with image")
     parser.add_argument("--pretrain", type=int, default=1,
-                        help="Pretrained BERT or not")
+                        help="Pretrained flan-t5 or not")
 
     parser.add_argument("--logging_steps", type=int,
                         default=10, help="Logging in training")
@@ -382,7 +380,7 @@ def main():
     accelerator = Accelerator()
     # Make one log on every process with the configuration for debugging.
 
-    wandb.init(project="bert_il", config=args, name=args.output_dir)
+    wandb.init(project="T5_SL", config=args, name=args.output_dir)
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
