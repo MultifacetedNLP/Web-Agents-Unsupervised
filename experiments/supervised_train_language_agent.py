@@ -40,6 +40,8 @@ from transformers import (
     default_data_collator,
     get_scheduler,
 )
+from transformers.optimization import Adafactor, AdafactorSchedule
+
 from transformers.utils.versions import require_version
 from collections import deque
 
@@ -310,7 +312,7 @@ def parse_args():
     parser.add_argument(
         "--num_warmup_steps", type=int, default=0, help="Number of steps for the warmup in the lr scheduler."
     )
-    parser.add_argument("--output_dir", type=str, default="./ckpts/web_click_t5",
+    parser.add_argument("--output_dir", type=str, default="./ckpts_2/web_click_t5",
                         help="Where to store the final model.")
     parser.add_argument("--seed", type=int, default=None,
                         help="A seed for reproducible training.")
@@ -426,19 +428,8 @@ def main():
         eval_dataset, collate_fn=data_collator, batch_size=args.per_device_eval_batch_size)
 
     # Optimizer
-    # Split weights in two groups, one with weight decay and the other not.
-    no_decay = ["bias", "LayerNorm.weight"]
-    optimizer_grouped_parameters = [
-        {
-            "params": [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)],
-            "weight_decay": args.weight_decay,
-        },
-        {
-            "params": [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)],
-            "weight_decay": 0.0,
-        },
-    ]
-    optimizer = AdamW(optimizer_grouped_parameters, lr=args.learning_rate)
+    optimizer = Adafactor(model.parameters(), scale_parameter=True, relative_step=True, warmup_init=True, lr=None)
+    
 
     # Scheduler and math around the number of training steps.
     num_update_steps_per_epoch = math.ceil(
@@ -449,12 +440,7 @@ def main():
         args.num_train_epochs = math.ceil(
             args.max_train_steps / num_update_steps_per_epoch)
 
-    lr_scheduler = get_scheduler(
-        name=args.lr_scheduler_type,
-        optimizer=optimizer,
-        num_warmup_steps=args.num_warmup_steps,
-        num_training_steps=args.max_train_steps,
-    )
+    lr_scheduler = AdafactorSchedule(optimizer)
 
     # Prepare everything with our `accelerator`.
     model, optimizer, train_dataloader, eval_dataloader, lr_scheduler = accelerator.prepare(
