@@ -52,6 +52,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import wandb
 
+import numpy as np
+
 logger = get_logger(__name__)
 
 require_version("datasets>=1.8.0",
@@ -70,7 +72,7 @@ task_to_keys = {
 }
 
 tokenizer = AutoTokenizer.from_pretrained(
-    'google/flan-t5-base', truncation_side='left') # TODO: change the flan-t5-base to an argument
+    'google/flan-t5-base') # TODO: change the flan-t5-base to an argument #  truncation_side='left'
 print(len(tokenizer))
 
 PATH = "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl" # TODO: change these to arguments
@@ -153,8 +155,8 @@ def get_data(split, mem=False, filter_search=False):
         goal_range = range(0, 500)
 
     cnt = 0
-    observation_list = deque([], maxlen=2) # TODO: change the 2 to argument
-    chosen_action_list = deque([], maxlen=1) # TODO: change the 1 to argument
+    observation_list = deque([], maxlen=1) # TODO: change the 1 to argument
+    chosen_action_list = deque([], maxlen=0) # TODO: change the 0 to argument
     context_list, final_chosen_action_list = [], []
     num_trajs = 0
     for json_str in json_list:
@@ -188,11 +190,122 @@ def get_data(split, mem=False, filter_search=False):
     print('total transitions: {}'.format(cnt))
     return context_list, final_chosen_action_list
 
+def truncate_sequence(sequence, truncate_size, save_token):
+            
+    if truncate_size > save_token:
+        first_ids = sequence["input_ids"][:save_token]
+        last_ids = sequence["input_ids"][-truncate_size+save_token:]
+        ids = first_ids + last_ids
+    else:
+        ids = sequence["input_ids"][-truncate_size:]
+        
+    mask = sequence["attention_mask"][-truncate_size:]
+        
+    if truncate_size == 0:
+        ids = []
+        mask = []
+
+    sequence["input_ids"] = ids
+    sequence["attention_mask"] = mask
+    return sequence
+
+def pad_sequence(sequence, size):
+    sequence_size = len(sequence["input_ids"])
+    ids = sequence["input_ids"] + [
+        0 # TODO: create a constant value for pad token
+        for _ in range(size - sequence_size)]
+    mask = sequence["attention_mask"] + [0 for _ in range(size - sequence_size)]
+    sequence["input_ids"] = ids
+    sequence["attention_mask"] = mask
+    return sequence
+    
+def truncate_obs_sequences(sequences, truncate_size):
+
+    sequence = sequences[0] # instruction sequence
+    instruction_len = len(sequence["input_ids"])
+    num_observations = len(sequences) - 1
+        
+    allowed_sizes = {}
+    observation_size = truncate_size - instruction_len
+        
+    obs_lengths = [(index, len(seq["input_ids"])) for index, seq in enumerate(sequences[1:])]
+    obs_lengths.sort(key=lambda x:x[1])
+    for index, obs_len in enumerate(obs_lengths):
+        truncate_size_per_ob = observation_size // (num_observations - index)
+        if obs_len[1] <= truncate_size_per_ob:
+            allowed_sizes[obs_len[0]] = obs_len[1]
+            observation_size -= obs_len[1]
+        else:
+            allowed_sizes[obs_len[0]] = truncate_size_per_ob
+            observation_size -= truncate_size_per_ob
+        
+    for ob_index, seq in enumerate(sequences[1:]):
+            
+        if len(seq["input_ids"]) > allowed_sizes[ob_index]:
+            truncated_sequence = truncate_sequence(seq, allowed_sizes[ob_index], save_token=4) # save_token=4 saves the observation
+
+        else:
+            truncated_sequence = seq
+                
+        sequence["input_ids"].extend(truncated_sequence["input_ids"])
+        sequence["attention_mask"].extend(truncated_sequence["attention_mask"])
+            
+            
+    return sequence
+    
+def split_sequence(sequence, observation_ids = [16018, 257, 10]):
+    sequence_input_ids = np.array(sequence["input_ids"])
+    sequence_attention_mask = np.array(sequence["attention_mask"])
+        
+    indices = np.where((sequence_input_ids[:-4] == observation_ids[0])
+                           & (sequence_input_ids[1:-3] == observation_ids[1]) 
+                           & (sequence_input_ids[4:] == observation_ids[2]))[0]
+        
+    sub_sequence_input_ids = np.split(sequence_input_ids, indices)
+    sub_sequence_attention_mask = np.split(sequence_attention_mask, indices)
+        
+    sequences = []
+    for sub_input_ids, sub_attention_mask in zip(sub_sequence_input_ids, sub_sequence_attention_mask):
+        sequences.append({"input_ids": sub_input_ids.tolist(), "attention_mask":sub_attention_mask.tolist()})
+        
+    return sequences
+
+def pad_or_truncate_sequence(sequence, size, max_size, encoder=False):
+    sequence_size = len(sequence["input_ids"])
+        
+    if sequence_size > max_size:
+        if not encoder:
+            return truncate_sequence(sequence, max_size, save_token=1) # save_token=1 saves the pad token of the decoder's input
+        else:
+            sequences = split_sequence(sequence)
+            return truncate_obs_sequences(sequences, max_size)
+    else:
+        return pad_sequence(sequence, min(size, max_size))
+
 
 def get_dataset(split, mem=False):
     input_text, output_text = get_data(split, mem)
-    input_encodings = tokenizer(
-        input_text, padding='max_length', max_length=512, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
+    
+    
+    tokenized_inputs = [tokenizer(input) for input in input_text]
+    contexts_max_size = max([len(i['input_ids']) for i in tokenized_inputs])
+    
+    encoder_max_size = 512 # TODO: change the max_length to an argument
+    input_encodings = {'input_ids':[], 'attention_mask':[]}
+    for tokenized_input in tokenized_inputs:
+        result = pad_or_truncate_sequence(tokenized_input, contexts_max_size,
+                        max_size=encoder_max_size, encoder=True)
+        input_encodings['input_ids'].append(result['input_ids'])
+        input_encodings['attention_mask'].append(result['attention_mask'])
+        
+    input_encodings['input_ids'] = torch.tensor(input_encodings['input_ids'])
+    input_encodings['attention_mask'] = torch.tensor(input_encodings['attention_mask'])
+    
+    
+    # input_encodings = tokenizer(
+    #    input_text, padding='max_length', max_length=512, truncation=True, return_tensors='pt')
+    
+    tokenizer.truncation_side='left'
     output_encodings = tokenizer(
         output_text, padding='max_length', max_length=128, truncation=True, return_tensors='pt') # TODO: change the max_length to an argument
     
@@ -312,7 +425,7 @@ def parse_args():
     parser.add_argument(
         "--num_warmup_steps", type=int, default=0, help="Number of steps for the warmup in the lr scheduler."
     )
-    parser.add_argument("--output_dir", type=str, default="./ckpts_2/web_click_t5",
+    parser.add_argument("--output_dir", type=str, default="./ckpts/web_click_t5",
                         help="Where to store the final model.")
     parser.add_argument("--seed", type=int, default=None,
                         help="A seed for reproducible training.")
