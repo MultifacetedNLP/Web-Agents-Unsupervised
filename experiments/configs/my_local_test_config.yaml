@@ -10,15 +10,19 @@ lamorel_args:
     num_machines: 1
   llm_args:
     model_type: seq2seq
-    encoder_max_size: 2048
+    encoder_max_size: 512
     decoder_max_size: 128
     model_path: google/flan-t5-large
+    model_local_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/ckpts3/web_click_t5/epoch_9/model.pth
+    image: false
+    feat_conv_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
+    feat_ids_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
     pretrained: true
     minibatch_size: 3
     pre_encode_inputs: true
     parallelism:
       use_gpu: true
-      model_parallelism_size: 2
+      model_parallelism_size: 1
       synchronize_gpus_after_scoring: false
       empty_cuda_cache_after_scoring: false
   updater_args:
@@ -46,13 +50,13 @@ rl_script_args:
   action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
   name_experiment: 'llm_flan_t5_large'
-  name_model: 'google-flan-t5-large'
+  name_model: 'google/flan-t5-large'
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
-  id_expe: 'llm_flan_t5_large_nbr_env_16_google-flan-t5-large_pretrained_True_shape_reward_beta_0_seed_1'
+  id_expe: 'llm_flan_t5_nbr_env_16_google-flan-t5-large_pretrained_True_nbr_obs_2_shape_reward_beta_0_seed_1'
   sample: false
   deactivte_RL_for_search: false
   bart_path: ''
-  generate_query: true
+  generate_query: false
   name_environment: 'Webshop'
   load_embedding: false
   use_action_heads: false
@@ -61,7 +65,7 @@ rl_script_args:
   spm_path: ""
   random_agent: false
   get_example_trajectories: false
-  nbr_obs: 3
+  nbr_obs: 1
   im_learning: false
   im_path: ""
   bot: false
@@ -70,10 +74,11 @@ rl_script_args:
     num: null
     human_goals: 1
     get_image: 0
+    return_image_feature: 0
     num_prev_obs: 0
     num_prev_actions: 0
     step_limit: 100
-    click_item_name: 1
+    click_item_name: 0
     harsh_reward: 0
     go_to_item: 0
     go_to_search: 0
