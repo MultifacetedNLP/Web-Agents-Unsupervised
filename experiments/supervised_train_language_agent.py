@@ -72,7 +72,7 @@ task_to_keys = {
 }
 
 tokenizer = AutoTokenizer.from_pretrained(
-    'google/flan-t5-base') # TODO: change the flan-t5-base to an argument #  truncation_side='left'
+    'google/flan-t5-large') # TODO: change the flan-t5-base to an argument #  truncation_side='left'
 print(len(tokenizer))
 
 PATH = "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl" # TODO: change these to arguments
@@ -80,11 +80,6 @@ PATH = "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments
 HUMAN_GOAL_PATH = '/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json' # TODO: change these to arguments
 IGNORE_INDEX = -100
 
-
-def process(s):
-    s = s.lower().replace('"', '').replace("'", "").strip()
-    s = s.replace('[sep]', '[SEP]')
-    return s
 
 def generate_prompt_webshop_v2(goal, subgoals, deque_obs, deque_actions):
     ldo = len(deque_obs)
@@ -113,9 +108,13 @@ def extract_instruction(state):
     instruction_end_id = state.find('\n[button]')
     return state[instruction_start_id:instruction_end_id].strip()
 
-def remove_instruction(state):
-    instruction_end_id = state.find('\n[button]')
-    return state[instruction_end_id:].strip()
+def process(state): # TODO: I may add special tokens like <clicked button>
+    instruction_start_id = state.find('Instruction:')
+    instruction_end_id = state.find('[button]')
+    
+    state = state[instruction_end_id:] if instruction_start_id == 0 else state[:instruction_start_id] + state[instruction_end_id:]
+    
+    return state.lower().replace('amazon shopping game\n', '').replace('webshop\n', '').strip()
 
 def process_goal(state):
     state = state.lower().replace('"', '').replace("'", "")
@@ -170,12 +169,12 @@ def get_data(split, mem=False, filter_search=False):
         num_trajs += 1
         observation_list.clear()
         chosen_action_list.clear()
-        for state, valid_acts, chosen_act in zip(result['states'], result['available_actions'], result['actions_translate']): #  result['images']
+        for state, valid_acts, chosen_act in zip(result['states'], result['available_actions'], result['actions']): #  result['images']
             cnt += 1
             if filter_search and chosen_act.startswith('search['):
                 continue
             
-            observation_list.append(remove_instruction(state))
+            observation_list.append(process(state))
             if len(valid_acts) == 0:
                 valid_acts = [chosen_act]
             
@@ -189,6 +188,7 @@ def get_data(split, mem=False, filter_search=False):
     print('num of {} trajs: {}'.format(split, num_trajs))
     print('total transitions: {}'.format(cnt))
     return context_list, final_chosen_action_list
+
 
 def truncate_sequence(sequence, truncate_size, save_token):
             
@@ -209,6 +209,7 @@ def truncate_sequence(sequence, truncate_size, save_token):
     sequence["attention_mask"] = mask
     return sequence
 
+
 def pad_sequence(sequence, size):
     sequence_size = len(sequence["input_ids"])
     ids = sequence["input_ids"] + [
@@ -218,6 +219,7 @@ def pad_sequence(sequence, size):
     sequence["input_ids"] = ids
     sequence["attention_mask"] = mask
     return sequence
+    
     
 def truncate_obs_sequences(sequences, truncate_size):
 
@@ -253,6 +255,7 @@ def truncate_obs_sequences(sequences, truncate_size):
             
     return sequence
     
+    
 def split_sequence(sequence, observation_ids = [16018, 257, 10]):
     sequence_input_ids = np.array(sequence["input_ids"])
     sequence_attention_mask = np.array(sequence["attention_mask"])
@@ -269,6 +272,7 @@ def split_sequence(sequence, observation_ids = [16018, 257, 10]):
         sequences.append({"input_ids": sub_input_ids.tolist(), "attention_mask":sub_attention_mask.tolist()})
         
     return sequences
+
 
 def pad_or_truncate_sequence(sequence, size, max_size, encoder=False):
     sequence_size = len(sequence["input_ids"])
@@ -371,7 +375,7 @@ def parse_args():
     )
     parser.add_argument(
         "--model_name_or_path",
-        default="google/flan-t5-base",
+        default="google/flan-t5-large",
         type=str,
         help="Path to pretrained model or model identifier from huggingface.co/models.",
     )
@@ -383,7 +387,7 @@ def parse_args():
     parser.add_argument(
         "--per_device_train_batch_size",
         type=int,
-        default=1,
+        default=4,
         help="Batch size (per device) for the training dataloader.",
     )
     parser.add_argument(
@@ -411,7 +415,7 @@ def parse_args():
     parser.add_argument(
         "--gradient_accumulation_steps",
         type=int,
-        default=16,
+        default=8,
         help="Number of updates steps to accumulate before performing a backward/update pass.",
     )
     parser.add_argument(
@@ -425,7 +429,7 @@ def parse_args():
     parser.add_argument(
         "--num_warmup_steps", type=int, default=0, help="Number of steps for the warmup in the lr scheduler."
     )
-    parser.add_argument("--output_dir", type=str, default="./ckpts/web_click_t5",
+    parser.add_argument("--output_dir", type=str, default="./ckpts_large_adafactor_2/web_click_t5",
                         help="Where to store the final model.")
     parser.add_argument("--seed", type=int, default=None,
                         help="A seed for reproducible training.")
@@ -523,7 +527,7 @@ def main():
     #    image=args.image, pretrain_bert=args.pretrain)
     # model = BertModelForWebshop(config)
     # model.bert.resize_token_embeddings(len(tokenizer))
-    model = AutoModelForSeq2SeqLM.from_pretrained('google/flan-t5-base') # TODO: change the flan-t5-base to an argument
+    model = AutoModelForSeq2SeqLM.from_pretrained('google/flan-t5-large') # TODO: change the flan-t5-base to an argument
 
     train_dataset = get_dataset("train", mem=args.mem)
     eval_dataset = get_dataset("eval", mem=args.mem)
@@ -541,8 +545,9 @@ def main():
         eval_dataset, collate_fn=data_collator, batch_size=args.per_device_eval_batch_size)
 
     # Optimizer
-    optimizer = Adafactor(model.parameters(), scale_parameter=True, relative_step=True, warmup_init=True, lr=None)
-    
+    # optimizer = Adafactor(model.parameters(), scale_parameter=True, relative_step=True, warmup_init=True, lr=None)
+    optimizer = Adafactor(model.parameters(), scale_parameter=False, relative_step=False, warmup_init=False, lr=1e-3)
+    # Split weights in two groups, one with weight decay and the other not.
 
     # Scheduler and math around the number of training steps.
     num_update_steps_per_epoch = math.ceil(
@@ -651,7 +656,7 @@ def main():
             
             # calculate the score
             with torch.no_grad():
-                tokens_logprobs = torch.gather(outputs["logits"], 2, batch["decoder_input_ids"][:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
+                tokens_logprobs = torch.gather(F.log_softmax(outputs["logits"], dim=-1), 2, batch["decoder_input_ids"][:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
                 mask = torch.ones(tokens_logprobs.shape, dtype=torch.bool, device=tokens_logprobs.device)
                 for i, _output in enumerate(batch["decoder_input_ids"]):
                     for j, _token in enumerate(_output):
@@ -671,7 +676,7 @@ def main():
                 if args.with_tracking and args.logging_steps > 0 and completed_steps % args.logging_steps == 0:
                     wandb.log(
                         {
-                            "train_score": sum(scores) / len(scores),
+                            "train_score_prob": sum(scores) / len(scores),
                             "train_loss": total_loss / total_step,
                             "train_step": completed_steps,
                         },
@@ -699,7 +704,7 @@ def main():
                 outputs = model(input_ids = batch['input_ids'], attention_mask = batch['attention_mask'], labels = batch['labels'])
                 
                 
-            tokens_logprobs = torch.gather(outputs["logits"], 2, batch["decoder_input_ids"][:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
+            tokens_logprobs = torch.gather(F.log_softmax(outputs["logits"], dim=-1), 2, batch["decoder_input_ids"][:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
             mask = torch.ones(tokens_logprobs.shape, dtype=torch.bool, device=tokens_logprobs.device)
             for i, _output in enumerate(batch["decoder_input_ids"]):
                 for j, _token in enumerate(_output):
@@ -727,7 +732,7 @@ def main():
         if args.with_tracking:
             wandb.log(
                 {
-                    "eval_score": score,
+                    "eval_score_prob": score,
                     "eval_loss": total_loss / total_step,
                     "epoch": epoch,
                     "epoch_step": completed_steps,
@@ -747,7 +752,7 @@ def main():
 
     if args.output_dir is not None:
         with open(os.path.join(args.output_dir, "all_results.json"), "w") as f:
-            json.dump({"eval_score": scores}, f)
+            json.dump({"eval_score_prob": scores}, f)
 
 
 if __name__ == "__main__":
