@@ -154,8 +154,8 @@ def get_data(split, mem=False, filter_search=False):
         goal_range = range(0, 500)
 
     cnt = 0
-    observation_list = deque([], maxlen=1) # TODO: change the 1 to argument
-    chosen_action_list = deque([], maxlen=0) # TODO: change the 0 to argument
+    observation_list = deque([], maxlen=2) # TODO: change the 1 to argument
+    chosen_action_list = deque([], maxlen=1) # TODO: change the 0 to argument
     context_list, final_chosen_action_list = [], []
     num_trajs = 0
     for json_str in json_list:
@@ -294,7 +294,7 @@ def get_dataset(split, mem=False):
     tokenized_inputs = [tokenizer(input) for input in input_text]
     contexts_max_size = max([len(i['input_ids']) for i in tokenized_inputs])
     
-    encoder_max_size = 512 # TODO: change the max_length to an argument
+    encoder_max_size = 1024 # TODO: change the max_length to an argument
     input_encodings = {'input_ids':[], 'attention_mask':[]}
     for tokenized_input in tokenized_inputs:
         result = pad_or_truncate_sequence(tokenized_input, contexts_max_size,
@@ -387,7 +387,7 @@ def parse_args():
     parser.add_argument(
         "--per_device_train_batch_size",
         type=int,
-        default=4,
+        default=1,
         help="Batch size (per device) for the training dataloader.",
     )
     parser.add_argument(
@@ -415,7 +415,7 @@ def parse_args():
     parser.add_argument(
         "--gradient_accumulation_steps",
         type=int,
-        default=8,
+        default=32,
         help="Number of updates steps to accumulate before performing a backward/update pass.",
     )
     parser.add_argument(
@@ -429,7 +429,7 @@ def parse_args():
     parser.add_argument(
         "--num_warmup_steps", type=int, default=0, help="Number of steps for the warmup in the lr scheduler."
     )
-    parser.add_argument("--output_dir", type=str, default="./ckpts_large_adafactor_2/web_click_t5",
+    parser.add_argument("--output_dir", type=str, default="./ckpts_large_2_observations/web_click_t5",
                         help="Where to store the final model.")
     parser.add_argument("--seed", type=int, default=None,
                         help="A seed for reproducible training.")
