@@ -72,7 +72,7 @@ task_to_keys = {
 }
 
 tokenizer = AutoTokenizer.from_pretrained(
-    'google/flan-t5-large') # TODO: change the flan-t5-base to an argument #  truncation_side='left'
+    'google/flan-t5-xl') # TODO: change the flan-t5-base to an argument #  truncation_side='left'
 print(len(tokenizer))
 
 PATH = "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl" # TODO: change these to arguments
@@ -154,8 +154,8 @@ def get_data(split, mem=False, filter_search=False):
         goal_range = range(0, 500)
 
     cnt = 0
-    observation_list = deque([], maxlen=2) # TODO: change the 1 to argument
-    chosen_action_list = deque([], maxlen=1) # TODO: change the 0 to argument
+    observation_list = deque([], maxlen=4) # TODO: change the 4 to argument
+    chosen_action_list = deque([], maxlen=3) # TODO: change the 3 to argument
     context_list, final_chosen_action_list = [], []
     num_trajs = 0
     for json_str in json_list:
@@ -294,7 +294,7 @@ def get_dataset(split, mem=False):
     tokenized_inputs = [tokenizer(input) for input in input_text]
     contexts_max_size = max([len(i['input_ids']) for i in tokenized_inputs])
     
-    encoder_max_size = 1024 # TODO: change the max_length to an argument
+    encoder_max_size = 2048 # TODO: change the max_length to an argument
     input_encodings = {'input_ids':[], 'attention_mask':[]}
     for tokenized_input in tokenized_inputs:
         result = pad_or_truncate_sequence(tokenized_input, contexts_max_size,
@@ -375,7 +375,7 @@ def parse_args():
     )
     parser.add_argument(
         "--model_name_or_path",
-        default="google/flan-t5-large",
+        default="google/flan-t5-xl",
         type=str,
         help="Path to pretrained model or model identifier from huggingface.co/models.",
     )
@@ -393,7 +393,7 @@ def parse_args():
     parser.add_argument(
         "--per_device_eval_batch_size",
         type=int,
-        default=8,
+        default=4,
         help="Batch size (per device) for the evaluation dataloader.",
     )
     parser.add_argument(
@@ -429,7 +429,7 @@ def parse_args():
     parser.add_argument(
         "--num_warmup_steps", type=int, default=0, help="Number of steps for the warmup in the lr scheduler."
     )
-    parser.add_argument("--output_dir", type=str, default="./ckpts_large_2_observations/web_click_t5",
+    parser.add_argument("--output_dir", type=str, default="/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_xl_4_observations/web_click_t5",
                         help="Where to store the final model.")
     parser.add_argument("--seed", type=int, default=None,
                         help="A seed for reproducible training.")
@@ -527,7 +527,7 @@ def main():
     #    image=args.image, pretrain_bert=args.pretrain)
     # model = BertModelForWebshop(config)
     # model.bert.resize_token_embeddings(len(tokenizer))
-    model = AutoModelForSeq2SeqLM.from_pretrained('google/flan-t5-large') # TODO: change the flan-t5-base to an argument
+    model = AutoModelForSeq2SeqLM.from_pretrained('google/flan-t5-xl') # TODO: change the flan-t5-base to an argument
 
     train_dataset = get_dataset("train", mem=args.mem)
     eval_dataset = get_dataset("eval", mem=args.mem)
