@@ -50,7 +50,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             else:
                 ob, info = env.reset()
             self.infos.append(info)
-            self.obs_queue[i].append(ob)
+            self.obs_queue[i].append(ob.lower())
             self.subgoals.append(info['valid'])
         logging.info("reset environment")
 
@@ -118,7 +118,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             # scores = torch.stack([_o[self.llm_scoring_module_key] for _o in output]).squeeze()
             # dist = Categorical(logits=scores)
             scores = [_o[self.llm_scoring_module_key] for _o in output]
-            dists = [Categorical(logits=score) for score in scores]
+            dists = [Categorical(probs=torch.exp(score)) for score in scores]
             action = torch.stack([dist.sample() for dist in dists])
             a = action.cpu().numpy()
             
@@ -146,7 +146,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                 self.dones_envs.append(done)
                 self.infos.append(info)
                 self.subgoals.append(info['valid'])
-                self.obs_queue[j].append(obs)
+                self.obs_queue[j].append(obs.lower())
                 if done:
                     # reinitialise memory of past observations and actions
                     self.obs_queue[j].clear()
@@ -154,7 +154,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                     obs, info = env.reset()
                     self.infos[-1] = info
                     self.subgoals[-1] = info['valid']
-                    self.obs_queue[j].append(obs)
+                    self.obs_queue[j].append(obs.lower())
 
 
             if self.aux_info:
@@ -478,7 +478,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                         scores = output[0][self.llm_scoring_module_key]
                         
                         if sample:
-                            dist = Categorical(logits=scores)
+                            dist = Categorical(probs=torch.exp(scores))
                             action = dist.sample()
                             a = action.cpu().numpy()
                         else:
@@ -502,7 +502,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                 
                 if sample:
                     # a = [torch.multinomial(F.softmax(score, dim=0), 1)[0].item() for score in scores]
-                    dists = [Categorical(logits=score) for score in scores]
+                    dists = [Categorical(probs=torch.exp(score)) for score in scores]
                     action = torch.stack([dist.sample() for dist in dists])
                     a = action.cpu().numpy()
                 else:
@@ -530,7 +530,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                 self.dones_envs.append(done)
                 self.infos.append(info)
                 self.subgoals.append(info['valid'])
-                self.obs_queue[j].append(obs)
+                self.obs_queue[j].append(obs.lower())
                 if done:
                     # reinitialise memory of past observations and actions
                     self.obs_queue[j].clear()
@@ -541,7 +541,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                     reset_index += 1
                     self.infos[-1] = info
                     self.subgoals[-1] = info['valid']
-                    self.obs_queue[j].append(obs)
+                    self.obs_queue[j].append(obs.lower())
 
             # self.obs = obs
 

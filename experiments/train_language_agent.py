@@ -64,25 +64,27 @@ class LogScoringModuleFn(BaseModuleFunction):
 
     def forward(self, forward_outputs, minibatch, tokenized_contexts, **kwargs):
         if self._model_type == "causal":  # hence input should be removed from result
-            logits = forward_outputs["logits"][:, len(tokenized_contexts["input_ids"]) - 1:-1, :]
+            logprobs = F.log_softmax(forward_outputs["logits"], dim=-1)[:, len(tokenized_contexts["input_ids"]) - 1:-1, :]
             output_tokens = minibatch["input_ids"][:, len(tokenized_contexts["input_ids"]):]
         else:
-            logits = forward_outputs["logits"][:, :-1, :]  # skip </s> token appended by tokenizer
+            logprobs = F.log_softmax(forward_outputs["logits"], dim=-1)[:, :-1, :] # skip </s> token appended by tokenizer
             output_tokens = minibatch["decoder_input_ids"][:, 1:]  # skip pad token
 
         tokens_logprobs = \
-            torch.gather(logits, 2, output_tokens[:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
+            torch.gather(logprobs, 2, output_tokens[:, :, None]).squeeze(-1).to(torch.float32)  # filter with sequence tokens
 
         # Compute mask to assign probability 1 to padding tokens
         mask = torch.ones(tokens_logprobs.shape, dtype=torch.bool, device=self.device)
         for i, _output in enumerate(output_tokens):
             for j, _token in enumerate(_output):
-                if _token != self._pad_token:
+                if _token == self._pad_token:
                     mask[i, j] = False
-        masked_token_probs = tokens_logprobs.masked_fill(mask, 1.0)  # apply mask
-        minibatch_probs = masked_token_probs.sum(-1)  # compute final sequences' probability
+        
+        # masked_token_probs = tokens_logprobs.masked_fill(mask, 1.0)  # apply mask
+        # minibatch_probs = masked_token_probs.sum(-1)  # compute final sequences' probability
+        score = (tokens_logprobs * mask).sum(-1) / mask.sum(-1)
 
-        return minibatch_probs.cpu()
+        return score.cpu()
 
 class ValueHeadModuleFn(BaseModuleFunction):
     def __init__(self, model_type):
@@ -203,7 +205,7 @@ class PPOUpdater(BaseUpdater):
             # scores = torch.stack([_o[kwargs["scoring_module_key"]] for _o in output]).squeeze()
             # dist = Categorical(logits=scores)
             scores = [_o[kwargs["scoring_module_key"]] for _o in output]
-            dists = [Categorical(logits=score) for score in scores]
+            dists = [Categorical(probs=torch.exp(score)) for score in scores]
 
             values = torch.stack([_o["value"][0] for _o in output])
             
