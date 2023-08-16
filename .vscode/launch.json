@@ -52,7 +52,6 @@
             "stopOnEntry": false,
             "showReturnValue": true
         },
-
         {
             "name": "Supervised Train Language Agent",
             "type": "python",
@@ -61,6 +60,10 @@
             "program": "${cwd}/experiments/supervised_train_language_agent.py",
             "console": "integratedTerminal",
             "justMyCode": true,
+            "args": [
+                "--config-path","${cwd}/experiments/configs",
+                "--config-name","supervised_train_config.yaml"
+            ],
             "stopOnEntry": false,
             "showReturnValue": true
         }
