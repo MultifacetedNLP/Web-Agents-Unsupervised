@@ -10,10 +10,10 @@ lamorel_args:
     num_machines: 1
   llm_args:
     model_type: seq2seq
-    encoder_max_size: 512
+    encoder_max_size: 1024
     decoder_max_size: 128
     model_path: google/flan-t5-large
-    model_local_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/ckpts3/web_click_t5/epoch_9/model.pth
+    model_local_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_large_2_observations/web_click_t5/epoch_9/model.pth
     image: false
     feat_conv_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
     feat_ids_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
@@ -56,7 +56,7 @@ rl_script_args:
   sample: false
   deactivte_RL_for_search: false
   bart_path: ''
-  generate_query: false
+  generate_query: true
   name_environment: 'Webshop'
   load_embedding: false
   use_action_heads: false
@@ -65,7 +65,7 @@ rl_script_args:
   spm_path: ""
   random_agent: false
   get_example_trajectories: false
-  nbr_obs: 1
+  nbr_obs: 2
   im_learning: false
   im_path: ""
   bot: false
