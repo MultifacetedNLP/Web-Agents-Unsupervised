@@ -1,0 +1,22 @@
+trajectories_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl
+human_goal_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json
+encoder_max_size: 1024
+decoder_max_size: 128
+model_name_or_path: google/flan-t5-large
+per_device_train_batch_size: 1
+per_device_eval_batch_size: 8
+learning_rate: 0.00002
+weight_decay: 0.0
+num_train_epochs: 10
+max_train_steps: null
+gradient_accumulation_steps: 32
+lr_scheduler_type: linear # need some work here
+num_warmup_steps: 0
+output_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_large_2_observations_test/web_click_t5
+seed: null
+checkpointing_steps: epoch
+resume_from_checkpoint: null
+with_tracking: 1
+image: 0 # need some work here
+logging_steps: 10
+nbr_obs: 2
