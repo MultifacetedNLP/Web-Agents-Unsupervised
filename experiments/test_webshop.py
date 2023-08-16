@@ -24,19 +24,22 @@ logger = logging.getLogger(__name__)
 accelerator = Accelerator()
 
 
+# TODO: needs work
 class LoadSpecificWeightsUpdater(BaseUpdater):
     def perform_update(self, contexts, candidates, _current_batch_ids, **kwargs):
         if not hasattr(self, "is_loaded"):
-            try:
-                self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
-                                                            "/" + kwargs["id_expe"] + "/last/model.checkpoint", map_location='cuda:0'))
-                self.is_loaded = True
-                print("Last")
-            except:
-                self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
-                                                            "/" + kwargs["id_expe"] + "/backup/model.checkpoint"), map_location='cuda:0')
-                self.is_loaded = True
-                print("Backup")
+            #try:
+            #    self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
+            #                                                "/" + kwargs["id_expe"] + "/last/model.checkpoint", map_location='cuda:0'))
+            #    self.is_loaded = True
+            #    print("Last")
+            #except:
+            #    self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
+            #                                                "/" + kwargs["id_expe"] + "/backup/model.checkpoint"), map_location='cuda:0')
+            #    self.is_loaded = True
+            #    print("Backup")
+                
+            self.is_loaded = True
 
 
 def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
