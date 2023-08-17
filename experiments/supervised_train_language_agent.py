@@ -362,7 +362,7 @@ def main(args):
     #    image=args.image, pretrain_bert=args.pretrain)
     # model = BertModelForWebshop(config)
     # model.bert.resize_token_embeddings(len(tokenizer))
-    model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name_or_path)
+    model = AutoModelForSeq2SeqLM.from_pretrained(pretrained_model_name_or_path = args.model_name_or_path, cache_dir=args.cache_dir)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path) # truncation_side='left'
     print(len(tokenizer))
 

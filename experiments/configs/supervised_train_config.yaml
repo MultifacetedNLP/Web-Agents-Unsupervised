@@ -13,6 +13,7 @@ gradient_accumulation_steps: 32
 lr_scheduler_type: linear # need some work here
 num_warmup_steps: 0
 output_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_large_2_observations_test/web_click_t5
+cache_dir: null
 seed: null
 checkpointing_steps: epoch
 resume_from_checkpoint: null
