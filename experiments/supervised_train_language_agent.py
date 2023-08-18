@@ -328,12 +328,13 @@ def data_collator(batch):
 @hydra.main(config_path='configs', config_name='supervised_train_config')
 def main(args):
 
+    args = args.main_args
     # Initialize the accelerator. We will let the accelerator handle device placement for us in this example.
     # If we're using tracking, we also need to initialize it here and it will pick up all supported trackers in the environment
     # accelerator = Accelerator(log_with="wandb", logging_dir=args.output_dir) if args.with_tracking else Accelerator()
     accelerator = Accelerator()
     # Make one log on every process with the configuration for debugging.
-
+    
     wandb.init(project="T5_SL", config=args, name=args.output_dir)
 
     logging.basicConfig(

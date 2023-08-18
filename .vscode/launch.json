@@ -53,7 +53,23 @@
             "showReturnValue": true
         },
         {
-            "name": "Supervised Train Language Agent",
+            "name": "Accelerate Supervised Train Language Agent",
+            "type": "python",
+            "request": "launch",
+            "cwd": "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL",
+            "program": "${cwd}/experiments/accelerate_launcher.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--config-path","${cwd}/experiments/configs",
+                "--config-name","supervised_train_config.yaml",
+                "main_args.path=${cwd}/experiments/supervised_train_language_agent.py"
+            ],
+            "stopOnEntry": false,
+            "showReturnValue": true
+        },
+        {
+            "name": "Without Accelerate Supervised Train Language Agent",
             "type": "python",
             "request": "launch",
             "cwd": "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL",
