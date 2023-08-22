@@ -1,30 +1,30 @@
-accelerate_args:
-  config_file: accelerate/fsdp_config.yaml
-  machine_rank: 0
-  num_machines: 1
-  num_processes: 4
-main_args:
-  path: ???
-  trajectories_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl
-  human_goal_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json
-  encoder_max_size: 1024
-  decoder_max_size: 128
-  model_name_or_path: google/flan-t5-xl
-  per_device_train_batch_size: 1
-  per_device_eval_batch_size: 8
-  learning_rate: 0.00002
-  weight_decay: 0.0
-  num_train_epochs: 10
-  max_train_steps: null
-  gradient_accumulation_steps: 32
-  lr_scheduler_type: linear # need some work here
-  num_warmup_steps: 0
-  output_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_xl_2_observations/web_click_t5
-  cache_dir: null
-  seed: null
-  checkpointing_steps: epoch
-  resume_from_checkpoint: null
-  with_tracking: 1
-  image: 0 # need some work here
-  logging_steps: 10
-  nbr_obs: 2
+trajectories_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl
+human_goal_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json
+encoder_max_size: 1024
+decoder_max_size: 128
+model_name_or_path: google/flan-t5-xl
+nbr_obs: 2
+cache_dir: null
+output_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_xl_2_observations/web_click_t5
+logging_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs/ckpts_xl_2_observations/web_click_t5
+num_train_epochs: 10
+logging_steps: 10
+save_strategy: epoch
+evaluation_strategy: epoch
+gradient_accumulation_steps: 32
+eval_accumulation_steps: 1
+per_device_train_batch_size: 1
+per_device_eval_batch_size: 8
+warmup_steps: 100
+weight_decay: 0.01
+learning_rate: 0.00002
+fp16: false
+gradient_checkpointing: True
+optim: adafactor
+run_name: flan-t5-xl-2-observations
+max_train_steps: null
+lr_scheduler_type: linear # need some work here
+seed: null
+resume_from_checkpoint: null
+with_tracking: 1
+image: 0 # need some work here
