@@ -305,7 +305,7 @@ def get_training_args(args) -> TrainingArguments:
         load_best_model_at_end=True,
         save_strategy=args.save_strategy,
         evaluation_strategy=args.evaluation_strategy,
-        save_total_limit=3,
+        save_total_limit=args.save_total_limit,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         eval_accumulation_steps=args.eval_accumulation_steps,
         metric_for_best_model="eval_loss",
