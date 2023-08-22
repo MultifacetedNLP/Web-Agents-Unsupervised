@@ -366,6 +366,8 @@ def main(args):
     model = AutoModelForSeq2SeqLM.from_pretrained(pretrained_model_name_or_path = args.model_name_or_path, cache_dir=args.cache_dir)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path) # truncation_side='left'
     print(len(tokenizer))
+    
+    model = accelerator.prepare(model)
 
     train_dataset = get_dataset("train", args.trajectories_file, args.human_goal_file, args.nbr_obs, tokenizer, args.encoder_max_size, args.decoder_max_size)
     eval_dataset = get_dataset("eval", args.trajectories_file, args.human_goal_file, args.nbr_obs, tokenizer, args.encoder_max_size, args.decoder_max_size)
@@ -417,8 +419,8 @@ def main(args):
     )
 
     # Prepare everything with our `accelerator`.
-    model, optimizer, train_dataloader, eval_dataloader, lr_scheduler = accelerator.prepare(
-        model, optimizer, train_dataloader, eval_dataloader, lr_scheduler
+    optimizer, train_dataloader, eval_dataloader, lr_scheduler = accelerator.prepare(
+        optimizer, train_dataloader, eval_dataloader, lr_scheduler
     )
 
     # We need to recalculate our total training steps as the size of the training dataloader may have changed.
