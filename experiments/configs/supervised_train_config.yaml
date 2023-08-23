@@ -22,6 +22,8 @@ warmup_steps: 100
 weight_decay: 0.01
 learning_rate: 0.00002
 fp16: false
+bf16: false
+tf32: false
 gradient_checkpointing: True
 optim: adafactor
 run_name: flan-t5-xl-2-observations

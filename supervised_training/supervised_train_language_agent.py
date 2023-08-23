@@ -317,6 +317,8 @@ def get_training_args(args) -> TrainingArguments:
         weight_decay=args.weight_decay,
         report_to="wandb",
         fp16=args.fp16,
+        bf16=args.bf16,
+        tf32=args.tf32,
         optim=args.optim,
         gradient_checkpointing = args.gradient_checkpointing,
         dataloader_drop_last=True,
