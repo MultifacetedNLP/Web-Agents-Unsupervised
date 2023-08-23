@@ -16,6 +16,9 @@
 import json
 import random
 import torch
+import bitsandbytes as bnb
+from transformers.trainer_pt_utils import get_parameter_names
+from torch import nn
 
 from transformers import (
     Trainer,
@@ -319,7 +322,7 @@ def get_training_args(args) -> TrainingArguments:
         fp16=args.fp16,
         bf16=args.bf16,
         tf32=args.tf32,
-        optim=args.optim,
+        # optim=args.optim,
         gradient_checkpointing = args.gradient_checkpointing,
         dataloader_drop_last=True,
         run_name=args.run_name,
@@ -341,13 +344,41 @@ def main(args):
         
     training_args = get_training_args(args)
     
+    decay_parameters = get_parameter_names(model, [nn.LayerNorm])
+    decay_parameters = [name for name in decay_parameters if "bias" not in name]
+    optimizer_grouped_parameters = [
+        {
+            "params": [p for n, p in model.named_parameters() if n in decay_parameters],
+            "weight_decay": training_args.weight_decay,
+        },
+        {
+            "params": [p for n, p in model.named_parameters() if n not in decay_parameters],
+            "weight_decay": 0.0,
+        },
+    ]
+    
+    optimizer_kwargs = {
+        "betas": (training_args.adam_beta1, training_args.adam_beta2),
+        "eps": training_args.adam_epsilon,
+    }
+    optimizer_kwargs["lr"] = training_args.learning_rate
+    adam_bnb_optim = bnb.optim.Adam8bit(
+        optimizer_grouped_parameters,
+        betas=(training_args.adam_beta1, training_args.adam_beta2),
+        eps=training_args.adam_epsilon,
+        lr=training_args.learning_rate,
+    )
+
+    
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
-        data_collator=data_collator
+        data_collator=data_collator,
+        optimizers=(adam_bnb_optim, None)
     )
+    
     trainer.train()
     trainer.save_model()
 
