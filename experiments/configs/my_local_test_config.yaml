@@ -10,15 +10,15 @@ lamorel_args:
     num_machines: 1
   llm_args:
     model_type: seq2seq
-    encoder_max_size: 1024
+    encoder_max_size: 2048
     decoder_max_size: 128
-    model_path: google/flan-t5-large
-    model_local_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_large_2_observations/web_click_t5/epoch_9/model.pth
+    model_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/Flan-T5-xl/checkpoint-300-adafactor
+    model_local_path: null
     image: false
     feat_conv_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
     feat_ids_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
     pretrained: true
-    minibatch_size: 3
+    minibatch_size: 1
     pre_encode_inputs: true
     parallelism:
       use_gpu: true
@@ -49,10 +49,10 @@ rl_script_args:
   batch_size: 2
   action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
-  name_experiment: 'llm_flan_t5_large'
-  name_model: 'google/flan-t5-large'
+  name_experiment: 'llm_flan_t5_xl_supervised'
+  name_model: 'google/flan-t5-xl'
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
-  id_expe: null # 'llm_flan_t5_nbr_env_16_google-flan-t5-large_pretrained_True_nbr_obs_2_shape_reward_beta_0_seed_1'
+  id_expe: checkpoint-300-adafactor
   sample: false
   deactivte_RL_for_search: false
   bart_path: ''
@@ -65,7 +65,7 @@ rl_script_args:
   spm_path: ""
   random_agent: false
   get_example_trajectories: false
-  nbr_obs: 2
+  nbr_obs: 4
   im_learning: false
   im_path: ""
   bot: false

@@ -33,12 +33,13 @@ class LoadSpecificWeightsUpdater(BaseUpdater):
                 self.is_loaded = True
                 print("Last")
             except:
-                self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
-                                                            "/" + kwargs["id_expe"] + "/backup/model.checkpoint"), map_location='cuda:0')
-                self.is_loaded = True
-                print("Backup")
-                
-            self.is_loaded = True
+                try:
+                    self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
+                                                                "/" + kwargs["id_expe"] + "/backup/model.checkpoint"), map_location='cuda:0')
+                    self.is_loaded = True
+                    print("Backup")
+                except:
+                    print("No RL model loaded")
 
 
 def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
@@ -105,11 +106,9 @@ def main(config_args):
         os.makedirs(test_path)
     
     
-    # if id_expe exists, it means that we want to load a model trained with RL
-    if config_args.rl_script_args.id_expe:
-        lm_server.update([None for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
-                    [[None] for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
-                    id_expe=config_args.rl_script_args.id_expe, saving_path_model=config_args.rl_script_args.saving_path_model)
+    lm_server.update([None for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
+                [[None] for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
+                id_expe=config_args.rl_script_args.id_expe, saving_path_model=config_args.rl_script_args.saving_path_model)
     
     
     envs = []
