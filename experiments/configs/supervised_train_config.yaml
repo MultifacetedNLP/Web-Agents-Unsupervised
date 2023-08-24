@@ -2,17 +2,18 @@ trajectories_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/
 human_goal_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json
 encoder_max_size: 1024
 decoder_max_size: 128
-model_name_or_path: google/flan-t5-xl
+model_name_or_path: google/flan-t5-large
 nbr_obs: 2
 cache_dir: null
-output_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_xl_2_observations/web_click_t5
-logging_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs/ckpts_xl_2_observations/web_click_t5
+output_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models
+logging_dir: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs
+run_name: flan_t5_large_2_observations
 num_train_epochs: 10
 logging_steps: 10
 save_strategy: steps
-save_steps: 300
+save_steps: 10
 evaluation_strategy: steps
-eval_steps: 150
+eval_steps: 10
 gradient_accumulation_steps: 32
 eval_accumulation_steps: 8
 per_device_train_batch_size: 1
@@ -24,9 +25,8 @@ learning_rate: 0.00002
 fp16: false
 bf16: false
 tf32: false
-gradient_checkpointing: True
+gradient_checkpointing: false
 optim: adafactor
-run_name: flan-t5-xl-2-observations
 max_train_steps: null
 lr_scheduler_type: linear # need some work here
 seed: null

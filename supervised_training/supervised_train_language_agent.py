@@ -16,6 +16,7 @@
 import json
 import random
 import torch
+import os
 import bitsandbytes as bnb
 from transformers.trainer_pt_utils import get_parameter_names
 from torch import nn
@@ -299,10 +300,10 @@ def data_collator(batch):
     }
 
 
-def get_training_args(args) -> TrainingArguments:
+def get_training_args(args, output_dir, logging_dir) -> TrainingArguments:
     return TrainingArguments(
-        output_dir=args.output_dir,
-        logging_dir=args.logging_dir,
+        output_dir=output_dir,
+        logging_dir=logging_dir,
         num_train_epochs=args.num_train_epochs,
         logging_steps=args.logging_steps,
         load_best_model_at_end=True,
@@ -341,8 +342,16 @@ def main(args):
 
     train_dataset = get_dataset("train", args.trajectories_file, args.human_goal_file, args.nbr_obs, tokenizer, args.encoder_max_size, args.decoder_max_size)
     eval_dataset = get_dataset("eval", args.trajectories_file, args.human_goal_file, args.nbr_obs, tokenizer, args.encoder_max_size, args.decoder_max_size)
+    
+    output_dir = os.path.join(args.output_dir, args.run_name)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
         
-    training_args = get_training_args(args)
+    logging_dir = os.path.join(args.logging_dir, args.run_name)
+    if not os.path.exists(logging_dir):
+        os.makedirs(logging_dir)
+    
+    training_args = get_training_args(args, output_dir, logging_dir)
     
     decay_parameters = get_parameter_names(model, [nn.LayerNorm])
     decay_parameters = [name for name in decay_parameters if "bias" not in name]
