@@ -8,18 +8,16 @@ class ModelTypesEnum(Enum):
     seq2seq = AutoModelForSeq2SeqLM
 
 
-def load_hf_model_and_tokenizer(type, path, local_path, pretrained):
-    print("Loading model {}".format(path))
-    tokenizer = AutoTokenizer.from_pretrained(path)
+def load_hf_model_and_tokenizer(type, model_path, tokenizer_path, pretrained):
+    print("Loading model {}".format(model_path))
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
 
     # Select class according to type
     model_class = ModelTypesEnum[type].value
     if pretrained:
-        model = model_class.from_pretrained(path)
-        if local_path:
-            model.load_state_dict(torch.load(local_path))
+        model = model_class.from_pretrained(model_path)
     else:
-        config = AutoConfig.from_pretrained(path)
+        config = AutoConfig.from_pretrained(model_path)
         model = model_class.from_config(config)
 
     if ModelTypesEnum[type] == ModelTypesEnum.causal:

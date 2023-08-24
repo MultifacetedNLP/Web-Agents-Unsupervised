@@ -13,12 +13,12 @@ lamorel_args:
     encoder_max_size: 2048
     decoder_max_size: 128
     model_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/Flan-T5-xl/checkpoint-300-adafactor
-    model_local_path: null
+    tokenizer_path: google/flan-t5-xl
     image: false
     feat_conv_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
     feat_ids_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
     pretrained: true
-    minibatch_size: 1
+    minibatch_size: 3
     pre_encode_inputs: true
     parallelism:
       use_gpu: true
