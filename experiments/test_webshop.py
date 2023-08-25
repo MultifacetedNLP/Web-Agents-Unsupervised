@@ -67,7 +67,7 @@ def run_agent(args, algo, saving_path_logs, run_name, n_tests):
     txt_path = os.path.join(test_path, 'final.txt')
     with open(txt_path, 'w') as file:
         # Write content to the file
-        file.write(average_score)
+        file.write(average_score + "\n")
         file.write(average_test_success_rate)
         
     for each_return_per_episode, success_rate in zip(logs["return_per_episode"], success_rates):
