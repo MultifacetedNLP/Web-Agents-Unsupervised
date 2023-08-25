@@ -27,7 +27,7 @@ class HF_LLM(BaseLLM):
         print("Parallelising HF LLM on {} devices".format(len(self.devices)))
         # Load model and tokenizer
         self._LLM_tokenizer, self._LLM_model, num_layers = load_hf_model_and_tokenizer(
-            args.model_type, args.model_path, args.tokenizer_path, args.pretrained)
+            args.model_type, args.model_path, args.pytorch_path, args.tokenizer_path, args.pretrained)
         
         if use_cpu:
             # Current version of the lib does not support parallelization with cpu

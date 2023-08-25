@@ -8,7 +8,7 @@ class ModelTypesEnum(Enum):
     seq2seq = AutoModelForSeq2SeqLM
 
 
-def load_hf_model_and_tokenizer(type, model_path, tokenizer_path, pretrained):
+def load_hf_model_and_tokenizer(type, model_path, pytorch_path, tokenizer_path, pretrained):
     print("Loading model {}".format(model_path))
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
 
@@ -16,6 +16,8 @@ def load_hf_model_and_tokenizer(type, model_path, tokenizer_path, pretrained):
     model_class = ModelTypesEnum[type].value
     if pretrained:
         model = model_class.from_pretrained(model_path)
+        if pytorch_path:
+            model.load_state_dict(torch.load(pytorch_path))
     else:
         config = AutoConfig.from_pretrained(model_path)
         model = model_class.from_config(config)
