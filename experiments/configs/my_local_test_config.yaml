@@ -10,10 +10,11 @@ lamorel_args:
     num_machines: 1
   llm_args:
     model_type: seq2seq
-    encoder_max_size: 2048
+    encoder_max_size: 1024
     decoder_max_size: 128
-    model_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/Flan-T5-xl/checkpoint-300-adafactor
-    tokenizer_path: google/flan-t5-xl
+    model_path: google/flan-t5-large
+    pytorch_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/ckpts_large_2_observations/web_click_t5/epoch_9/model.pth
+    tokenizer_path: google/flan-t5-large
     image: false
     feat_conv_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
     feat_ids_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
@@ -28,47 +29,17 @@ lamorel_args:
   updater_args:
 rl_script_args:
   path: ???
-  seed: 1
   number_envs: 10
-  num_steps: 100000
   number_episodes: 500
-  simplification_str: easy
   frames_per_proc: 40
-  reward_shaping_beta: 0
-  discount: 0.99
-  lr: 1e-6
-  beta1: 0.9
-  beta2: 0.999
-  gae_lambda: 0.99
-  entropy_coef: 0.01
-  value_loss_coef: 0.5
-  max_grad_norm: 0.5
-  adam_eps: 1e-5
-  clip_eps: 0.2
-  epochs: 2
-  batch_size: 2
-  action_space: ["turn_left","turn_right","go_forward","pick_up","drop","toggle"]
-  saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
-  name_experiment: 'llm_flan_t5_xl_supervised'
-  name_model: 'google/flan-t5-xl'
+  nbr_obs: 2
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
-  id_expe: checkpoint-300-adafactor
+  saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
+  run_name: ckpts_large_2_observations
   sample: false
   deactivte_RL_for_search: false
   bart_path: ''
   generate_query: true
-  name_environment: 'Webshop'
-  load_embedding: false
-  use_action_heads: false
-  template_test: 1
-  modified_action_space: false
-  spm_path: ""
-  random_agent: false
-  get_example_trajectories: false
-  nbr_obs: 4
-  im_learning: false
-  im_path: ""
-  bot: false
   environment_args:
     state_format: 'text_rich'
     num: null
