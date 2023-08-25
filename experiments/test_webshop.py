@@ -2,21 +2,18 @@
 import os
 import torch
 from web_agent_site import WebEnv
-import argparse
-from dotmap import DotMap
 from agents.ppo.llm_ppo_agent_webshop import LLMPPOAgentWebshop
 import hydra
 from lamorel import Caller, lamorel_init
 from lamorel import BaseUpdater
-from train_language_agent import ValueHeadModuleFn, LogScoringModuleFn, ActionHeadsModuleFn
-import json
-import babyai.utils as utils
+from train_language_agent import ValueHeadModuleFn, LogScoringModuleFn
 import csv
 
 from colorama import Fore
 
 from accelerate import Accelerator
 import logging
+import numpy
 
 lamorel_init()
 logger = logging.getLogger(__name__)
@@ -47,9 +44,9 @@ def run_agent(args, algo, saving_path_logs, run_name, n_tests):
 
 
     test_path = os.path.join(os.path.join(saving_path_logs, run_name), 'test')
+    
     csv_path = os.path.join(test_path, 'log.csv')
-    first_created = not os.path.exists(csv_path)
-        
+    first_created = not os.path.exists(csv_path) 
     csv_writer = csv.writer(open(csv_path, 'a', 1))
     if first_created:
         csv_writer.writerow(["return_per_episode", "success_per_episode"])
@@ -58,17 +55,20 @@ def run_agent(args, algo, saving_path_logs, run_name, n_tests):
     logs = algo.generate_trajectories(n_tests, sample=args.rl_script_args.sample, deactivte_RL_for_search=args.rl_script_args.deactivte_RL_for_search,
                                       bart_path=args.rl_script_args.bart_path, generate_query=args.rl_script_args.generate_query)
 
-    return_per_episode = utils.synthesize(logs["return_per_episode"])
     success_rates = [1 if r == 100.0 else 0 for r in logs["return_per_episode"]]
-    success_per_episode = utils.synthesize(success_rates)
-    # num_frames_per_episode = utils.synthesize(logs["num_frames_per_episode"])
 
-    data = [*return_per_episode.values(), success_per_episode['mean'] * 100]
-
-    logger.info(Fore.YELLOW + format_str.format(*data) + Fore.RESET)
+    average_score = f"avg test score: {numpy.mean(logs['return_per_episode'])}"
+    average_test_success_rate = f"avg test success rate %: {numpy.mean(success_rates) * 100}"
     print('------------------------------------------')
-    print('avg test score', return_per_episode['mean'])
-    print('avg test success rate %', success_per_episode['mean'] * 100)
+    print(average_score)
+    print(average_test_success_rate)
+    
+    
+    txt_path = os.path.join(test_path, 'final.txt')
+    with open(txt_path, 'w') as file:
+        # Write content to the file
+        file.write(average_score)
+        file.write(average_test_success_rate)
         
     for each_return_per_episode, success_rate in zip(logs["return_per_episode"], success_rates):
         csv_writer.writerow([each_return_per_episode, success_rate])
