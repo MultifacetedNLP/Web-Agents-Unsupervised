@@ -1,6 +1,7 @@
 test.ipynb
 **/__pycache__/
 *nohup*
+*wandb*
 experiments/length_prompts_analysis/
 experiments/length_prompts_analysis_save/
 experiments/length_prompts_analysis_save_2/
@@ -11,6 +12,7 @@ slurm_logs/
 plots/
 outputs/
 /envs/
+/envs_supervised/
 web_agent_site/data
 experiments/data/
 web_agent_site/search_engine/indexes
