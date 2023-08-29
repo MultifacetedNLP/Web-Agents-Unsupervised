@@ -97,6 +97,21 @@
             ],
             "stopOnEntry": false,
             "showReturnValue": true
+        },
+        {
+            "name": "Generate Queries",
+            "type": "python",
+            "request": "launch",
+            "cwd": "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL",
+            "program": "${cwd}/supervised_training/generate_query.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--config-path","${cwd}/experiments/configs",
+                "--config-name","generate_query_config.yaml"
+            ],
+            "stopOnEntry": false,
+            "showReturnValue": true
         }
     ]
 }
