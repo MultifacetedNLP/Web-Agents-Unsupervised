@@ -378,13 +378,13 @@ def main(args):
     eval_dataset = get_dataset("eval", args.trajectories_file, args.human_goal_file,
                                args.default_file_path, args.items_human_ins,
                                args.nbr_obs, tokenizer, args.encoder_max_size,
-                               args.decoder_max_size, args.category)
+                               args.decoder_max_size)
     
-    output_dir = os.path.join(args.output_dir, args.run_name)
+    output_dir = os.path.join(args.output_dir, args.run_name + "_" + args.category)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
-    logging_dir = os.path.join(args.logging_dir, args.run_name)
+    logging_dir = os.path.join(args.logging_dir, args.run_name + "_" + args.category)
     if not os.path.exists(logging_dir):
         os.makedirs(logging_dir)
     
