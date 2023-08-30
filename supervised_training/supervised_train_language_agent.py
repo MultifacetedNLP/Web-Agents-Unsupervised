@@ -30,7 +30,7 @@ from transformers import (
 
 from transformers.utils.versions import require_version
 from collections import deque
-
+from tqdm import tqdm
 
 from datasets import Dataset
 import hydra
@@ -88,8 +88,67 @@ def process_goal(state):
         state = state.split(', and price lower than')[0]
     return state
 
+def clean_product_keys(products):
+    for product in products:
+        product.pop('product_information', None)
+        product.pop('brand', None)
+        product.pop('brand_url', None)
+        product.pop('list_price', None)
+        product.pop('availability_quantity', None)
+        product.pop('availability_status', None)
+        product.pop('total_reviews', None)
+        product.pop('total_answered_questions', None)
+        product.pop('seller_id', None)
+        product.pop('seller_name', None)
+        product.pop('fulfilled_by_amazon', None)
+        product.pop('fast_track_message', None)
+        product.pop('aplus_present', None)
+        product.pop('small_description_old', None)
+    print('Keys cleaned.')
+    return products
 
-def get_data(split, trajectories_path, human_goal_path, nbr_obs, filter_search=False):
+def remove_dot_at_end(input_str):
+    if input_str.endswith('.'):
+        return input_str[:-1]
+    else:
+        return input_str
+
+def process_str(s):
+    s = s.lower().replace('"', '').replace("'", "").strip()
+    s = remove_dot_at_end(s)
+    return s
+
+def create_instrunction_to_category_dict(default_file_path, items_human_ins):
+    print('Creating instrunction to category dictionary...')
+    with open(default_file_path) as f:
+        products = json.load(f)
+    print('Products loaded.')
+    products = clean_product_keys(products)
+    asin_to_category = {}
+    for product in tqdm(products):
+        asin = product['asin']
+        if asin == 'nan' or len(asin) > 10:
+            continue
+        asin_to_category[asin] = product['category']
+    print('asin_to_category dictionary created.')
+        
+    with open(items_human_ins) as f:
+        items_human_ins_dict = json.load(f)
+    print('items_human_ins_dict loaded.')
+    instrunction_to_category = {}
+    for _, value in items_human_ins_dict.items():
+        for val in value:
+            instrunction_to_category[process_str(val['instruction'])] = asin_to_category[val['asin']]
+    print('instrunction_to_category dictionary created.')
+    return instrunction_to_category
+
+
+def get_data(split, trajectories_path, human_goal_path, default_file_path, items_human_ins, nbr_obs, filter_search=False, category='all'):
+    
+    instrunction_to_category = {}
+    if category != 'all':
+        instrunction_to_category = create_instrunction_to_category_dict(default_file_path, items_human_ins)
+    
     print('Loading data from {}'.format(trajectories_path))
     with open(trajectories_path, 'r') as json_file:
         json_list = list(json_file)
@@ -98,13 +157,6 @@ def get_data(split, trajectories_path, human_goal_path, nbr_obs, filter_search=F
 
     random.seed(233)
     random.shuffle(json_list)
-
-    # if split == 'train':
-    #     json_list = json_list[:int(len(json_list) * 0.9)]
-    # elif split == 'eval':
-    #     json_list = json_list[int(len(json_list) * 0.9):]
-    # elif split == 'all':
-    #     pass
 
     # split by human goal index
     goal_range = range(len(human_goals))
@@ -123,10 +175,12 @@ def get_data(split, trajectories_path, human_goal_path, nbr_obs, filter_search=F
     for json_str in json_list:
         result = json.loads(json_str)
         instruction = extract_instruction(result['states'][0])
-        s = process_goal(result['states'][0])
-        assert s in human_goals, s
-        goal_idx = human_goals.index(s)
+        goal = process_goal(result['states'][0])
+        assert goal in human_goals, goal
+        goal_idx = human_goals.index(goal)
         if goal_idx not in goal_range:
+            continue
+        if category != 'all' and instrunction_to_category.get(goal, "") != category:
             continue
         num_trajs += 1
         observation_list.clear()
@@ -249,9 +303,11 @@ def pad_or_truncate_sequence(sequence, size, max_size, encoder=False):
         return pad_sequence(sequence, min(size, max_size))
 
 
-def get_dataset(split, trajectories_path, human_goal_path, nbr_obs, tokenizer, encoder_max_size, decoder_max_size):
-    input_text, output_text = get_data(split, trajectories_path, human_goal_path, nbr_obs=nbr_obs)
+def get_dataset(split, trajectories_path, human_goal_path, default_file_path, items_human_ins, 
+                nbr_obs, tokenizer, encoder_max_size, decoder_max_size, category='all'):
     
+    input_text, output_text = get_data(split, trajectories_path, human_goal_path, default_file_path, 
+                                       items_human_ins, nbr_obs=nbr_obs, category=category)
     
     tokenized_inputs = [tokenizer(input) for input in input_text]
     contexts_max_size = max([len(i['input_ids']) for i in tokenized_inputs])
@@ -340,8 +396,15 @@ def main(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path) # truncation_side='left'
     print(len(tokenizer))
 
-    train_dataset = get_dataset("train", args.trajectories_file, args.human_goal_file, args.nbr_obs, tokenizer, args.encoder_max_size, args.decoder_max_size)
-    eval_dataset = get_dataset("eval", args.trajectories_file, args.human_goal_file, args.nbr_obs, tokenizer, args.encoder_max_size, args.decoder_max_size)
+    train_dataset = get_dataset("train", args.trajectories_file, args.human_goal_file, 
+                                args.default_file_path, args.items_human_ins,
+                                args.nbr_obs, tokenizer, args.encoder_max_size, 
+                                args.decoder_max_size, args.category)
+    
+    eval_dataset = get_dataset("eval", args.trajectories_file, args.human_goal_file,
+                               args.default_file_path, args.items_human_ins,
+                               args.nbr_obs, tokenizer, args.encoder_max_size,
+                               args.decoder_max_size, args.category)
     
     output_dir = os.path.join(args.output_dir, args.run_name)
     if not os.path.exists(output_dir):
