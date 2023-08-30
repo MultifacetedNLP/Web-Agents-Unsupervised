@@ -2,7 +2,7 @@ trajectories_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/
 human_goal_file: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json
 default_file_path: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/items_shuffle.json
 items_human_ins: /u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/items_human_ins.json
-category: all # electronics, fashion, grocery, garden, beauty, all
+category: [grocery] # electronics, fashion, grocery, garden, beauty, all
 encoder_max_size: 1024
 decoder_max_size: 128
 model_name_or_path: google/flan-t5-large

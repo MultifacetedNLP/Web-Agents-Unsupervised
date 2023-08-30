@@ -114,6 +114,7 @@ def create_instrunction_to_category_dict(default_file_path, items_human_ins):
 
 
 def get_data(split, trajectories_path, human_goal_path, default_file_path, items_human_ins, nbr_obs, filter_search=False, category='all'):
+    print(f"*** start of getting data for {split} ***")
     
     instrunction_to_category = {}
     if category != 'all':
@@ -150,7 +151,7 @@ def get_data(split, trajectories_path, human_goal_path, default_file_path, items
         goal_idx = human_goals.index(goal)
         if goal_idx not in goal_range:
             continue
-        if category != 'all' and instrunction_to_category.get(goal, "") != category:
+        if category != 'all' and instrunction_to_category.get(goal, "") not in category:
             continue
         num_trajs += 1
         observation_list.clear()
@@ -176,7 +177,9 @@ def get_data(split, trajectories_path, human_goal_path, default_file_path, items
     if category == 'all':
         print('all categories are included')
     else:  
-        print('category {} is only included'.format(category))
+        print('included category/categories:', *category, sep = " ")
+        
+    print(f"*** end of getting data for {split} ***")
     return context_list, final_chosen_action_list
 
 
@@ -356,7 +359,7 @@ def get_training_args(args, output_dir, logging_dir) -> TrainingArguments:
         # optim=args.optim,
         gradient_checkpointing = args.gradient_checkpointing,
         dataloader_drop_last=True,
-        run_name=args.run_name + "_" + args.category,
+        run_name=args.run_name + "_" + "_".join(args.category),
         # dataloader_num_workers=cfg.num_workers,
         # sharded_ddp="simple",
     )
@@ -380,11 +383,12 @@ def main(args):
                                args.nbr_obs, tokenizer, args.encoder_max_size,
                                args.decoder_max_size)
     
-    output_dir = os.path.join(args.output_dir, args.run_name + "_" + args.category)
+    name = args.run_name + "_" + "_".join(args.category)
+    output_dir = os.path.join(args.output_dir, name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
-    logging_dir = os.path.join(args.logging_dir, args.run_name + "_" + args.category)
+    logging_dir = os.path.join(args.logging_dir, name)
     if not os.path.exists(logging_dir):
         os.makedirs(logging_dir)
     
