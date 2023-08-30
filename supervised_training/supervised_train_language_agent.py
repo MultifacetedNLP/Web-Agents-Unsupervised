@@ -88,58 +88,28 @@ def process_goal(state):
         state = state.split(', and price lower than')[0]
     return state
 
-def clean_product_keys(products):
-    for product in products:
-        product.pop('product_information', None)
-        product.pop('brand', None)
-        product.pop('brand_url', None)
-        product.pop('list_price', None)
-        product.pop('availability_quantity', None)
-        product.pop('availability_status', None)
-        product.pop('total_reviews', None)
-        product.pop('total_answered_questions', None)
-        product.pop('seller_id', None)
-        product.pop('seller_name', None)
-        product.pop('fulfilled_by_amazon', None)
-        product.pop('fast_track_message', None)
-        product.pop('aplus_present', None)
-        product.pop('small_description_old', None)
-    print('Keys cleaned.')
-    return products
-
-def remove_dot_at_end(input_str):
-    if input_str.endswith('.'):
-        return input_str[:-1]
-    else:
-        return input_str
-
 def process_str(s):
-    s = s.lower().replace('"', '').replace("'", "").strip()
-    s = remove_dot_at_end(s)
+    s = s.lower().strip('.').replace('"', '').replace("'", "")
     return s
 
 def create_instrunction_to_category_dict(default_file_path, items_human_ins):
     print('Creating instrunction to category dictionary...')
     with open(default_file_path) as f:
         products = json.load(f)
-    print('Products loaded.')
-    products = clean_product_keys(products)
     asin_to_category = {}
     for product in tqdm(products):
         asin = product['asin']
         if asin == 'nan' or len(asin) > 10:
             continue
         asin_to_category[asin] = product['category']
-    print('asin_to_category dictionary created.')
         
     with open(items_human_ins) as f:
         items_human_ins_dict = json.load(f)
-    print('items_human_ins_dict loaded.')
     instrunction_to_category = {}
     for _, value in items_human_ins_dict.items():
         for val in value:
             instrunction_to_category[process_str(val['instruction'])] = asin_to_category[val['asin']]
-    print('instrunction_to_category dictionary created.')
+    print('Instrunction to category dictionary created.')
     return instrunction_to_category
 
 
@@ -203,6 +173,10 @@ def get_data(split, trajectories_path, human_goal_path, default_file_path, items
         
     print('num of {} trajs: {}'.format(split, num_trajs))
     print('total transitions: {}'.format(cnt))
+    if category == 'all':
+        print('all categories are included')
+    else:  
+        print('category {} is only included'.format(category))
     return context_list, final_chosen_action_list
 
 
