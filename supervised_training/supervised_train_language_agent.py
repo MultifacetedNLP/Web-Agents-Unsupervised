@@ -356,7 +356,7 @@ def get_training_args(args, output_dir, logging_dir) -> TrainingArguments:
         # optim=args.optim,
         gradient_checkpointing = args.gradient_checkpointing,
         dataloader_drop_last=True,
-        run_name=args.run_name,
+        run_name=args.run_name + "_" + args.category,
         # dataloader_num_workers=cfg.num_workers,
         # sharded_ddp="simple",
     )
