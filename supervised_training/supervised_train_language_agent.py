@@ -383,12 +383,12 @@ def main(args):
                                args.nbr_obs, tokenizer, args.encoder_max_size,
                                args.decoder_max_size)
     
-    name = args.run_name + "_" + "_".join(args.category)
-    output_dir = os.path.join(args.output_dir, name)
+    id_expe = args.run_name + "_" + "_".join(args.category)
+    output_dir = os.path.join(args.output_dir, id_expe)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
-    logging_dir = os.path.join(args.logging_dir, name)
+    logging_dir = os.path.join(args.logging_dir, id_expe)
     if not os.path.exists(logging_dir):
         os.makedirs(logging_dir)
     
