@@ -25,25 +25,25 @@ class LoadSpecificWeightsUpdater(BaseUpdater):
         if not hasattr(self, "is_loaded"):
             try:
                 self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
-                                                            "/" + kwargs["run_name"] + "/last/model.checkpoint", map_location='cuda:0'))
+                                                            "/" + kwargs["id_expe"] + "/last/model.checkpoint", map_location='cuda:0'))
                 self.is_loaded = True
                 print("Last")
             except:
                 try:
                     self._llm_module.load_state_dict(torch.load(kwargs["saving_path_model"] +
-                                                                "/" + kwargs["run_name"] + "/backup/model.checkpoint"), map_location='cuda:0')
+                                                                "/" + kwargs["id_expe"] + "/backup/model.checkpoint"), map_location='cuda:0')
                     self.is_loaded = True
                     print("Backup")
                 except:
                     print("No RL model loaded")
 
 
-def run_agent(args, algo, saving_path_logs, run_name, n_tests):
+def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
     format_str = ("Reward: {: .2f} +- {: .2f}  (Min: {: .2f} Max: {: .2f}) |\
     Success Rate: {: .2f} |")
 
 
-    test_path = os.path.join(os.path.join(saving_path_logs, run_name), 'test')
+    test_path = os.path.join(os.path.join(saving_path_logs, id_expe), 'test')
     
     csv_path = os.path.join(test_path, 'log.csv')
     first_created = not os.path.exists(csv_path) 
@@ -92,7 +92,7 @@ def main(config_args):
                        custom_module_functions=custom_lamorel_module_functions)
         
         
-    log_path = os.path.join(config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.run_name)
+    log_path = os.path.join(config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe)
     # create the folder for the tests results and return_per_episode
     test_path = os.path.join(log_path, 'test')
     if not os.path.exists(test_path):
@@ -101,7 +101,7 @@ def main(config_args):
     
     lm_server.update([None for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
                 [[None] for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
-                run_name=config_args.rl_script_args.run_name, saving_path_model=config_args.rl_script_args.saving_path_model)
+                id_expe=config_args.rl_script_args.id_expe, saving_path_model=config_args.rl_script_args.saving_path_model)
     
     
     envs = []
@@ -121,7 +121,7 @@ def main(config_args):
                               nbr_obs=config_args.rl_script_args.nbr_obs, test=True)
     
     
-    run_agent(config_args, algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.run_name,
+    run_agent(config_args, algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe,
               config_args.rl_script_args.number_episodes)
     
     if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
