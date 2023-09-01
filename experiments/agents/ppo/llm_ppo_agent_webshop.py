@@ -17,9 +17,9 @@ bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
 class LLMPPOAgentWebshop(BasePPOAgent):
     def __init__(self, envs, lm_server, llm_scoring_module_key, nbr_llms=None, num_frames_per_proc=None, discount=0.99,
                  lr=7e-4, beta1=0.9, beta2=0.999, gae_lambda=0.95, entropy_coef=0.01, value_loss_coef=0.5,
-                 max_grad_norm=0.5, adam_eps=1e-5, clip_eps=0.2, epochs=4, prioritization_best_trajectories=0, batch_size=64, reshape_reward=None,
-                 name_experiment=None, saving_path_model=None, saving_path_logs=None, number_envs=None, subgoals=None,
-                 nbr_obs=3, id_expe=None, template_test=1, aux_info=None, debug=False, test=False):
+                 max_grad_norm=0.5, adam_eps=1e-5, clip_eps=0.2, epochs=4, prioritization_best_trajectories=0, batch_size=64, 
+                 reshape_reward=None, saving_path_model=None, saving_path_logs=None,
+                 nbr_obs=3, id_expe=None, aux_info=None, debug=False, test=False):
         super().__init__(envs, num_frames_per_proc, discount, lr, gae_lambda, entropy_coef, value_loss_coef,
                          max_grad_norm, reshape_reward, aux_info, device=torch.device("cpu"))
 
@@ -69,13 +69,10 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         self.beta2 = beta2
         self.adam_eps = adam_eps
 
-        self.name_experiment = name_experiment
         self.saving_path_model = saving_path_model
         self.saving_path_logs = saving_path_logs
-        self.number_envs = number_envs
 
         self.id_expe = id_expe
-        self.template_test = template_test
         self.number_updates = 0
 
         if self.saving_path_logs and id_expe:
@@ -359,8 +356,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                                                          saving_path_model=self.saving_path_model,
                                                          experiment_path=self.experiment_path,
                                                          number_updates=self.number_updates,
-                                                         scoring_module_key=self.llm_scoring_module_key,
-                                                         template_test=self.template_test)
+                                                         scoring_module_key=self.llm_scoring_module_key)
 
                 lm_server_update_first_call = False
 

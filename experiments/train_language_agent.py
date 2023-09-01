@@ -333,9 +333,6 @@ def run_agent(args, algo, id_expe):
             json.dump(status, dst)
 
 
-# This will be overriden by lamorel's launcher if used
-
-
 # @hydra.main(config_path='config', config_name='config')
 @hydra.main(config_path='configs', config_name='my_local_config')
 def main(config_args):
@@ -344,70 +341,40 @@ def main(config_args):
         custom_lamorel_module_functions = {
             'value': ValueHeadModuleFn(config_args.lamorel_args.llm_args.model_type)
         }
-        if config_args.rl_script_args.use_action_heads:
-            custom_lamorel_module_functions['policy_head'] = ActionHeadsModuleFn(
-                config_args.lamorel_args.llm_args.model_type,
-                len(config_args.rl_script_args.action_space)
-            )
-            lamorel_scoring_module_key = "policy_head"
-        else:
-            custom_lamorel_module_functions['score'] = LogScoringModuleFn(
-                config_args.lamorel_args.llm_args.model_type
-            )
-            lamorel_scoring_module_key = "score"
+        
+        custom_lamorel_module_functions['score'] = LogScoringModuleFn(
+            config_args.lamorel_args.llm_args.model_type
+        )
+        lamorel_scoring_module_key = "score"
 
         lamorel_init()
         lm_server = Caller(config_args.lamorel_args, custom_updater=PPOUpdater(),
                            custom_module_functions=custom_lamorel_module_functions)
 
     # Env
-    name_env = config_args.rl_script_args.name_environment
-    seed = config_args.rl_script_args.seed
     envs = []
-    subgoals = []
     number_envs = config_args.rl_script_args.number_envs
-    list_actions = []
-    if "BabyAI" in name_env:
-        for a in config_args.rl_script_args.action_space:
-            list_actions.append(a.replace("_", " "))
-    elif "Webshop" in name_env:
-        train_env = WebEnv(config_args.rl_script_args.environment_args, split='train', id='train_')
-        server = train_env.env.server
+    
+    # webshop environment
+    train_env = WebEnv(config_args.rl_script_args.environment_args, split='train', id='train_')
+    server = train_env.env.server
     
     for i in range(number_envs):
-        if "BabyAI" in name_env:
-            env = gym.make(name_env)
-            env.seed(100 * seed + i)
-            envs.append(env)
-            subgoals.append(list_actions)
-        elif "Webshop" in name_env:
-            env = WebEnv(config_args.rl_script_args.environment_args, split='train', server=server, id=f'train{i}_')
-            envs.append(env)
+        env = WebEnv(config_args.rl_script_args.environment_args, split='train', server=server, id=f'train{i}_')
+        envs.append(env)
             
-    if "BabyAI" in name_env:
-        envs = ParallelEnv(envs)
-
-    if config_args.rl_script_args.reward_shaping_beta == 0:
-        reshape_reward = reward_function
-    else:
-        reshape_reward = reward_function_shapped  # TODO ad the beta
+    # if config_args.rl_script_args.reward_shaping_beta == 0:
+    #    reshape_reward = reward_function
+    # else:
+    #    reshape_reward = reward_function_shapped  # TODO ad the beta
 
     id_expe = config_args.rl_script_args.name_experiment + \
-              '_nbr_env_{}_'.format(config_args.rl_script_args.number_envs) + \
-              '{}_'.format(config_args.rl_script_args.name_model) + \
-              'pretrained_{}_'.format(config_args.lamorel_args.llm_args.pretrained)
+              '_nbr_env_{}_'.format(config_args.rl_script_args.number_envs)
 
-    if not config_args.lamorel_args.llm_args.pretrained:
-        id_expe += 'load_embedding_{}_'.format(config_args.rl_script_args.load_embedding)
 
-    if config_args.rl_script_args.use_action_heads:
-        id_expe += 'use_action_heads_{}_'.format(config_args.rl_script_args.use_action_heads)
+    id_expe += 'nbr_obs_{}_'.format(config_args.rl_script_args.nbr_obs)
 
-    if config_args.rl_script_args.nbr_obs != 3:
-        id_expe += 'nbr_obs_{}_'.format(config_args.rl_script_args.nbr_obs)
-
-    id_expe += 'shape_reward_beta_{}_'.format(config_args.rl_script_args.reward_shaping_beta) + \
-               'seed_{}'.format(config_args.rl_script_args.seed)
+    # id_expe += 'shape_reward_beta_{}_'.format(config_args.rl_script_args.reward_shaping_beta)
 
     model_path = os.path.join(config_args.rl_script_args.saving_path_model, id_expe)
     if not os.path.exists(model_path):
@@ -445,42 +412,20 @@ def main(config_args):
                                  beta2=config_args.rl_script_args.beta2,
                                  adam_eps=config_args.rl_script_args.adam_eps)
 
-        if "BabyAI" in name_env:
-            algo = LLMPPOAgent(envs, lm_server, lamorel_scoring_module_key,
-                            config_args.lamorel_args.distributed_setup_args.n_llm_processes,
-                            config_args.rl_script_args.frames_per_proc,
-                            config_args.rl_script_args.discount, config_args.rl_script_args.lr,
-                            config_args.rl_script_args.beta1, config_args.rl_script_args.beta2,
-                            config_args.rl_script_args.gae_lambda, config_args.rl_script_args.entropy_coef,
-                            config_args.rl_script_args.value_loss_coef, config_args.rl_script_args.max_grad_norm,
-                            config_args.rl_script_args.adam_eps, config_args.rl_script_args.clip_eps,
-                            config_args.rl_script_args.epochs, config_args.rl_script_args.batch_size,
-                            reshape_reward,
-                            config_args.rl_script_args.name_experiment,
-                            config_args.rl_script_args.saving_path_model,
-                            config_args.rl_script_args.saving_path_logs, number_envs, subgoals,
-                            config_args.rl_script_args.nbr_obs, id_expe,
-                            config_args.rl_script_args.template_test)
-        elif "Webshop" in name_env:
-            algo = LLMPPOAgentWebshop(envs, lm_server, lamorel_scoring_module_key,
-                            config_args.lamorel_args.distributed_setup_args.n_llm_processes,
-                            config_args.rl_script_args.frames_per_proc,
-                            config_args.rl_script_args.discount, config_args.rl_script_args.lr,
-                            config_args.rl_script_args.beta1, config_args.rl_script_args.beta2,
-                            config_args.rl_script_args.gae_lambda, config_args.rl_script_args.entropy_coef,
-                            config_args.rl_script_args.value_loss_coef, config_args.rl_script_args.max_grad_norm,
-                            config_args.rl_script_args.adam_eps, config_args.rl_script_args.clip_eps,
-                            config_args.rl_script_args.epochs, config_args.rl_script_args.prioritization_best_trajectories,
-                            config_args.rl_script_args.batch_size, None,
-                            config_args.rl_script_args.name_experiment,
-                            config_args.rl_script_args.saving_path_model,
-                            config_args.rl_script_args.saving_path_logs, number_envs, None,
-                            config_args.rl_script_args.nbr_obs, id_expe,
-                            config_args.rl_script_args.template_test)
+        algo = LLMPPOAgentWebshop(envs, lm_server, lamorel_scoring_module_key,
+                        config_args.lamorel_args.distributed_setup_args.n_llm_processes,
+                        config_args.rl_script_args.frames_per_proc,
+                        config_args.rl_script_args.discount, config_args.rl_script_args.lr,
+                        config_args.rl_script_args.beta1, config_args.rl_script_args.beta2,
+                        config_args.rl_script_args.gae_lambda, config_args.rl_script_args.entropy_coef,
+                        config_args.rl_script_args.value_loss_coef, config_args.rl_script_args.max_grad_norm,
+                        config_args.rl_script_args.adam_eps, config_args.rl_script_args.clip_eps,
+                        config_args.rl_script_args.epochs, config_args.rl_script_args.prioritization_best_trajectories,
+                        config_args.rl_script_args.batch_size, None,
+                        config_args.rl_script_args.saving_path_model,
+                        config_args.rl_script_args.saving_path_logs,
+                        config_args.rl_script_args.nbr_obs, id_expe)
         
-    else:
-        algo = DRRNAgent(envs, subgoals, reshape_reward, config_args.rl_script_args.spm_path, max_steps=number_envs * 4,
-                         saving_path=config_args.rl_script_args.saving_path_model + "/" + id_expe, save_frequency=1)
     run_agent(config_args.rl_script_args, algo, id_expe)
     if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
         lm_server.close()
