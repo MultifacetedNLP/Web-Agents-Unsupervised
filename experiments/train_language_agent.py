@@ -368,7 +368,7 @@ def main(config_args):
     # else:
     #    reshape_reward = reward_function_shapped  # TODO ad the beta
 
-    id_expe = config_args.rl_script_args.name_experiment + \
+    id_expe = config_args.rl_script_args.run_name + \
               '_nbr_env_{}_'.format(config_args.rl_script_args.number_envs)
 
 
