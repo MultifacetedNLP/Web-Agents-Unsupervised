@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import re
+import torch
 
 class BaseAgent(ABC):
     def __init__(self, envs):
@@ -88,6 +89,43 @@ class BaseAgent(ABC):
     
                 
         return goal + "," + obs
+    
+    
+    def top_k_top_p_filtering(self, probs=None, logits=None, top_k=0, top_p=0.0, filter_value=0):
+        """ Filter from the probability distribution using top-k and/or nucleus (top-p) filtering
+            Args:
+                probs: probability distribution shape (vocabulary size)
+                top_k >0: keep only top k elements with highest probability (top-k filtering).
+                top_p >0.0: keep the top elements with cumulative probability >= top_p (nucleus filtering).
+                    Nucleus filtering is described in Holtzman et al. (http://arxiv.org/abs/1904.09751)
+        """
+        if logits is not None:
+            probs = torch.nn.functional.softmax(logits, dim=-1)
+        else:
+            probs = probs / probs.sum(-1, keepdim=True)
+        
+        assert probs.dim() == 1  # batch size 1 for now - could be updated for more but the code would be less clear
+        top_k = min(top_k, probs.size(-1))  # Safety check
+        
+        if top_k > 0:
+            # Remove all elements with a probability less than the last token of the top-k
+            indices_to_remove = probs < torch.topk(probs, top_k)[0][..., -1, None]
+            probs[indices_to_remove] = filter_value
+
+        if top_p > 0.0:
+            sorted_probs, sorted_indices = torch.sort(probs, descending=True)
+            cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
+
+            # Remove elements with cumulative probability above the threshold
+            sorted_indices_to_remove = cumulative_probs > top_p
+            # Shift the indices to the right to keep also the first token above the threshold
+            sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+            sorted_indices_to_remove[..., 0] = 0
+
+            indices_to_remove = sorted_indices[sorted_indices_to_remove]
+            probs[indices_to_remove] = filter_value
+            
+        return probs
 
 
     def generate_prompt_french(self, goal, subgoals, deque_obs, deque_actions):
