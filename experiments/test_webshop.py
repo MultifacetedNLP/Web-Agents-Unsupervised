@@ -53,6 +53,7 @@ def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
 
         
     logs = algo.generate_trajectories(n_tests, sample_actions=args.rl_script_args.sample_actions, sample_query=args.rl_script_args.sample_query,
+                                      top_k=args.rl_script_args.top_k, top_p=args.rl_script_args.top_p,
                                       deactivte_RL_for_search=args.rl_script_args.deactivte_RL_for_search,
                                       bart_path=args.rl_script_args.bart_path, generate_query=args.rl_script_args.generate_query)
 
