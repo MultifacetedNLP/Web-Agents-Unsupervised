@@ -52,7 +52,8 @@ def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
         csv_writer.writerow(["return_per_episode", "success_per_episode"])
 
         
-    logs = algo.generate_trajectories(n_tests, sample=args.rl_script_args.sample, deactivte_RL_for_search=args.rl_script_args.deactivte_RL_for_search,
+    logs = algo.generate_trajectories(n_tests, sample_actions=args.rl_script_args.sample_actions, sample_query=args.rl_script_args.sample_query,
+                                      deactivte_RL_for_search=args.rl_script_args.deactivte_RL_for_search,
                                       bart_path=args.rl_script_args.bart_path, generate_query=args.rl_script_args.generate_query)
 
     success_rates = [1 if r == 100.0 else 0 for r in logs["return_per_episode"]]

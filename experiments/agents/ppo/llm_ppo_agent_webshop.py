@@ -414,7 +414,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
     
 
-    def generate_trajectories(self, n_tests, sample=False, deactivte_RL_for_search=False, bart_path="", generate_query=False):
+    def generate_trajectories(self, n_tests, sample_actions=False, sample_query=False, deactivte_RL_for_search=False, bart_path="", generate_query=False):
         """Generates trajectories and calculates relevant metrics.
         Runs several environments concurrently.
         Returns
@@ -455,12 +455,22 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                                                             deque_obs=self.obs_queue[j],
                                                             deque_actions=self.acts_queue[j])
                             
-                            
-                            query = self.lm_server.generate(contexts=[prompt], num_beams=5)
-                            query = query[0][0]["text"].replace("[", "").replace("]", "")
-                            print(query)
-                            actions_str.append(f'search[{query}]')
-                            self.acts_queue[j].append(actions_str[j])
+                            if not sample_query:
+                                query = self.lm_server.generate(contexts=[prompt], num_beams=10)
+                                query = query[0][0]["text"].replace("[", "").replace("]", "")
+                                print(query)
+                                actions_str.append(f'search[{query}]')
+                                self.acts_queue[j].append(actions_str[j])
+                            else:
+                                queries = self.lm_server.generate(contexts=[prompt], num_beams=10, num_return_sequences=10, early_stopping=True)[0]
+                                scores = torch.stack([query["sequences_scores"] for query in queries])
+                                dist = Categorical(logits=scores)
+                                chosen_query_index = int(dist.sample().cpu().numpy())
+                                query = queries[chosen_query_index]["text"].replace("[", "").replace("]", "")
+                                print(query)
+                                actions_str.append(f'search[{query}]')
+                                self.acts_queue[j].append(actions_str[j])
+                                
                     else:
                         prompt = self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
                                                             deque_obs=self.obs_queue[j],
@@ -473,7 +483,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                         
                         scores = output[0][self.llm_scoring_module_key]
                         
-                        if sample:
+                        if sample_actions:
                             dist = Categorical(probs=torch.exp(scores))
                             action = dist.sample()
                             a = action.cpu().numpy()
@@ -496,7 +506,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                 scores = [_o[self.llm_scoring_module_key] for _o in output]
                 # vals = torch.stack([_o["value"][0] for _o in output]).cpu().numpy()
                 
-                if sample:
+                if sample_actions:
                     # a = [torch.multinomial(F.softmax(score, dim=0), 1)[0].item() for score in scores]
                     dists = [Categorical(probs=torch.exp(score)) for score in scores]
                     action = torch.stack([dist.sample() for dist in dists])

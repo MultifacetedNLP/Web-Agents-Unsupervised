@@ -23,7 +23,7 @@ lamorel_args:
     pre_encode_inputs: true
     parallelism:
       use_gpu: true
-      model_parallelism_size: 1
+      model_parallelism_size: 2
       synchronize_gpus_after_scoring: false
       empty_cuda_cache_after_scoring: false
   updater_args:
@@ -35,8 +35,9 @@ rl_script_args:
   nbr_obs: 2
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
-  id_expe: flan_t5_large_2_observations_only_PPO
-  sample: false
+  id_expe: ckpts_large_2_observations_finetuned_with_ppo_v2
+  sample_actions: false
+  sample_query: true
   deactivte_RL_for_search: false
   bart_path: ''
   generate_query: true
