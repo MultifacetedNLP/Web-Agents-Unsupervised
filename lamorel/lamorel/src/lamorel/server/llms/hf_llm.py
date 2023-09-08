@@ -269,7 +269,7 @@ class HF_LLM(BaseLLM):
                 {
                     "text": _text,
                     "score": _score.detach().cpu().numpy(),
-                    "sequences_scores": _sequences_score.detach().cpu().numpy()
+                    "sequences_scores": _sequences_score.detach()
                 }
                 for _text, _score, _sequences_score in zip(_generated_texts, _scores, results.sequences_scores)
             ])
