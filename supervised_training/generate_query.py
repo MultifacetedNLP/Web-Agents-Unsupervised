@@ -53,7 +53,7 @@ def main(args):
     all_prompts, all_goals = get_data(args.goal_path)
     
     dataset = get_dataset(all_prompts, tokenizer, args.encoder_max_size)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=16)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size)
     all_queries = []
     for batch in tqdm(dataloader):
         output = model.generate(
