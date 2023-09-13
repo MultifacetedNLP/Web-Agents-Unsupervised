@@ -60,9 +60,11 @@ def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
     success_rates = [1 if r == 100.0 else 0 for r in logs["return_per_episode"]]
 
     average_score = f"avg test score: {numpy.mean(logs['return_per_episode'])}"
+    std_score = f"std of test score: {numpy.std(logs['return_per_episode'])}"
     average_test_success_rate = f"avg test success rate %: {numpy.mean(success_rates) * 100}"
     print('------------------------------------------')
     print(average_score)
+    print(std_score)
     print(average_test_success_rate)
     
     
@@ -70,6 +72,7 @@ def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
     with open(txt_path, 'w') as file:
         # Write content to the file
         file.write(average_score + "\n")
+        file.write(std_score + "\n")
         file.write(average_test_success_rate)
         
     for each_return_per_episode, success_rate in zip(logs["return_per_episode"], success_rates):
