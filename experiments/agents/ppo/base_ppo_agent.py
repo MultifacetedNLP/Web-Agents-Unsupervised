@@ -1,8 +1,6 @@
 # from experiments.agents.base_agent import BaseAgent
 from agents.base_agent import BaseAgent
 
-from babyai.rl.utils.supervised_losses import ExtraInfoCollector
-
 import torch
 
 class BasePPOAgent(BaseAgent):
@@ -67,9 +65,6 @@ class BasePPOAgent(BaseAgent):
         self.rewards_bonus = torch.zeros(*shape, device=self.device)
         self.advantages = torch.zeros(*shape, device=self.device)
         self.log_probs = torch.zeros(*shape, device=self.device)
-
-        if self.aux_info:
-            self.aux_info_collector = ExtraInfoCollector(self.aux_info, shape, self.device)
 
         # Initialize log values
         self.log_episode_return = torch.zeros(self.num_procs, device=self.device)

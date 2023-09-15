@@ -1,7 +1,6 @@
 from .base_ppo_agent import BasePPOAgent
 
-import babyai.utils
-from babyai.rl.utils import DictList
+from ...utils.dictlist import DictList
 
 import os
 import torch
@@ -153,11 +152,6 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                     self.subgoals[-1] = info['valid']
                     self.obs_queue[j].append(obs.lower())
 
-
-            if self.aux_info:
-                env_info = self.aux_info_collector.process(env_info)
-                # env_info = self.process_aux_info(env_info)
-
             # Update experiences values
 
             # self.obss[i] = self.obs
@@ -257,9 +251,6 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         exps.log_prob = self.log_probs.transpose(0, 1).reshape(-1)
         self.dones[-1, :] = 1
         exps.dones = self.dones.transpose(0, 1).reshape(-1)
-
-        if self.aux_info:
-            exps = self.aux_info_collector.end_collection(exps)
 
         # Log some values
 
