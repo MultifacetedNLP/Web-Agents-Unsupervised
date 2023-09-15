@@ -1,6 +1,6 @@
 from .base_ppo_agent import BasePPOAgent
 
-from ...utils.dictlist import DictList
+from utils import DictList
 
 import os
 import torch
