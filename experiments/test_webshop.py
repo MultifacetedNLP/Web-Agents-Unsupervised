@@ -37,46 +37,59 @@ class LoadSpecificWeightsUpdater(BaseUpdater):
                 except:
                     print("No RL model loaded")
 
+def uniquify(path):
+    filename, extension = os.path.splitext(path)
+    counter = 1
+
+    while os.path.exists(path):
+        path = filename + " (" + str(counter) + ")" + extension
+        counter += 1
+
+    return path
 
 def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
-    format_str = ("Reward: {: .2f} +- {: .2f}  (Min: {: .2f} Max: {: .2f}) |\
-    Success Rate: {: .2f} |")
-
-
-    test_path = os.path.join(os.path.join(saving_path_logs, id_expe), 'test')
-    
-    csv_path = os.path.join(test_path, 'log.csv')
-    first_created = not os.path.exists(csv_path) 
-    csv_writer = csv.writer(open(csv_path, 'a', 1))
-    if first_created:
-        csv_writer.writerow(["return_per_episode", "success_per_episode"])
-
         
-    logs = algo.generate_trajectories(n_tests, sample_actions=args.rl_script_args.sample_actions, sample_query=args.rl_script_args.sample_query,
+    logs = algo.generate_trajectories(n_tests, sample_actions=args.rl_script_args.sample_actions, sample_queries=args.rl_script_args.sample_queries,
                                       top_k=args.rl_script_args.top_k, top_p=args.rl_script_args.top_p,
-                                      deactivte_RL_for_search=args.rl_script_args.deactivte_RL_for_search,
-                                      bart_path=args.rl_script_args.bart_path, generate_query=args.rl_script_args.generate_query)
+                                      generate_query=args.rl_script_args.generate_query)
 
     success_rates = [1 if r == 100.0 else 0 for r in logs["return_per_episode"]]
+    fail_rate = [1 if r == 0.0 else 0 for r in logs["return_per_episode"]]
 
     average_score = f"avg test score: {numpy.mean(logs['return_per_episode'])}"
     std_score = f"std of test score: {numpy.std(logs['return_per_episode'])}"
-    average_test_success_rate = f"avg test success rate %: {numpy.mean(success_rates) * 100}"
+    average_success_rate = f"avg test success rate %: {numpy.mean(success_rates) * 100}"
+    average_fail_rate = f"avg test fail rate %: {numpy.mean(fail_rate) * 100}"
     print('------------------------------------------')
     print(average_score)
     print(std_score)
-    print(average_test_success_rate)
+    print(average_success_rate)
+    print(average_fail_rate)
     
     
-    txt_path = os.path.join(test_path, 'final.txt')
+    test_path = os.path.join(os.path.join(saving_path_logs, id_expe), 'test')
+    
+    name = f"sample_actions_{args.rl_script_args.sample_actions}_sample_queries_{args.rl_script_args.sample_queries}_top_k_" + \
+    f"{args.rl_script_args.top_k}_top_p_{args.rl_script_args.top_p}_generate_query_{args.rl_script_args.generate_query}"
+    
+    csv_path = os.path.join(test_path, f'log_{name}.csv')
+    csv_path = uniquify(csv_path)
+    csv_writer = csv.writer(open(csv_path, 'a', 1))
+    csv_writer.writerow(["return_per_episode", "success_per_episode"])
+    
+    for each_return_per_episode, success_rate in zip(logs["return_per_episode"], success_rates):
+        csv_writer.writerow([each_return_per_episode, success_rate])
+    
+    
+    txt_path = os.path.join(test_path, f'final_{name}.txt')
+    txt_path = uniquify(txt_path)
     with open(txt_path, 'w') as file:
         # Write content to the file
         file.write(average_score + "\n")
         file.write(std_score + "\n")
-        file.write(average_test_success_rate)
+        file.write(average_success_rate + "\n")
+        file.write(average_fail_rate)
         
-    for each_return_per_episode, success_rate in zip(logs["return_per_episode"], success_rates):
-        csv_writer.writerow([each_return_per_episode, success_rate])
 
 
 
@@ -120,11 +133,24 @@ def main(config_args):
     print('envs loaded')
     
     
+
+    algo = LLMPPOAgentWebshop(envs = envs, lm_server = lm_server, llm_scoring_module_key=lamorel_scoring_module_key,
+                              num_frames_per_proc=config_args.rl_script_args.number_episodes,
+                              nbr_obs=config_args.rl_script_args.nbr_obs, test=True)
+    
+    
+    run_agent(config_args, algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe,
+              config_args.rl_script_args.number_episodes)
+    
+    
     
     algo = LLMPPOAgentWebshop(envs = envs, lm_server = lm_server, llm_scoring_module_key=lamorel_scoring_module_key,
                               num_frames_per_proc=config_args.rl_script_args.number_episodes,
                               nbr_obs=config_args.rl_script_args.nbr_obs, test=True)
     
+    
+    config_args.rl_script_args.top_p = 0.00
+    config_args.rl_script_args.top_k = 0
     
     run_agent(config_args, algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe,
               config_args.rl_script_args.number_episodes)
