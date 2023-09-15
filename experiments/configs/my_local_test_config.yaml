@@ -35,13 +35,11 @@ rl_script_args:
   nbr_obs: 2
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
-  id_expe: ckpts_large_2_observations_finetuned_with_ppo_v2
+  id_expe: flan_t5_large_2_observations_beauty_with_ppo
   sample_actions: true
-  sample_query: true
-  top_k: 0
-  top_p: 0.80
-  deactivte_RL_for_search: false
-  bart_path: ''
+  sample_queries: true
+  top_k: 8
+  top_p: 0.90
   generate_query: true
   environment_args:
     state_format: 'text_rich'
