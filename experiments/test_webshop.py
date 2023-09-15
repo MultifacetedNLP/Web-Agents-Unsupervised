@@ -47,9 +47,15 @@ def uniquify(path):
 
     return path
 
-def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
-        
-    logs = algo.generate_trajectories(n_tests, sample_actions=args.rl_script_args.sample_actions, sample_queries=args.rl_script_args.sample_queries,
+def run_agent(args, envs, lm_server, lamorel_scoring_module_key):
+    
+    algo = LLMPPOAgentWebshop(envs = envs, lm_server = lm_server, llm_scoring_module_key=lamorel_scoring_module_key,
+                              num_frames_per_proc=args.rl_script_args.number_episodes,
+                              nbr_obs=args.rl_script_args.nbr_obs, test=True)
+    
+    
+    logs = algo.generate_trajectories(args.rl_script_args.number_episodes, sample_actions=args.rl_script_args.sample_actions,
+                                      sample_queries=args.rl_script_args.sample_queries,
                                       top_k=args.rl_script_args.top_k, top_p=args.rl_script_args.top_p,
                                       generate_query=args.rl_script_args.generate_query)
 
@@ -67,7 +73,7 @@ def run_agent(args, algo, saving_path_logs, id_expe, n_tests):
     print(average_fail_rate)
     
     
-    test_path = os.path.join(os.path.join(saving_path_logs, id_expe), 'test')
+    test_path = os.path.join(os.path.join(args.rl_script_args.saving_path_logs, args.rl_script_args.id_expe), 'test')
     
     name = f"sample_actions_{args.rl_script_args.sample_actions}_sample_queries_{args.rl_script_args.sample_queries}_top_k_" + \
     f"{args.rl_script_args.top_k}_top_p_{args.rl_script_args.top_p}_generate_query_{args.rl_script_args.generate_query}"
@@ -133,27 +139,14 @@ def main(config_args):
     print('envs loaded')
     
     
-
-    algo = LLMPPOAgentWebshop(envs = envs, lm_server = lm_server, llm_scoring_module_key=lamorel_scoring_module_key,
-                              num_frames_per_proc=config_args.rl_script_args.number_episodes,
-                              nbr_obs=config_args.rl_script_args.nbr_obs, test=True)
-    
-    
-    run_agent(config_args, algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe,
-              config_args.rl_script_args.number_episodes)
-    
-    
-    
-    algo = LLMPPOAgentWebshop(envs = envs, lm_server = lm_server, llm_scoring_module_key=lamorel_scoring_module_key,
-                              num_frames_per_proc=config_args.rl_script_args.number_episodes,
-                              nbr_obs=config_args.rl_script_args.nbr_obs, test=True)
+    run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
     
     
     config_args.rl_script_args.top_p = 0.00
     config_args.rl_script_args.top_k = 0
     
-    run_agent(config_args, algo, config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe,
-              config_args.rl_script_args.number_episodes)
+    run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
+    
     
     if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
         lm_server.close()
