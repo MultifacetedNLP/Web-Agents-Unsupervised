@@ -16,16 +16,11 @@ import time
 
 import numpy as np
 import torch
-import gym
 import torch.nn.functional as F
 from torch.distributions import Categorical
 
-import babyai_text
-import babyai.utils as utils
-from babyai.paral_env_simple import ParallelEnv
+from utils import synthesize
 
-from agents.drrn.drrn import DRRNAgent
-from agents.ppo.llm_ppo_agent import LLMPPOAgent
 from agents.ppo.llm_ppo_agent_webshop import LLMPPOAgentWebshop
 
 from lamorel import Caller, lamorel_init
@@ -309,12 +304,12 @@ def run_agent(args, algo, id_expe):
 
         total_ellapsed_time = int(time.time() - total_start_time)
         fps = logs["num_frames"] / (update_end_time - update_start_time)
-        return_per_episode = utils.synthesize(logs["return_per_episode"])
-        success_per_episode = utils.synthesize(
+        return_per_episode = synthesize(logs["return_per_episode"])
+        success_per_episode = synthesize(
             [1 if r == 100.0 else 0 for r in logs["return_per_episode"]])
-        reshaped_return_per_episode = utils.synthesize(logs["reshaped_return_per_episode"])
-        reshaped_return_bonus_per_episode = utils.synthesize(logs["reshaped_return_bonus_per_episode"])
-        num_frames_per_episode = utils.synthesize(logs["num_frames_per_episode"])
+        reshaped_return_per_episode = synthesize(logs["reshaped_return_per_episode"])
+        reshaped_return_bonus_per_episode = synthesize(logs["reshaped_return_bonus_per_episode"])
+        num_frames_per_episode = synthesize(logs["num_frames_per_episode"])
 
         data = [status['i'], status['num_episodes'], status['num_frames'],
                 fps, total_ellapsed_time,
