@@ -518,9 +518,11 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                     self.obs_queue[j].clear()
                     self.acts_queue[j].clear()
                     print("reset_index: ", reset_index)
-                    print("reward: ", reward)
+                    print(f"reward of '{env.session['goal']['instruction_text']}' is {reward} ")
                     obs, info = env.reset(reset_index)
                     reset_index += 1
+                    if len(self.env[0].goal_idxs) == reset_index:
+                        reset_index = 0
                     self.infos[-1] = info
                     self.subgoals[-1] = info['valid']
                     self.obs_queue[j].append(obs.lower())
