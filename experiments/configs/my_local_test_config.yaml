@@ -30,16 +30,15 @@ lamorel_args:
 rl_script_args:
   path: ???
   number_envs: 10
-  number_episodes: 500
+  number_episodes: 2000
   frames_per_proc: 40
   nbr_obs: 2
   saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
   saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
   id_expe: flan_t5_large_2_observations_beauty_with_ppo
-  sample_actions: true
-  sample_queries: true
-  top_k: 8
-  top_p: 0.90
+  epsilon: 0.2
+  top_k: 0
+  top_p: 0.00
   generate_query: true
   environment_args:
     state_format: 'text_rich'
@@ -49,7 +48,7 @@ rl_script_args:
     return_image_feature: 0
     num_prev_obs: 0
     num_prev_actions: 0
-    step_limit: 100
+    step_limit: 200
     click_item_name: 0
     harsh_reward: 0
     go_to_item: 0
