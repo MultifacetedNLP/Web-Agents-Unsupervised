@@ -11,6 +11,8 @@ from tqdm import tqdm
 from collections import deque
 import logging
 from transformers import BartForConditionalGeneration, BartTokenizer
+import random
+
 bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
 
 class LLMPPOAgentWebshop(BasePPOAgent):
@@ -405,7 +407,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
 
     
 
-    def generate_trajectories(self, n_tests, sample_actions=False, sample_queries=False, top_k=0, top_p=0.0, generate_query=False):
+    def generate_trajectories(self, n_tests, epsilon, top_k=0, top_p=0.0, generate_query=False):
         """Generates trajectories and calculates relevant metrics.
         Runs several environments concurrently.
         Returns
@@ -424,6 +426,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
         
         pbar = tqdm(range(n_tests), ascii=" " * 9 + ">", ncols=100)
         reset_index = self.num_procs
+        total_index = self.num_procs
         while self.log_done_counter < n_tests:
             
             if generate_query:
@@ -434,19 +437,19 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                         prompt = self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
                                                         deque_obs=self.obs_queue[j],
                                                         deque_actions=self.acts_queue[j])
-                            
-                        if sample_queries:
+                        
+                        if random.random() > epsilon:
+                            query = self.lm_server.generate(contexts=[prompt], num_beams=8)
+                            query = query[0][0]["text"].replace("[", "").replace("]", "")
+                            print(query)
+                            actions_str.append(f'search[{query}]')
+                            self.acts_queue[j].append(actions_str[j])
+                        else:
                             queries = self.lm_server.generate(contexts=[prompt], num_beams=8, num_return_sequences=8, early_stopping=True)[0]
                             scores = torch.stack([query["sequences_scores"] for query in queries])
                             dist = Categorical(probs=self.top_k_top_p_filtering(logits=scores, top_k=top_k, top_p=top_p))
                             chosen_query_index = int(dist.sample().cpu().numpy())
                             query = queries[chosen_query_index]["text"].replace("[", "").replace("]", "")
-                            print(query)
-                            actions_str.append(f'search[{query}]')
-                            self.acts_queue[j].append(actions_str[j])
-                        else:
-                            query = self.lm_server.generate(contexts=[prompt], num_beams=8)
-                            query = query[0][0]["text"].replace("[", "").replace("]", "")
                             print(query)
                             actions_str.append(f'search[{query}]')
                             self.acts_queue[j].append(actions_str[j])
@@ -463,12 +466,12 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                         
                         scores = output[0][self.llm_scoring_module_key]
                         
-                        if sample_actions:
+                        if random.random() > epsilon:
+                            a = torch.argmax(scores).item()
+                        else:
                             dist = Categorical(probs=self.top_k_top_p_filtering(probs=torch.exp(scores), top_k=top_k, top_p=top_p))
                             action = dist.sample()
                             a = action.cpu().numpy()
-                        else:
-                            a = torch.argmax(scores).item()
                             
                         actions_str.append(self.subgoals[j][int(a)])
                         self.acts_queue[j].append(actions_str[j])
@@ -477,7 +480,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                 prompt = [self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
                                                             deque_obs=self.obs_queue[j],
                                                             deque_actions=self.acts_queue[j])
-                        for j in range(self.num_procs)]
+                        for j in range(len(self.subgoals))]
 
                 output = self.lm_server.custom_module_fns(
                     module_function_keys=[self.llm_scoring_module_key], # 'value'
@@ -486,16 +489,16 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                 scores = [_o[self.llm_scoring_module_key] for _o in output]
                 # vals = torch.stack([_o["value"][0] for _o in output]).cpu().numpy()
                 
-                if sample_actions:
+                if random.random() > epsilon:
+                    a = [torch.argmax(score).item() for score in scores]
+                else:
                     dists = [Categorical(probs=self.top_k_top_p_filtering(probs=torch.exp(score), top_k=top_k, top_p=top_p)) for score in scores]
                     action = torch.stack([dist.sample() for dist in dists])
                     a = action.cpu().numpy()
-                else:
-                    a = [torch.argmax(score).item() for score in scores]
                 
 
                 actions_str = []
-                for j in range(self.num_procs):
+                for j in range(len(self.subgoals)):
                     actions_str.append(self.subgoals[j][int(a[j])])
                     # self.actions.append(self.subgoals[j][int(a[j])])
                     self.acts_queue[j].append(actions_str[j])
@@ -504,6 +507,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             # take a step based on the calculated action
             self.infos, self.subgoals = [], []
             self.rewards_envs, self.dones_envs = [], []
+            remove_indexes = []
             for j, env in enumerate(self.env):
                 # self.vals.append(vals[j][0])
                 # self.prompts.append(prompt[j])
@@ -521,36 +525,49 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                     print(f"reward of '{env.session['goal']['instruction_text']}' is {reward} ")
                     obs, info = env.reset(reset_index)
                     reset_index += 1
+                    total_index += 1
                     if len(self.env[0].goal_idxs) == reset_index:
                         reset_index = 0
                     self.infos[-1] = info
                     self.subgoals[-1] = info['valid']
                     self.obs_queue[j].append(obs.lower())
+                    
+                    if total_index > n_tests:
+                        remove_indexes.append(j)
 
             # self.obs = obs
+                
 
             self.mask = 1 - torch.tensor(self.dones_envs, device=self.device, dtype=torch.float)
 
 
             self.log_episode_return += torch.tensor(self.rewards_envs, device=self.device, dtype=torch.float)
-            self.log_episode_num_frames += torch.ones(self.num_procs, device=self.device)
 
+            print("length of dones_envs:", len(self.dones_envs))
             for i, done_ in enumerate(self.dones_envs):
-                if done_ and self.log_done_counter < n_tests:
+                #if done_ and self.log_done_counter < n_tests:
+                if done_:    
                     self.log_done_counter += 1
                     pbar.update(1)
                         
                     self.log_return.append(self.log_episode_return[i].item() * 10)
-                    self.log_num_frames.append(self.log_episode_num_frames[i].item())
 
             self.log_episode_return *= self.mask
-            self.log_episode_num_frames *= self.mask
+            
+            # removing environments
+            if len(remove_indexes) > 0:
+                for index in remove_indexes:
+                    del self.env[index]
+                    del self.infos[index]
+                    del self.subgoals[index]
+                    del self.obs_queue[index]
+                    del self.acts_queue[index]
+                    self.log_episode_return = torch.cat((self.log_episode_return[:index], self.log_episode_return[index + 1:]))
 
         pbar.close()
 
         log = {
-            "return_per_episode": self.log_return[-self.log_done_counter:],
-            "num_frames_per_episode": self.log_num_frames[-self.log_done_counter:]
+            "return_per_episode": self.log_return[-self.log_done_counter:]
         }
 
         return log
