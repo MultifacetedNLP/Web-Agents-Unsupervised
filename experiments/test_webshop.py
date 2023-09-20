@@ -54,8 +54,7 @@ def run_agent(args, envs, lm_server, lamorel_scoring_module_key):
                               nbr_obs=args.rl_script_args.nbr_obs, test=True)
     
     
-    logs = algo.generate_trajectories(args.rl_script_args.number_episodes, sample_actions=args.rl_script_args.sample_actions,
-                                      sample_queries=args.rl_script_args.sample_queries,
+    logs = algo.generate_trajectories(args.rl_script_args.number_episodes, epsilon=args.rl_script_args.epsilon,
                                       top_k=args.rl_script_args.top_k, top_p=args.rl_script_args.top_p,
                                       generate_query=args.rl_script_args.generate_query)
 
@@ -75,8 +74,9 @@ def run_agent(args, envs, lm_server, lamorel_scoring_module_key):
     
     test_path = os.path.join(os.path.join(args.rl_script_args.saving_path_logs, args.rl_script_args.id_expe), 'test')
     
-    name = f"sample_actions_{args.rl_script_args.sample_actions}_sample_queries_{args.rl_script_args.sample_queries}_top_k_" + \
-    f"{args.rl_script_args.top_k}_top_p_{args.rl_script_args.top_p}_generate_query_{args.rl_script_args.generate_query}"
+    name = f"epsilon_{args.rl_script_args.epsilon}_top_k_" + \
+    f"{args.rl_script_args.top_k}_top_p_{args.rl_script_args.top_p}_generate_query_{args.rl_script_args.generate_query}_number_episodes_" + \
+    f"{args.rl_script_args.number_episodes}"
     
     csv_path = os.path.join(test_path, f'log_{name}.csv')
     csv_path = uniquify(csv_path)
@@ -141,9 +141,11 @@ def main(config_args):
     
     run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
     
+    config_args.rl_script_args.epsilon = 2  # sample
     
-    config_args.rl_script_args.top_p = 0.00
-    config_args.rl_script_args.top_k = 0
+    run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
+    
+    config_args.rl_script_args.epsilon = -2  # argmax
     
     run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
     
