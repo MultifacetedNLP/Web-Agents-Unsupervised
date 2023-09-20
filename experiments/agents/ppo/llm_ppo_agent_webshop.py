@@ -556,7 +556,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             
             # removing environments
             if len(remove_indexes) > 0:
-                for index in remove_indexes:
+                for index in sorted(remove_indexes, reverse=True):
                     del self.env[index]
                     del self.infos[index]
                     del self.subgoals[index]

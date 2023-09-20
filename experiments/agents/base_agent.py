@@ -4,7 +4,7 @@ import torch
 
 class BaseAgent(ABC):
     def __init__(self, envs):
-        self.env = envs
+        self.env = envs.copy()
         self.dict_translation_actions = {'turn left': "tourner à gauche",
                                          "turn right": "tourner à droite",
                                          "go forward": "aller tout droit",
