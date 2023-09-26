@@ -145,7 +145,13 @@ def main(config_args):
     
     run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
     
+    config_args.rl_script_args.top_p = 0.80  # top_p
+    
+    run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
+    
+    config_args.rl_script_args.top_p = 0.00  # top_p
     config_args.rl_script_args.epsilon = -2  # argmax
+    config_args.rl_script_args.number_episodes = len(envs[0].goal_idxs)
     
     run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
     
