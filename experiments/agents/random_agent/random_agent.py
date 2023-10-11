@@ -32,6 +32,7 @@ class Random_agent(BaseAgent):
                 self.subgoals[i] = info['valid']
                 self.returns[i] += reward
                 if done:
+                    logging.info(f"reward of '{self.env[i].session['goal']['instruction_text']}' is {reward} ")
                     _, info = self.env[i].reset(reset_index)
                     self.subgoals[i] = info['valid']
                     reset_index += 1
@@ -41,7 +42,6 @@ class Random_agent(BaseAgent):
                     if episodes_done > n_tests:
                         remove_indexes.append(i)
                     pbar.update(1)
-                    print(f"reward of '{self.env[i].session['goal']['instruction_text']}' is {reward} ")
                     self.logs["return_per_episode"].append(self.returns[i] * 10)
                     self.returns[i] = 0
                     
