@@ -161,8 +161,7 @@ def main(config_args):
     run_agent(config_args, envs, lm_server,  lamorel_scoring_module_key)
     
     
-    if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
-        lm_server.close()
+    lm_server.close()
     
     
 if __name__ == "__main__":
