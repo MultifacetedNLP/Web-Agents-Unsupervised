@@ -17,8 +17,6 @@ import sentencepiece as spm
 
 import pickle
 
-import babyai.rl
-
 # from experiments.agents.base_agent import BaseAgent
 from agents.base_agent import BaseAgent
 
@@ -30,10 +28,16 @@ device = accelerator.state.device
 
 
 class DRRNAgent(BaseAgent):
-    def __init__(self, envs, subgoals, reshape_reward, spm_path, saving_path, gamma=0.9, batch_size=64, memory_size=5000000,
-                 priority_fraction=0, clip=5, embedding_dim=128, hidden_dim=128, lr=0.0001, max_steps=64, save_frequency=10):
+    def __init__(self, envs, reshape_reward, spm_path, saving_path, gamma=0.9, batch_size=64, memory_size=5000000,
+                 priority_fraction=0, clip=5, embedding_dim=128, hidden_dim=128, lr=0.0001, max_steps=64, save_frequency=10, nbr_obs=2, test=False):
         super().__init__(envs)
-        self.subgoals = subgoals
+        self.filter_candidates_fn = lambda candidates: [[valid_action[7:-1] if valid_action.startswith('search[') else valid_action[6:-1] \
+                                                            for valid_action in valid_actions] for valid_actions in candidates]
+        self.infos, self.subgoals= [], []
+        self.rewards_envs, self.dones_envs = [], []
+        self.n_envs = len(self.env)
+        self.obs_queue = [deque([], maxlen=nbr_obs) for _ in range(self.n_envs)]
+        self.acts_queue = [deque([], maxlen=nbr_obs - 1) for _ in range(self.n_envs)]
         self.reshape_reward = reshape_reward
         self.gamma = gamma
         self.batch_size = batch_size
@@ -49,17 +53,21 @@ class DRRNAgent(BaseAgent):
         self.max_steps = max_steps
 
         # Stateful env
-        self.obs, self.infos = self.env.reset()
-        self.n_envs = len(self.obs)
-        self.obs_queue = [deque([], maxlen=3) for _ in range(self.n_envs)]
-        self.acts_queue = [deque([], maxlen=2) for _ in range(self.n_envs)]
-        for j in range(self.n_envs):
-            self.obs_queue[j].append(self.infos[j]['descriptions'])
-        prompts = [self.generate_prompt(goal=self.obs[j]['mission'], subgoals=self.subgoals[j],
-                                             deque_obs=self.obs_queue[j], deque_actions=self.acts_queue[j])
-                   for j in range(self.n_envs)]
+        logging.info("resetting environment")
+        for i, env in enumerate(self.env):
+            if test:
+                ob, info = env.reset(i)
+            else:
+                ob, info = env.reset()
+            self.infos.append(info)
+            self.obs_queue[i].append(ob.lower())
+            self.subgoals.append(info['valid'])
+        logging.info("reset environment")
+        prompts = [self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
+                                           deque_obs=self.obs_queue[j], deque_actions=self.acts_queue[j])
+                      for j in range(self.n_envs)]
         self.states = self.build_state(prompts)
-        self.encoded_actions = self.encode_actions(self.subgoals)
+        self.encoded_actions = self.encode_actions(self.filter_candidates_fn(self.subgoals))
         self.logs = {
             "return_per_episode": [],
             "reshaped_return_per_episode": [],
@@ -74,7 +82,6 @@ class DRRNAgent(BaseAgent):
             "loss": 0
         }
         self.returns = [0 for _ in range(self.n_envs)]
-        self.reshaped_returns = [0 for _ in range(self.n_envs)]
         self.frames_per_episode = [0 for _ in range(self.n_envs)]
 
         self.save_frequency = save_frequency
@@ -139,43 +146,44 @@ class DRRNAgent(BaseAgent):
         for i in tqdm(range(self.max_steps // self.n_envs), ascii=" " * 9 + ">", ncols=100):
             action_ids, action_idxs, _ = self.act(self.states, self.encoded_actions, sample=True)
             actions = [_subgoals[idx] for _subgoals, idx in zip(self.subgoals, action_idxs)]
-            if len(self.subgoals[0]) > 6:
-                # only useful when we test the impact of the number of actions
-                real_a = np.copy(action_idxs)
-                real_a[real_a > 6] = 6
-                obs, rewards, dones, infos = self.env.step(real_a)
-            else:
-                obs, rewards, dones, infos = self.env.step(action_idxs)
-            reshaped_rewards = [self.reshape_reward(reward=r)[0] for r in rewards]
-            for j in range(self.n_envs):
-                self.returns[j] += rewards[j]
-                self.reshaped_returns[j] += reshaped_rewards[j]
+            
+            self.infos, self.subgoals = [], []
+            self.rewards_envs, self.dones_envs = [], []
+            for j, env in enumerate(self.env):
+                obs, reward, done, info = env.step(actions[j])
+                self.rewards_envs.append(reward)
+                self.dones_envs.append(done)
+                self.infos.append(info)
+                self.subgoals.append(info['valid'])
+                self.returns[j] += reward
                 self.frames_per_episode[j] += 1
-                if dones[j]:
+                self.acts_queue[j].append(actions[j])
+                self.obs_queue[j].append(obs.lower())
+                if done:
+                    self.obs_queue[j].clear()
+                    self.acts_queue[j].clear()
+                    obs, info = env.reset()
+                    self.infos[-1] = info
+                    self.subgoals[-1] = info['valid']
+                    self.obs_queue[j].append(obs.lower())
                     episodes_done += 1
                     self.logs["num_frames_per_episode"].append(self.frames_per_episode[j])
                     self.frames_per_episode[j] = 0
                     self.logs["return_per_episode"].append(self.returns[j])
                     self.returns[j] = 0
-                    self.logs["reshaped_return_per_episode"].append(self.reshaped_returns[j])
-                    self.logs["reshaped_return_bonus_per_episode"].append(self.reshaped_returns[j])
-                    self.reshaped_returns[j] = 0
-                    # reinitialise memory of past observations and actions
-                    self.obs_queue[j].clear()
-                    self.acts_queue[j].clear()
-                else:
-                    self.acts_queue[j].append(actions[j])
-                    self.obs_queue[j].append(infos[j]['descriptions'])
+                    
+                    
 
-            next_prompts = [self.generate_prompt(goal=obs[j]['mission'], subgoals=self.subgoals[j],
-                                                 deque_obs=self.obs_queue[j],
-                                                 deque_actions=self.acts_queue[j])
+            next_prompts = [self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
+                                           deque_obs=self.obs_queue[j], deque_actions=self.acts_queue[j])
                             for j in range(self.n_envs)]
             next_states = self.build_state(next_prompts)
+            next_poss_actions = self.encode_actions(self.filter_candidates_fn(self.subgoals))
             for state, act, rew, next_state, next_poss_acts, done in \
-                    zip(self.states, action_ids, reshaped_rewards, next_states, self.encoded_actions, dones):
+                    zip(self.states, action_ids, self.rewards_envs, next_states, next_poss_actions, self.dones_envs):
                 self.observe(state, act, rew, next_state, next_poss_acts, done)
             self.states = next_states
+            self.encoded_actions = next_poss_actions
             # self.logs["num_frames"] += self.n_envs
 
         loss = self.update()
@@ -195,70 +203,65 @@ class DRRNAgent(BaseAgent):
         logs["episodes_done"] = episodes_done
         return logs
 
-    def generate_trajectories(self, dict_modifier, n_tests, language='english'):
-        if language == "english":
-            generate_prompt = self.generate_prompt
-            subgoals = self.subgoals
-        elif language == "french":
-            generate_prompt = self.generate_prompt_french
-            subgoals = [[self.prompt_modifier(sg, self.dict_translation_actions) for sg in sgs]
-                        for sgs in self.subgoals]
+    def generate_trajectories(self, n_tests):
 
         episodes_done = 0
+        remove_indexes = []
+        reset_index = self.n_envs
         pbar = tqdm(range(n_tests), ascii=" " * 9 + ">", ncols=100)
         while episodes_done < n_tests:
-            # Do one agent-environment interaction
-            prompts = [
-                self.prompt_modifier(
-                    generate_prompt(goal=self.obs[j]['mission'],
-                                    subgoals=subgoals[j],
-                                    deque_obs=self.obs_queue[j],
-                                    deque_actions=self.acts_queue[j]),
-                    dict_modifier)
-                for j in range(self.n_envs)]
-            self.states = self.build_state(prompts)
-            action_ids, action_idxs, _ = self.act(self.states, self.encoded_actions, sample=True)
+
+            _, action_idxs, _ = self.act(self.states, self.encoded_actions, sample=True)
             actions = [_subgoals[idx] for _subgoals, idx in zip(self.subgoals, action_idxs)]
 
-            if len(self.subgoals[0]) > 6:
-                # only useful when we test the impact of the number of actions
-                real_a = np.copy(action_idxs)
-                real_a[real_a > 6] = 6
-                obs, rewards, dones, infos = self.env.step(real_a)
-            else:
-                obs, rewards, dones, infos = self.env.step(action_idxs)
-            reshaped_rewards = [self.reshape_reward(reward=r)[0] for r in rewards]
-
-            for j in range(self.n_envs):
-                self.returns[j] += rewards[j]
-                self.reshaped_returns[j] += reshaped_rewards[j]
+            self.infos, self.subgoals = [], []
+            for j, env in enumerate(self.env):
+                obs, reward, done, info = env.step(actions[j])
+                self.infos.append(info)
+                self.subgoals.append(info['valid'])
+                self.returns[j] += reward
+                # self.reshaped_returns[j] += reshaped_rewards[j]
                 self.frames_per_episode[j] += 1
-                if dones[j]:
+                self.acts_queue[j].append(actions[j])
+                self.obs_queue[j].append(obs.lower())
+                if done:
+                    self.obs_queue[j].clear()
+                    self.acts_queue[j].clear()
+                    obs, info = env.reset(reset_index)
+                    reset_index += 1
+                    if len(self.env[0].goal_idxs) == reset_index:
+                        reset_index = 0
                     episodes_done += 1
-                    pbar.update(1)
+                    if episodes_done > n_tests:
+                        remove_indexes.append(j)
+                    self.infos[-1] = info
+                    self.subgoals[-1] = info['valid']
+                    self.obs_queue[j].append(obs.lower())
                     self.logs["num_frames_per_episode"].append(self.frames_per_episode[j])
                     self.frames_per_episode[j] = 0
                     self.logs["return_per_episode"].append(self.returns[j])
                     self.returns[j] = 0
-                    self.logs["reshaped_return_per_episode"].append(self.reshaped_returns[j])
-                    self.logs["reshaped_return_bonus_per_episode"].append(self.reshaped_returns[j])
-                    self.reshaped_returns[j] = 0
-                    # reinitialise memory of past observations and actions
-                    self.obs_queue[j].clear()
-                    self.acts_queue[j].clear()
-                else:
-                    self.acts_queue[j].append(actions[j])
-                    self.obs_queue[j].append(infos[j]['descriptions'])
-
-            self.obs = obs
-            next_prompts = [self.prompt_modifier(generate_prompt(goal=obs[j]['mission'], subgoals=subgoals[j],
-                                                                 deque_obs=self.obs_queue[j],
-                                                                 deque_actions=self.acts_queue[j]),
-                                                 dict_modifier)
+                    pbar.update(1)
+                    
+            # removing environments
+            if len(remove_indexes) > 0:
+                for index in sorted(remove_indexes, reverse=True):
+                    del self.env[index]
+                    del self.infos[index]
+                    del self.subgoals[index]
+                    del self.returns[index]
+                    del self.frames_per_episode[index]
+                    del self.obs_queue[index]
+                    del self.acts_queue[index]
+                    
+                    
+            next_prompts = [self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
+                                           deque_obs=self.obs_queue[j], deque_actions=self.acts_queue[j])
                             for j in range(self.n_envs)]
-            next_states = self.build_state(next_prompts)
-
-            self.states = next_states
+            self.states = self.build_state(next_prompts)
+            
+            self.encoded_actions = self.encode_actions(self.filter_candidates_fn(self.subgoals))
+            
             # self.logs["num_frames"] += self.n_envs
         pbar.close()
 
@@ -269,7 +272,7 @@ class DRRNAgent(BaseAgent):
             else:
                 logs[k] = v
         logs["episodes_done"] = episodes_done
-        return None, logs
+        return logs
 
     def load(self):
         try:

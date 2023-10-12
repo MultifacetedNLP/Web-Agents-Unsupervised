@@ -1,0 +1,30 @@
+lamorel_args:
+  distributed_setup_args:
+    n_llm_processes: 0
+rl_script_args:
+  path: ???
+  number_envs: 16
+  num_steps: 300000
+  saving_path_logs: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
+  saving_path_model: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
+  run_name: 'flan_t5_large_2_observations_beauty_ppo'
+  nbr_obs: 2
+  spm_path: '/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/agents/drrn/spm_models/unigram_8k.model'
+  environment_args:
+    state_format: 'text_rich'
+    num: null
+    human_goals: 1
+    get_image: 0
+    return_image_feature: 0
+    num_prev_obs: 0
+    num_prev_actions: 0
+    step_limit: 100
+    click_item_name: 0
+    harsh_reward: 0
+    go_to_item: 0
+    go_to_search: 0
+    ban_buy: 0
+    extra_search_path: "/u/spa-d2/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/goal_query_predict_beauty.json"
+    button_version: 0
+
+

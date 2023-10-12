@@ -22,6 +22,7 @@ from torch.distributions import Categorical
 from utils import synthesize
 
 from agents.ppo.llm_ppo_agent_webshop import LLMPPOAgentWebshop
+from agents.drrn.drrn import DRRNAgent
 
 from lamorel import Caller, lamorel_init
 from lamorel import BaseUpdater, BaseModuleFunction
@@ -420,6 +421,10 @@ def main(config_args):
                         config_args.rl_script_args.saving_path_model,
                         config_args.rl_script_args.saving_path_logs,
                         config_args.rl_script_args.nbr_obs, id_expe)
+    else:
+        algo = DRRNAgent(envs, None, config_args.rl_script_args.spm_path, max_steps=number_envs * 4,
+                         saving_path=config_args.rl_script_args.saving_path_model + "/" + id_expe, save_frequency=1,
+                         nbr_obs=config_args.rl_script_args.nbr_obs)
         
     run_agent(config_args.rl_script_args, algo, id_expe)
     if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
