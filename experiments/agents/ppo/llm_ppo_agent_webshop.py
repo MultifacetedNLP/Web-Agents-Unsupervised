@@ -439,13 +439,13 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                                                         deque_actions=self.acts_queue[j])
                         
                         if random.random() > epsilon:
-                            query = self.lm_server.generate(contexts=[prompt], num_beams=6)
+                            query = self.lm_server.generate(contexts=[prompt], num_beams=10)
                             query = query[0][0]["text"].replace("[", "").replace("]", "")
                             print(query)
                             actions_str.append(f'search[{query}]')
                             self.acts_queue[j].append(actions_str[j])
                         else:
-                            queries = self.lm_server.generate(contexts=[prompt], num_beams=6, num_return_sequences=6, early_stopping=True)[0]
+                            queries = self.lm_server.generate(contexts=[prompt], num_beams=10, num_return_sequences=10, early_stopping=True)[0]
                             scores = torch.stack([query["sequences_scores"] for query in queries])
                             dist = Categorical(probs=self.top_k_top_p_filtering(logits=scores, top_k=top_k, top_p=top_p))
                             chosen_query_index = int(dist.sample().cpu().numpy())
