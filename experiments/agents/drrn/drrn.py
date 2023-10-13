@@ -169,7 +169,8 @@ class DRRNAgent(BaseAgent):
                     episodes_done += 1
                     self.logs["num_frames_per_episode"].append(self.frames_per_episode[j])
                     self.frames_per_episode[j] = 0
-                    self.logs["return_per_episode"].append(self.returns[j])
+                    self.logs["return_per_episode"].append(self.returns[j] * 10)
+                    self.logs["reshaped_return_per_episode"].append(self.returns[j] * 10)
                     self.returns[j] = 0
                     
                     
@@ -239,7 +240,8 @@ class DRRNAgent(BaseAgent):
                     self.obs_queue[j].append(obs.lower())
                     self.logs["num_frames_per_episode"].append(self.frames_per_episode[j])
                     self.frames_per_episode[j] = 0
-                    self.logs["return_per_episode"].append(self.returns[j])
+                    self.logs["return_per_episode"].append(self.returns[j] * 10)
+                    self.logs["reshaped_return_per_episode"].append(self.returns[j] * 10)
                     self.returns[j] = 0
                     pbar.update(1)
                     
