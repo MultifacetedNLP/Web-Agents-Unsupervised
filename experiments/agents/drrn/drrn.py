@@ -259,7 +259,7 @@ class DRRNAgent(BaseAgent):
                     
             next_prompts = [self.generate_prompt_webshop_v2(goal=self.infos[j]['goal'], subgoals=self.subgoals[j],
                                            deque_obs=self.obs_queue[j], deque_actions=self.acts_queue[j])
-                            for j in range(self.n_envs)]
+                            for j in range(len(self.env))]
             self.states = self.build_state(next_prompts)
             
             self.encoded_actions = self.encode_actions(self.filter_candidates_fn(self.subgoals))
