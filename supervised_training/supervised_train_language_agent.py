@@ -356,7 +356,7 @@ def get_training_args(args, output_dir, logging_dir) -> TrainingArguments:
         fp16=args.fp16,
         bf16=args.bf16,
         tf32=args.tf32,
-        # optim=args.optim,
+        optim=args.optim,
         gradient_checkpointing = args.gradient_checkpointing,
         dataloader_drop_last=True,
         run_name=args.run_name + "_" + "_".join(args.category),
@@ -426,7 +426,7 @@ def main(args):
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         data_collator=data_collator,
-        optimizers=(adam_bnb_optim, None)
+        #optimizers=(adam_bnb_optim, None)
     )
     
     trainer.train()
