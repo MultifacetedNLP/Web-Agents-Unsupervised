@@ -201,7 +201,10 @@ class PPOUpdater(BaseUpdater):
             # scores = torch.stack([_o[kwargs["scoring_module_key"]] for _o in output]).squeeze()
             # dist = Categorical(logits=scores)
             scores = [_o[kwargs["scoring_module_key"]] for _o in output]
-            dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            try:
+                dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            except:
+                dists = [Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
 
             values = torch.stack([_o["value"][0] for _o in output])
             
@@ -358,11 +361,6 @@ def main(config_args):
     for i in range(number_envs):
         env = WebEnv(config_args.rl_script_args.environment_args, split='train', server=server, id=f'train{i}_')
         envs.append(env)
-            
-    # if config_args.rl_script_args.reward_shaping_beta == 0:
-    #    reshape_reward = reward_function
-    # else:
-    #    reshape_reward = reward_function_shapped  # TODO ad the beta
 
     id_expe = config_args.rl_script_args.run_name + \
               '_nbr_env_{}_'.format(config_args.rl_script_args.number_envs)
@@ -370,7 +368,8 @@ def main(config_args):
 
     id_expe += 'nbr_obs_{}_'.format(config_args.rl_script_args.nbr_obs)
 
-    # id_expe += 'shape_reward_beta_{}_'.format(config_args.rl_script_args.reward_shaping_beta)
+    if not config_args.lamorel_args.llm_args.pretrained:
+        id_expe += 'pretrained_{}_'.format(config_args.lamorel_args.llm_args.pretrained)
 
     model_path = os.path.join(config_args.rl_script_args.saving_path_model, id_expe)
     if not os.path.exists(model_path):

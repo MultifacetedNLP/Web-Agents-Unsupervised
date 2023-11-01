@@ -116,7 +116,12 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             # scores = torch.stack([_o[self.llm_scoring_module_key] for _o in output]).squeeze()
             # dist = Categorical(logits=scores)
             scores = [_o[self.llm_scoring_module_key] for _o in output]
-            dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            
+            try:
+                dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            except:
+                dists = [Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
+
             action = torch.stack([dist.sample() for dist in dists])
             a = action.cpu().numpy()
             
