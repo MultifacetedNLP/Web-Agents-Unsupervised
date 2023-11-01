@@ -119,7 +119,7 @@ class LLMPPOAgentWebshop(BasePPOAgent):
             
             try:
                 dists = [Categorical(probs=torch.exp(score)) for score in scores]
-            except:
+            except Exception as e:
                 dists = [Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
 
             action = torch.stack([dist.sample() for dist in dists])

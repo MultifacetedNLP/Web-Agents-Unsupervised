@@ -203,7 +203,7 @@ class PPOUpdater(BaseUpdater):
             scores = [_o[kwargs["scoring_module_key"]] for _o in output]
             try:
                 dists = [Categorical(probs=torch.exp(score)) for score in scores]
-            except:
+            except Exception as e:
                 dists = [Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
 
             values = torch.stack([_o["value"][0] for _o in output])
