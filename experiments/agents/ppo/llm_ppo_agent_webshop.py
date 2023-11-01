@@ -113,14 +113,10 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                                                       candidates=self.filter_candidates_fn(self.subgoals),
                                                       images=[info['image_url'] for info in self.infos] if "image_url" in self.infos[0].keys() else None)
             
-            # scores = torch.stack([_o[self.llm_scoring_module_key] for _o in output]).squeeze()
-            # dist = Categorical(logits=scores)
             scores = [_o[self.llm_scoring_module_key] for _o in output]
-            
-            try:
-                dists = [Categorical(probs=torch.exp(score)) for score in scores]
-            except Exception as e:
-                dists = [Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
+            # dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            dists = [Categorical(probs=torch.exp(score)) if not (torch.exp(score) == 0).all() else
+                     Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
 
             action = torch.stack([dist.sample() for dist in dists])
             a = action.cpu().numpy()

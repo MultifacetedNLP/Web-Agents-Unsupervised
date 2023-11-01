@@ -198,13 +198,10 @@ class PPOUpdater(BaseUpdater):
             # PPO update
             output = self._llm_module([kwargs["scoring_module_key"], 'value'],
                                       contexts=contexts, candidates=candidates, images=sb['image'] if sb['image'][0] is not None else None, require_grad=True)
-            # scores = torch.stack([_o[kwargs["scoring_module_key"]] for _o in output]).squeeze()
-            # dist = Categorical(logits=scores)
             scores = [_o[kwargs["scoring_module_key"]] for _o in output]
-            try:
-                dists = [Categorical(probs=torch.exp(score)) for score in scores]
-            except Exception as e:
-                dists = [Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
+            # dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            dists = [Categorical(probs=torch.exp(score)) if not (torch.exp(score) == 0).all() else
+                     Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
 
             values = torch.stack([_o["value"][0] for _o in output])
             
