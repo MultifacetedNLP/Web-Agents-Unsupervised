@@ -114,9 +114,9 @@ class LLMPPOAgentWebshop(BasePPOAgent):
                                                       images=[info['image_url'] for info in self.infos] if "image_url" in self.infos[0].keys() else None)
             
             scores = [_o[self.llm_scoring_module_key] for _o in output]
-            # dists = [Categorical(probs=torch.exp(score)) for score in scores]
-            dists = [Categorical(probs=torch.exp(score)) if not (torch.exp(score) == 0).all() else
-                     Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
+            dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            # dists = [Categorical(probs=torch.exp(score)) if not (torch.exp(score) == 0).all() else
+            #          Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
 
             action = torch.stack([dist.sample() for dist in dists])
             a = action.cpu().numpy()

@@ -199,9 +199,9 @@ class PPOUpdater(BaseUpdater):
             output = self._llm_module([kwargs["scoring_module_key"], 'value'],
                                       contexts=contexts, candidates=candidates, images=sb['image'] if sb['image'][0] is not None else None, require_grad=True)
             scores = [_o[kwargs["scoring_module_key"]] for _o in output]
-            # dists = [Categorical(probs=torch.exp(score)) for score in scores]
-            dists = [Categorical(probs=torch.exp(score)) if not (torch.exp(score) == 0).all() else
-                     Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
+            dists = [Categorical(probs=torch.exp(score)) for score in scores]
+            # dists = [Categorical(probs=torch.exp(score)) if not (torch.exp(score) == 0).all() else
+            #          Categorical(probs=torch.exp(score - torch.max(score))) for score in scores]
 
             values = torch.stack([_o["value"][0] for _o in output])
             
