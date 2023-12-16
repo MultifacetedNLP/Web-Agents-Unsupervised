@@ -49,7 +49,14 @@ The following code will trian the Flan-T5 large model in the webshop environment
 ```
 
 ## Inference
-The following code will run inference in the Webshop environment
+The following code will download the model that was only trained with PPO, and put it in the $SCATCH path
 ```
-
+cd $SCRATCH;
+mkdir -p storage/models;
+cd storage/models;
+gdown "https://drive.google.com/uc?id=1GYumAWzrIyo-fby5wT5JsXjkto-8bbzq&confirm=t";
+unzip flan_t5_large_2_observations_only_ppo_1000000_steps.zip
+```
+Run the following code for inference on the only-ppo model
+```
 ```
