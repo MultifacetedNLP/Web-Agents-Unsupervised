@@ -4,6 +4,11 @@ In this repository, the code for our paper "Search Beyond Queries: Grounding Lan
 Interactions via Reinforcement Learning" is provided
 
 ## Installation steps
+
+0. **Clone the project**
+```
+git clone https://github.com/MultifacetedNLP/Web-Agents-Unsupervised.git Web-Agents-Unsupervised
+```
 1. **Create conda env**
 ```
 conda create -n WebAgent python=3.10.8; conda activate WebAgent
@@ -18,12 +23,14 @@ pip install -r requirements.txt
 ```
 4. **Install Wevshop Environment**: 
 ```
-cd web_agent_site/web_agent_site; pip install -e .; cd ../..
+cd web_agent_site; pip install -e .; cd ..
 ```
 6. **If the environment variable $SCRATCH and $HOME are empty, set them up**
 ```
-export SCRATCH="/path/to/your/desired/folder/scratch_folder";
-export HOME="/path/to/your/Home/directory";
+export SCRATCH="/path/to/your/desired/folder/scratch_folder"
+```
+```
+export HOME="/path/to/your/Home/directory"
 ```
 5. **Download the Datasets and Prepare the Search Engine for Environment**
 ```
