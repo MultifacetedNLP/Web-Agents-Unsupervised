@@ -6,7 +6,7 @@ Interactions via Reinforcement Learning" is provided
 ## Installation steps
 1. **Create conda env**
 ```
-conda create -n dlp python=3.10.8; conda activate dlp
+conda create -n WebAgent python=3.10.8; conda activate WebAgent
 ```
 2. **Install PyTorch**
 ```
