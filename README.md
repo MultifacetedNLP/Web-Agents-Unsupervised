@@ -34,7 +34,7 @@ export HOME="/path/to/your/Home/directory"
 ```
 5. **Download the Datasets and Prepare the Search Engine for Environment**
 ```
-./setup.sh [-d all]
+chmod +x ./setup.sh; ./setup.sh -d all
 ```
 6. **Install Accelerate**
 ```
