@@ -1,4 +1,7 @@
 test.ipynb
+.gitignore
+/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/plot_utils
+/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/transfer
 **/__pycache__/
 *nohup*
 *wandb*
