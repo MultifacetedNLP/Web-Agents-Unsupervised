@@ -1,5 +1,0 @@
-'Input Text','Environment','Selected Product','Selected Options','output 3','timestamp'
-'I want to buy a red T-shirt, the price should be lower than 30 dollars.','eBay','{"asin": "374285170484", "Title": "NEW Under Armour T Shirt Mens UA Short Sleeve Cotton Graphic Tee Loose 3 COLORS", "Description": "eBay Keep it cool in this men''s Under Armour tee.Product FeaturesSuper-soft, cotton-blend fabric pro...", "Features": "N/A..."}','"\"None Selected\""','<!DOCTYPE html><html><head><title>Chosen Product</title></head><body>Link to Product:
-        <a href="https://www.ebay.com/itm/374285170484" style="color:blue;text-decoration:underline;" target="_blank">https://www.ebay.com/itm/374285170484</a>
-        </body></html>','2023-06-06 16:16:08.566632'
-I need some cute heart-shaped glittery cupcake picks as a gift to bring to a baby shower,Amazon,,,,,,2023-06-06 16:46:47.703495
