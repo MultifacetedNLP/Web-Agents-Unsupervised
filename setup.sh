@@ -29,6 +29,7 @@ conda install -c conda-forge openjdk=11;
 # Download dataset into `data` folder via `gdown` command
 cd $SCRATCH
 mkdir -p data
+cd data
 if [ "$data" == "small" ]; then
   gdown https://drive.google.com/uc?id=1EgHdxQ_YxqIQlvvq5iKlCrkEKR6-j0Ib; # items_shuffle_1000 - product scraped info
   gdown https://drive.google.com/uc?id=1IduG0xl544V_A_jv3tHXC0kyFi7PnyBu; # items_ins_v2_1000 - product attributes
@@ -41,7 +42,7 @@ else
 fi
 gdown https://drive.google.com/uc?id=14Kb5SPBk_jfdLZ_CDBNitW98QLDlKR5O # items_human_ins
 # cd ..
-cd $HOME/Web-Agents-Unsupervised/web_agent_site
+cd $HOME/Projects/Web-Agents-Unsupervised/web_agent_site
 
 # Download spaCy large NLP model
 python -m spacy download en_core_web_lg
