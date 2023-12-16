@@ -149,6 +149,19 @@ def run_agent(args, envs, lm_server, lamorel_scoring_module_key):
 
 @hydra.main(config_path='config', config_name='config')
 def main(config_args):
+    
+    if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
+        custom_lamorel_module_functions = {
+            'value': ValueHeadModuleFn(config_args.lamorel_args.llm_args.model_type)
+        }
+
+        custom_lamorel_module_functions['score'] = LogScoringModuleFn(
+            config_args.lamorel_args.llm_args.model_type
+        )
+        lamorel_scoring_module_key = "score"
+
+        lm_server = Caller(config_args.lamorel_args, custom_updater=LoadSpecificWeightsUpdater(),
+                        custom_module_functions=custom_lamorel_module_functions)
         
         
     log_path = os.path.join(config_args.rl_script_args.saving_path_logs, config_args.rl_script_args.id_expe)
@@ -170,17 +183,6 @@ def main(config_args):
     
     # Flan-T5 model
     if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
-        custom_lamorel_module_functions = {
-            'value': ValueHeadModuleFn(config_args.lamorel_args.llm_args.model_type)
-        }
-
-        custom_lamorel_module_functions['score'] = LogScoringModuleFn(
-            config_args.lamorel_args.llm_args.model_type
-        )
-        lamorel_scoring_module_key = "score"
-
-        lm_server = Caller(config_args.lamorel_args, custom_updater=LoadSpecificWeightsUpdater(),
-                        custom_module_functions=custom_lamorel_module_functions)
         
         lm_server.update([None for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
                     [[None] for _ in range(config_args.lamorel_args.distributed_setup_args.n_llm_processes)],
