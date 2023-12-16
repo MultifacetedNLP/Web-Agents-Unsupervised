@@ -10,11 +10,11 @@ lamorel_args:
     num_machines: 1
   llm_args:
     model_type: seq2seq
-    encoder_max_size: 1024
+    encoder_max_size: 512
     decoder_max_size: 128
-    model_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/flan-t5-large
+    model_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/flan-t5
     pytorch_path: null
-    tokenizer_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/flan-t5-large
+    tokenizer_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/flan-t5
     image: false
     feat_conv_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
     feat_ids_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
@@ -31,7 +31,7 @@ rl_script_args:
   path: ???
   number_envs: 16
   num_steps: 300000
-  frames_per_proc: 40
+  frames_per_proc: 10
   # reward_shaping_beta: 0
   discount: 0.99
   lr: 1e-6
@@ -48,9 +48,9 @@ rl_script_args:
   batch_size: 2
   saving_path_logs: "/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
   saving_path_model: "/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
-  run_name: 'flan_t5_large_only_ppo'
+  run_name: 'flan_t5_deelllll'
   load_embedding: true
-  nbr_obs: 2
+  nbr_obs: 1
   environment_args:
     state_format: 'text_rich'
     num: null

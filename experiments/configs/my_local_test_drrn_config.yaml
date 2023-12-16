@@ -4,7 +4,7 @@ lamorel_args:
 rl_script_args:
   path: ???
   number_envs: 16
-  number_episodes: 500
+  number_episodes: 600
   saving_path_model: "/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
   saving_path_logs: "/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
   id_expe: flan_t5_large_2_observations_drrn_nbr_env_16_nbr_obs_2_
