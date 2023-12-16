@@ -205,7 +205,8 @@ def init_search_engine(num_products=None):
         indexes = 'indexes'
     else:
         raise NotImplementedError(f'num_products being {num_products} is not supported yet.')
-    search_engine = LuceneSearcher(os.path.join(BASE_DIR, f'../search_engine/{indexes}'))
+    scratch_variable = os.environ.get('SCRATCH')
+    search_engine = LuceneSearcher(os.path.join(BASE_DIR, f'{scratch_variable}/search_engine/{indexes}'))
     return search_engine
 
 

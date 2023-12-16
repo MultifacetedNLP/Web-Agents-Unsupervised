@@ -18,7 +18,16 @@ pip install -r requirements.txt
 ```
 4. **Install Wevshop Environment**: 
 ```
-here
+cd web_agent_site/web_agent_site; pip install -e .; cd ../..
+```
+6. **If the environment variable $SCRATCH and $HOME are empty, set them up**
+```
+export SCRATCH="/path/to/your/desired/folder/scratch_folder";
+export HOME="/path/to/your/Home/directory";
+```
+5. **Download the Datasets and Prepare the Search Engine for Environment**
+```
+./setup.sh [-d all]
 ```
 6. **Install Accelerate**
 ```

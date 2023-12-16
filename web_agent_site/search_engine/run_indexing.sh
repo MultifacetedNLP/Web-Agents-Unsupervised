@@ -1,31 +1,31 @@
 python -m pyserini.index.lucene \
   --collection JsonCollection \
-  --input resources_100 \
-  --index indexes_100 \
+  --input $SCRATCH/search_engine/resources_100 \
+  --index $SCRATCH/search_engine/indexes_100 \
   --generator DefaultLuceneDocumentGenerator \
   --threads 1 \
   --storePositions --storeDocvectors --storeRaw
 
 python -m pyserini.index.lucene \
   --collection JsonCollection \
-  --input resources \
-  --index indexes \
+  --input $SCRATCH/search_engine/resources \
+  --index $SCRATCH/search_engine/indexes \
   --generator DefaultLuceneDocumentGenerator \
   --threads 1 \
   --storePositions --storeDocvectors --storeRaw
 
 python -m pyserini.index.lucene \
   --collection JsonCollection \
-  --input resources_1k \
-  --index indexes_1k \
+  --input $SCRATCH/search_engine/resources_1k \
+  --index $SCRATCH/search_engine/indexes_1k \
   --generator DefaultLuceneDocumentGenerator \
   --threads 1 \
   --storePositions --storeDocvectors --storeRaw
 
 python -m pyserini.index.lucene \
   --collection JsonCollection \
-  --input resources_100k \
-  --index indexes_100k \
+  --input $SCRATCH/search_engine/resources_100k \
+  --index $SCRATCH/search_engine/indexes_100k \
   --generator DefaultLuceneDocumentGenerator \
   --threads 1 \
   --storePositions --storeDocvectors --storeRaw

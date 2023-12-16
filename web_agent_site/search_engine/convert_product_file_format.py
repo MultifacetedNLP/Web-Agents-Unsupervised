@@ -2,6 +2,7 @@ import sys
 import json
 from tqdm import tqdm
 sys.path.insert(0, '../')
+import os
 
 from web_agent_site.utils import DEFAULT_FILE_PATH
 from web_agent_site.engine.engine import load_products
@@ -29,19 +30,20 @@ for p in tqdm(all_products, total=len(all_products)):
     doc['product'] = p
     docs.append(doc)
 
+scratch_variable = os.environ.get('SCRATCH')
 
-with open('./resources_100/documents.jsonl', 'w+') as f:
+with open(f'{scratch_variable}/search_engine/resources_100/documents.jsonl', 'w+') as f:
     for doc in docs[:100]:
         f.write(json.dumps(doc) + '\n')
 
-with open('./resources/documents.jsonl', 'w+') as f:
+with open(f'{scratch_variable}/search_engine/resources/documents.jsonl', 'w+') as f:
     for doc in docs:
         f.write(json.dumps(doc) + '\n')
 
-with open('./resources_1k/documents.jsonl', 'w+') as f:
+with open(f'{scratch_variable}/search_engine/resources_1k/documents.jsonl', 'w+') as f:
     for doc in docs[:1000]:
         f.write(json.dumps(doc) + '\n')
 
-with open('./resources_100k/documents.jsonl', 'w+') as f:
+with open(f'{scratch_variable}/search_engine/resources_100k/documents.jsonl', 'w+') as f:
     for doc in docs[:100000]:
         f.write(json.dumps(doc) + '\n')
