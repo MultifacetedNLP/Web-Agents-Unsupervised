@@ -1,7 +1,7 @@
 test.ipynb
 .gitignore
-experiments/plot_utils/
-experiments/transfer/
+experiments/plot_utils
+experiments/transfer
 **/__pycache__/
 *nohup*
 *wandb*
