@@ -7,7 +7,7 @@ Interactions via Reinforcement Learning" is provided
 
 0. **Clone the project**
 ```
-git clone https://github.com/MultifacetedNLP/Web-Agents-Unsupervised.git Web-Agents-Unsupervised
+git clone https://github.com/MultifacetedNLP/Web-Agents-Unsupervised.git Web-Agents-Unsupervised; cd Web-Agents-Unsupervised
 ```
 1. **Create conda env**
 ```
