@@ -42,7 +42,8 @@ else
 fi
 gdown "https://drive.google.com/uc?id=14Kb5SPBk_jfdLZ_CDBNitW98QLDlKR5O&confirm=t" # items_human_ins
 # cd ..
-cd $HOME/Projects/Web-Agents-Unsupervised/web_agent_site
+cd "$(dirname "$0")"
+cd web_agent_site
 
 # Download spaCy large NLP model
 python -m spacy download en_core_web_lg
