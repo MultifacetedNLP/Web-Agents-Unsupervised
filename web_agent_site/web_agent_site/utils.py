@@ -3,6 +3,7 @@ import hashlib
 import logging
 import random
 from os.path import dirname, abspath, join
+import os
 
 BASE_DIR = dirname(abspath(__file__))
 DEBUG_PROD_SIZE = None  # set to `None` to disable
