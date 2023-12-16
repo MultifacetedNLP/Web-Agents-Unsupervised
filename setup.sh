@@ -31,16 +31,16 @@ cd $SCRATCH
 mkdir -p data
 cd data
 if [ "$data" == "small" ]; then
-  gdown https://drive.google.com/uc?id=1EgHdxQ_YxqIQlvvq5iKlCrkEKR6-j0Ib; # items_shuffle_1000 - product scraped info
-  gdown https://drive.google.com/uc?id=1IduG0xl544V_A_jv3tHXC0kyFi7PnyBu; # items_ins_v2_1000 - product attributes
+  gdown "https://drive.google.com/uc?id=1EgHdxQ_YxqIQlvvq5iKlCrkEKR6-j0Ib&confirm=t"; # items_shuffle_1000 - product scraped info
+  gdown "https://drive.google.com/uc?id=1IduG0xl544V_A_jv3tHXC0kyFi7PnyBu&confirm=t"; # items_ins_v2_1000 - product attributes
 elif [ "$data" == "all" ]; then
-  gdown https://drive.google.com/uc?id=1A2whVgOO0euk5O13n2iYDM0bQRkkRduB; # items_shuffle
-  gdown https://drive.google.com/uc?id=1s2j6NgHljiZzQNL3veZaAiyW_qDEgBNi; # items_ins_v2
+  gdown "https://drive.google.com/uc?id=1A2whVgOO0euk5O13n2iYDM0bQRkkRduB&confirm=t"; # items_shuffle
+  gdown "https://drive.google.com/uc?id=1s2j6NgHljiZzQNL3veZaAiyW_qDEgBNi&confirm=t"; # items_ins_v2
 else
   echo "[ERROR]: argument for `-d` flag not recognized"
   helpFunction
 fi
-gdown https://drive.google.com/uc?id=14Kb5SPBk_jfdLZ_CDBNitW98QLDlKR5O # items_human_ins
+gdown "https://drive.google.com/uc?id=14Kb5SPBk_jfdLZ_CDBNitW98QLDlKR5O&confirm=t" # items_human_ins
 # cd ..
 cd $HOME/Projects/Web-Agents-Unsupervised/web_agent_site
 
