@@ -41,3 +41,15 @@ cd v0.13.2/accelerate-0.13.2; pip install -e .; cd ../..
 ```
 cd lamorel/lamorel; pip install -e .; cd ../..
 ```
+
+## Train
+The following code will trian the Flan-T5 large model in the webshop environment using Proximal Policy Optimization.
+```
+
+```
+
+## Inference
+The following code will run inference in the Webshop environment
+```
+
+```
