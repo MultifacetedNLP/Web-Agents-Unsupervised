@@ -12,12 +12,10 @@ lamorel_args:
     model_type: seq2seq
     encoder_max_size: 1024
     decoder_max_size: 128
-    model_path: t5-large
+    model_path: google/flan-t5-large
     pytorch_path: null
-    tokenizer_path: t5-large
+    tokenizer_path: google/flan-t5-large
     image: false
-    feat_conv_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_conv.pt
-    feat_ids_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/feat_ids.pt
     pretrained: true
     minibatch_size: 3
     pre_encode_inputs: true
@@ -33,9 +31,9 @@ rl_script_args:
   number_episodes: 2000
   frames_per_proc: 40
   nbr_obs: 2
-  saving_path_model: "/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models"
-  saving_path_logs: "/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs"
-  id_expe: t5_large_Zero_shot
+  saving_path_model: ???
+  saving_path_logs: ???
+  id_expe: ???
   epsilon: 0.2
   top_k: 0
   top_p: 0.00
