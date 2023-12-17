@@ -25,9 +25,10 @@ pip install -r requirements.txt
 ```
 cd web_agent_site; pip install -e .; cd ..
 ```
-6. **If the environment variable $SCRATCH (storing datsets and LLM models) is empty, set it up**
+6. **Set up $SCRATCH (path for storing datsets and LLM models), and $PROJECT (path to the project directory) if they are empty**
 ```
-export SCRATCH="/path/to/your/desired/folder/scratch_folder"
+export SCRATCH="/path/to/scratch_folder"
+export PROJECT="/path/to/project_folder"
 ```
 7. **Download the Datasets and Prepare the Search Engine for Environment**
 ```
