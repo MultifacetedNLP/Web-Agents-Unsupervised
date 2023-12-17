@@ -41,6 +41,8 @@ else
   helpFunction
 fi
 gdown "https://drive.google.com/uc?id=14Kb5SPBk_jfdLZ_CDBNitW98QLDlKR5O&confirm=t" # items_human_ins
+gdown "https://drive.google.com/uc?id=145IKR4zvMAj9USZaIHvhJO_S9VFRIqZu&confirm=t" # goal_query_predict.json
+
 
 cd $PROJECT/web_agent_site
 
