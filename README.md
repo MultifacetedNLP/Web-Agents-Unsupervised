@@ -44,9 +44,15 @@ cd lamorel/lamorel; pip install -e .; cd ../..
 ```
 
 ## Train
-The following code will trian the Flan-T5 large model in the webshop environment using Proximal Policy Optimization.
+The following code will trian the Flan-T5 large model in the webshop environment using Proximal Policy Optimization (local machine)
 ```
-
+chmod +x ./experiments/bash_files/train_ppo/local_train_ppo_run.sh;
+./experiments/bash_files/train_ppo/local_train_ppo_run.sh
+```
+The following code will trian the Flan-T5 large model in the webshop environment using Proximal Policy Optimization (slurm work manager)
+```
+chmod +x ./experiments/bash_files/train_ppo/slurm_train_ppo_run.sh;
+./experiments/bash_files/train_ppo/slurm_train_ppo_run.sh
 ```
 
 ## Inference
@@ -58,12 +64,12 @@ cd storage/models;
 gdown "https://drive.google.com/uc?id=1GYumAWzrIyo-fby5wT5JsXjkto-8bbzq&confirm=t";
 unzip flan_t5_large_2_observations_only_ppo_1000000_steps.zip
 ```
-Run the following code to perform inference on the only-ppo model on a local machine
+Run the following code to perform inference on the only-ppo model (local machine)
 ```
 chmod +x ./experiments/bash_files/test_only_ppo/local_test_run.sh;
 ./experiments/bash_files/test_only_ppo/local_test_run.sh
 ```
-Run the following code to perform inference on the only-ppo model on a slurm work manager
+Run the following code to perform inference on the only-ppo model (slurm work manager)
 ```
 chmod +x ./experiments/bash_files/test_only_ppo/slurm_test_run.sh;
 ./experiments/bash_files/test_only_ppo/slurm_test_run.sh
