@@ -54,5 +54,6 @@ rl_script_args:
     ban_buy: 0
     extra_search_path: ""
     button_version: 0
+    category: ''
 
 
