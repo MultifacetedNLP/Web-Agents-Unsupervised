@@ -26,5 +26,6 @@ rl_script_args:
     ban_buy: 0
     extra_search_path: "/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/goal_query_predict_all.json"
     button_version: 0
+    category: ''
 
 

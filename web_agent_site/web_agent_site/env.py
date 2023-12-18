@@ -18,14 +18,22 @@ class WebEnv:
     ''' A wrapper of textEnv for models. Returns valid actions at each step of the game. '''
 
     def __init__(self, args, split, server=None, id=None):
+        
+        if args.category:
+            def filter_goals(index, goal):
+                return goal['category'] == args.category and index < 500 # select test examples that are in the specified category
+            filter_goals_fn = filter_goals
+        else:
+            filter_goals_fn = None
+        
         self.env = WebAgentTextEnv(observation_mode=args.state_format, server=server,
-                                   filter_goals=None, limit_goals=-1,
+                                   filter_goals=filter_goals_fn, limit_goals=-1,
                                    num_products=args.num, human_goals=args.human_goals,
                                    get_image=args.get_image,
                                    return_image_feature=args.return_image_feature,
                                    num_prev_obs=args.num_prev_obs, num_prev_actions=args.num_prev_actions,
                                    session_prefix=id, button_version=args.button_version)
-        if args.num is None and split:
+        if args.num is None and filter_goals_fn:
             if split == 'test':
                 self.goal_idxs = range(500)
             elif split == 'eval':
