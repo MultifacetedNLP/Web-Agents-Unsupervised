@@ -33,7 +33,7 @@ class WebEnv:
                                    return_image_feature=args.return_image_feature,
                                    num_prev_obs=args.num_prev_obs, num_prev_actions=args.num_prev_actions,
                                    session_prefix=id, button_version=args.button_version)
-        if args.num is None and filter_goals_fn:
+        if args.num is None and filter_goals_fn is None:
             if split == 'test':
                 self.goal_idxs = range(500)
             elif split == 'eval':
