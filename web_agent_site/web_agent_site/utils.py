@@ -11,15 +11,15 @@ DEBUG_PROD_SIZE = None  # set to `None` to disable
 scratch_variable = os.environ.get('SCRATCH')
 # DEFAULT_ATTR_PATH = join(BASE_DIR, '../data/items_ins_v2_1000.json')
 # DEFAULT_FILE_PATH = join(BASE_DIR, '../data/items_shuffle_1000.json')
-DEFAULT_ATTR_PATH = join(BASE_DIR, f'{scratch_variable}/data/items_ins_v2.json')
-DEFAULT_FILE_PATH = join(BASE_DIR, f'{scratch_variable}/data/items_shuffle.json')
-DEFAULT_REVIEW_PATH = join(BASE_DIR, f'{scratch_variable}/data/reviews.json')
+DEFAULT_ATTR_PATH = join(BASE_DIR, f'../data/items_ins_v2.json')
+DEFAULT_FILE_PATH = join(BASE_DIR, f'../data/items_shuffle.json')
+DEFAULT_REVIEW_PATH = join(BASE_DIR, f'../data/reviews.json')
 
-FEAT_CONV = join(BASE_DIR, f'{scratch_variable}/data/feat_conv.pt')
-FEAT_IDS = join(BASE_DIR, f'{scratch_variable}/data/feat_ids.pt')
+FEAT_CONV = join(BASE_DIR, f'../data/feat_conv.pt')
+FEAT_IDS = join(BASE_DIR, f'../data/feat_ids.pt')
 
-HUMAN_ATTR_PATH = join(BASE_DIR, f'{scratch_variable}/data/items_human_ins.json')
-HUMAN_ATTR_PATH = join(BASE_DIR, f'{scratch_variable}/data/items_human_ins.json')
+HUMAN_ATTR_PATH = join(BASE_DIR, f'../data/items_human_ins.json')
+HUMAN_ATTR_PATH = join(BASE_DIR, f'../data/items_human_ins.json')
 
 def random_idx(cum_weights):
     """Generate random index by sampling uniformly from sum of all weights, then

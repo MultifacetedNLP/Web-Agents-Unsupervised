@@ -143,7 +143,6 @@ def run_agent(args, envs, lm_server, lamorel_scoring_module_key):
         file.write(std_score + "\n")
         file.write(average_success_rate + "\n")
         file.write(average_fail_rate)
-        
 
 
 
@@ -170,16 +169,31 @@ def main(config_args):
     if not os.path.exists(test_path):
         os.makedirs(test_path)
         
-        
-    envs = []
-    number_envs = config_args.rl_script_args.number_envs
+    if config_args.rl_script_args.environment_args.category:
+        def filter_goals(index, goal):
+            return goal['category'] == config_args.rl_script_args.environment_args.category and index < 500 # select test examples that are in the specified category
     
-    test_env = WebEnv(config_args.rl_script_args.environment_args, split='test')
-    server = test_env.env.server
-    for i in range(number_envs):
-        env = WebEnv(config_args.rl_script_args.environment_args, split='test', server=server, id=f'test{i}_')
-        envs.append(env)
-    print('envs loaded')
+        envs = []
+        number_envs = config_args.rl_script_args.number_envs
+        
+        test_env = WebEnv(config_args.rl_script_args.environment_args, split='', filter_goals=filter_goals)
+        server = test_env.env.server
+        for i in range(number_envs):
+            env = WebEnv(config_args.rl_script_args.environment_args, split='', server=server, id=f'category{i}_', filter_goals=filter_goals)
+            envs.append(env)
+            
+        config_args.rl_script_args.number_episodes = 4 * len(envs[0].goal_idxs)
+        print('envs loaded')
+    else:
+        envs = []
+        number_envs = config_args.rl_script_args.number_envs
+        
+        test_env = WebEnv(config_args.rl_script_args.environment_args, split='test')
+        server = test_env.env.server
+        for i in range(number_envs):
+            env = WebEnv(config_args.rl_script_args.environment_args, split='test', server=server, id=f'test{i}_')
+            envs.append(env)
+        print('envs loaded')
     
     # Flan-T5 model
     if config_args.lamorel_args.distributed_setup_args.n_llm_processes > 0:
