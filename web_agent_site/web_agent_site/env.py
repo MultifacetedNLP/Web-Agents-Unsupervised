@@ -21,7 +21,7 @@ class WebEnv:
         
         if args.category:
             def filter_goals(index, goal):
-                return goal['category'] == args.category and index < 500 # select test examples that are in the specified category
+                return goal['category'] != args.category and index < 500 # select test examples that are in the specified category
             filter_goals_fn = filter_goals
         else:
             filter_goals_fn = None
