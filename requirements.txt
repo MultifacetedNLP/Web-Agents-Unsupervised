@@ -26,3 +26,4 @@ Flask==2.1.2
 rich==12.4.4
 pyserini==0.17.0
 faiss-cpu
+gradio==3.14.0
