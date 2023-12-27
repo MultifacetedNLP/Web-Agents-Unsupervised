@@ -152,6 +152,22 @@ def plot_average_impl_ax(df, regexps, ax, labels, limits, colors, y_value='retur
 dfs = load_logs('/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs_lcc')
 df = pd.concat(dfs, sort=True)
 
+def plot_average_and_success_rate_average(**kwargs):
+    """Plot averages and success rate averages over groups of runs  defined by regular expressions."""
+    plt.figure(figsize=(7.5, 6))
+    new_kwargs = {key: value for key, value in kwargs.items() if key not in ['average_labels', 'average_colors', 'success_rate_average_labels', 'success_rate_average_colors']}
+    plot_average_impl(y_value='return_mean', labels=kwargs['average_labels'], colors=kwargs['average_colors'], **new_kwargs)
+    plot_average_impl(y_value='success_rate', labels=kwargs['success_rate_average_labels'], colors=kwargs['success_rate_average_colors'],**new_kwargs)
+    # plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11}, bbox_to_anchor=(1.1, 1.1))
+    plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
+    plt.xlabel("Steps", fontsize=15)
+
+    plt.title("PPO Training Process", fontsize=15)
+    plt.xticks(fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.grid()
+    # plt.figure(figsize=(8, 6), dpi=100)
+    plt.show()
 
 def plot_average(*args, **kwargs):
     """Plot averages over groups of runs  defined by regular expressions."""
@@ -159,7 +175,7 @@ def plot_average(*args, **kwargs):
     plot_average_impl(y_value='return_mean', *args, **kwargs)
     # plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11}, bbox_to_anchor=(1.1, 1.1))
     plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
-    plt.xlabel("Frames", fontsize=15)
+    plt.xlabel("Steps", fontsize=15)
 
     plt.title("Average Score", fontsize=15)
     plt.xticks(fontsize=10)
@@ -174,7 +190,7 @@ def plot_success_rate_average(*args, **kwargs):
     plt.figure(figsize=(7.5, 5))
     plot_average_impl(y_value='success_rate', *args, **kwargs)
     plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
-    plt.xlabel("Frames", fontsize=15)
+    plt.xlabel("Steps", fontsize=15)
 
     plt.title("Average Success Rate", fontsize=15)
     plt.xticks(fontsize=10)
@@ -188,7 +204,7 @@ def plot_entropy_average(*args, **kwargs):
     plt.figure(figsize=(7.5, 5))
     plot_average_impl(y_value='entropy', *args, **kwargs)
     plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
-    plt.xlabel("Frames", fontsize=15)
+    plt.xlabel("Steps", fontsize=15)
 
     plt.title("Average Entropy", fontsize=15)
     plt.xticks(fontsize=10)
@@ -201,7 +217,7 @@ def plot_loss_average(*args, **kwargs):
     plt.figure(figsize=(7.5, 5))
     plot_average_impl(y_value='loss', *args, **kwargs)
     plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
-    plt.xlabel("Frames", fontsize=15)
+    plt.xlabel("Steps", fontsize=15)
 
     plt.title("Average Loss", fontsize=15)
     plt.xticks(fontsize=10)
@@ -214,7 +230,7 @@ def plot_policy_loss_average(*args, **kwargs):
     plt.figure(figsize=(7.5, 5))
     plot_average_impl(y_value='policy_loss', *args, **kwargs)
     plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
-    plt.xlabel("Frames", fontsize=15)
+    plt.xlabel("Steps", fontsize=15)
 
     plt.title("Average Policy Loss", fontsize=15)
     plt.xticks(fontsize=10)
@@ -227,7 +243,7 @@ def plot_value_loss_average(*args, **kwargs):
     plt.figure(figsize=(7.5, 5))
     plot_average_impl(y_value='value_loss', *args, **kwargs)
     plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
-    plt.xlabel("Frames", fontsize=15)
+    plt.xlabel("Steps", fontsize=15)
 
     plt.title("Average Value Loss", fontsize=15)
     plt.xticks(fontsize=10)
@@ -239,7 +255,7 @@ def plot_grad_norm_average(*args, **kwargs):
     plt.figure(figsize=(7.5, 5))
     plot_average_impl(y_value='grad_norm', *args, **kwargs)
     plt.legend(handlelength=0.5, handleheight=0.5, prop={"size": 11})
-    plt.xlabel("Frames", fontsize=15)
+    plt.xlabel("Steps", fontsize=15)
 
     plt.title("Average Grad Norm", fontsize=15)
     plt.xticks(fontsize=10)
@@ -253,10 +269,14 @@ def plot_grad_norm_average(*args, **kwargs):
 regexs = ['.*flan_T5_large_2_observations_category_.*',
           '.*flan_T5_large_2_observations_all_nbr_env_16_nbr_obs_2_.*',
           '.*flan_T5_large_only_ppo_nbr_env_16_nbr_obs_2_.*']
-labels = ['Unsupervised Domain Adaptation', 'SL + PPO', 'RL (PPO)']
+average_labels = ['Score of Unsupervised D.A.', 'Score of  SL + PPO', 'Score of  RL (PPO)']
+success_rate_average_labels = ['Success Rate of Unsupervised D.A.', 'Success Rate of SL + PPO', 'Success Rate of RL (PPO)']
 limits = 1000000
-colors = ['tab:blue', 'tab:green', 'tab:red']
-plot_average(df, regexs, labels, limits, colors)
+average_colors = ['#003399', '#339933', '#CC3333']
+success_rate_average_colors = ['#3399FF', '#66FF66', '#FF6666']
+plot_average_and_success_rate_average(df=df, regexps=regexs, average_labels=average_labels, success_rate_average_labels=success_rate_average_labels, 
+                                      limits=limits, average_colors=average_colors, success_rate_average_colors=success_rate_average_colors)
+# plot_average(df, regexs, labels, limits, colors)
 # plot_success_rate_average(df, regexs, labels, limits, colors)
 """
 
@@ -265,28 +285,41 @@ plot_average(df, regexs, labels, limits, colors)
 regexs = ['.*flan_T5_large_1_observation_all_nbr_env_16_nbr_obs_1_.*',
           '.*flan_T5_large_2_observations_all_nbr_env_16_nbr_obs_2_.*']
 labels = ['One Observation', 'Two Observations']
+average_labels = ['Score of One Observation', 'Score of Two Observations']
+success_rate_average_labels = ['Success Rate of One Observation', 'Success Rate of Two Observations']
 limits = 500000
-colors = ['tab:blue', 'tab:red']
+average_colors = ['#003399', '#880000']
+success_rate_average_colors = ['#3399FF', '#FF6666']
+plot_average_and_success_rate_average(df=df, regexps=regexs, average_labels=average_labels, success_rate_average_labels=success_rate_average_labels, 
+                                      limits=limits, average_colors=average_colors, success_rate_average_colors=success_rate_average_colors)
 # plot_average(df, regexs, labels, limits, colors)
-plot_success_rate_average(df, regexs, labels, limits, colors)
+# plot_success_rate_average(df, regexs, labels, limits, colors)
 """
 
 """
 regexs = ['.*t5_large_only_ppo_nbr_env_16_nbr_obs_2_.*',
           '.*flan_T5_large_only_ppo_nbr_env_16_nbr_obs_2_.*']
-labels = ['T5 Large', 'Flan T5 Large']
+average_labels = ['Score of T5 Large', 'Score of Flan T5 Large']
+success_rate_average_labels = ['Success Rate of T5 Large', 'Success Rate of Flan T5 Large']
 limits = 500000
-colors = ['tab:blue', 'tab:red']
+average_colors = ['#003399', '#880000']
+success_rate_average_colors = ['#3399FF', '#FF6666']
+plot_average_and_success_rate_average(df=df, regexps=regexs, average_labels=average_labels, success_rate_average_labels=success_rate_average_labels, 
+                                      limits=limits, average_colors=average_colors, success_rate_average_colors=success_rate_average_colors)
 # plot_average(df, regexs, labels, limits, colors)
-plot_success_rate_average(df, regexs, labels, limits, colors)
+# plot_success_rate_average(df, regexs, labels, limits, colors)
 """
 
 
 
 regexs = ['.*t5_large_2_observations_category_.*',
           '.*flan_T5_large_2_observations_category_.*']
-labels = ['T5 Large with D.A.', 'Flan T5 Large with D.A.']
+average_labels = ['Score of T5 Large with D.A.', 'Score of Flan T5 Large with D.A.']
+success_rate_average_labels = ['Success Rate of T5 Large with D.A.', 'Success Rate of Flan T5 Large with D.A.']
 limits = 500000
-colors = ['tab:blue', 'tab:red']
+average_colors = ['#003399', '#880000']
+success_rate_average_colors = ['#3399FF', '#FF6666']
+plot_average_and_success_rate_average(df=df, regexps=regexs, average_labels=average_labels, success_rate_average_labels=success_rate_average_labels, 
+                                      limits=limits, average_colors=average_colors, success_rate_average_colors=success_rate_average_colors)
 # plot_average(df, regexs, labels, limits, colors)
-plot_success_rate_average(df, regexs, labels, limits, colors)
+# plot_success_rate_average(df, regexs, labels, limits, colors)
