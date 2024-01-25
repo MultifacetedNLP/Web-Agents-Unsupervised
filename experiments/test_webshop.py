@@ -1,4 +1,3 @@
-# load WebEnV
 import os
 import torch
 from web_agent_site import WebEnv

@@ -1,4 +1,3 @@
-# load WebEnV
 import os
 from web_agent_site import WebEnv
 import hydra

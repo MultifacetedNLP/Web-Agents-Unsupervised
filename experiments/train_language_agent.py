@@ -1,6 +1,3 @@
-"""
-This script run a simple agent in a BabyAI GoTo-Local environment.
-"""
 import os
 import distutils
 import csv
