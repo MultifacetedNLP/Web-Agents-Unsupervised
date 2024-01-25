@@ -1,7 +1,6 @@
-# Search Beyond Queries: Grounding Language Agents for Web Interactions via Reinforcement Learning
+# Search Beyond Queries: Training Smaller Language Models for Web Interactions via Reinforcement Learning
 
-In this repository, the code for our paper "Search Beyond Queries: Grounding Language Agents for Web
-Interactions via Reinforcement Learning" is provided
+In this repository, the code for our paper "Search Beyond Queries: Training Smaller Language Models for Web Interactions via Reinforcement Learning" is provided
 
 ## Installation steps
 
