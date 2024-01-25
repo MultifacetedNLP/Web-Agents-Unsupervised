@@ -1,15 +1,15 @@
-trajectories_file: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/il_trajs_finalized_images.jsonl
-human_goal_file: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/data/human_goals.json
-default_file_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/items_shuffle.json
-items_human_ins: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/items_human_ins.json
+trajectories_file: ./../../experiments/data/il_trajs_finalized_images.jsonl
+human_goal_file: ./../../experiments/data/human_goals.json
+default_file_path: ./../../web_agent_site/data/items_shuffle.json
+items_human_ins: ./../../web_agent_site/data/items_human_ins.json
 category: [beauty] # electronics, fashion, grocery, garden, beauty, all
 encoder_max_size: 1024
 decoder_max_size: 128
 model_name_or_path: t5-large
 nbr_obs: 2
 cache_dir: null
-output_dir: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models
-logging_dir: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/logs
+output_dir: ./../../storage/models
+logging_dir: ./../../storage/logs
 run_name: T5_large_2_observations
 num_train_epochs: 10
 logging_steps: 10

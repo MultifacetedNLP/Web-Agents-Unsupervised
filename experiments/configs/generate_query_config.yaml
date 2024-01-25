@@ -1,11 +1,11 @@
-model_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/storage/models/T5_large_2_observations_beauty
+model_path: ./../../storage/models/T5_large_2_observations_beauty
 tokenizer_path: t5-large
 cache_dir: null
-goal_path: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data/items_human_ins.json
+goal_path: ./../../web_agent_site/data/items_human_ins.json
 num_beams: 10
 num_return_sequences: 10
 max_length: 512 # you may change it
 batch_size: 16
-output_dir: /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/web_agent_site/data
+output_dir: ./../../web_agent_site/data
 output_name: goal_query_predict_beauty_T5_2_obs.json
 encoder_max_size: 1024 # you may change it
