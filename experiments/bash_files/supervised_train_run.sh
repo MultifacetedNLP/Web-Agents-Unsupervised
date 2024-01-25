@@ -12,7 +12,7 @@
 #SBATCH --nodes=1
 
 
-python /home/mfe261/PPO_webshop/experiments/accelerate_launcher.py \
-        --config-path=/home/mfe261/PPO_webshop/experiments/configs \
+python $PROJECT/experiments/accelerate_launcher.py \
+        --config-path=$PROJECT/experiments/configs \
         --config-name=supervised_train_config \
-        rl_script_args.path=/home/mfe261/PPO_webshop/experiments/supervised_train_language_agent.py
+        rl_script_args.path=$PROJECT/experiments/supervised_train_language_agent.py

@@ -12,6 +12,6 @@
 #SBATCH --nodes=1
 
 
-python /u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/test_webshop.py \
-        --config-path=/u/spa-d4/grad/mfe261/Projects/Grounding_LLMs_with_online_RL/experiments/configs \
+python $PROJECT/experiments/test_webshop.py \
+        --config-path=$PROJECT/experiments/configs \
         --config-name=my_local_test_drrn_config
