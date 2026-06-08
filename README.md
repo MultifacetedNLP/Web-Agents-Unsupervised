@@ -1,6 +1,6 @@
-# Search Beyond Queries: Training Smaller Language Models for Web Interactions via Reinforcement Learning
+# Grounded Language Agent for Product Search via Intelligent Web Interactions
 
-In this repository, the code for our paper "Search Beyond Queries: Training Smaller Language Models for Web Interactions via Reinforcement Learning" is provided
+In this repository, the code for our paper "Grounded Language Agent for Product Search via Intelligent Web Interactions" is provided
 
 ## Installation steps
 
@@ -81,19 +81,8 @@ If you use this code or reference our study in your work, please cite:
 ```bibtex
 @inproceedings{@inproceedings{fereidouni-etal-2024-grounded,
     title = "Grounded Language Agent for Product Search via Intelligent Web Interactions",
-    author = "Fereidouni, Moghis  and
-      Mosharrof, Adib  and
-      Siddique, A.b.",
-    editor = "Kumar, Sachin  and
-      Balachandran, Vidhisha  and
-      Park, Chan Young  and
-      Shi, Weijia  and
-      Hayati, Shirley Anugrah  and
-      Tsvetkov, Yulia  and
-      Smith, Noah  and
-      Hajishirzi, Hannaneh  and
-      Kang, Dongyeop  and
-      Jurgens, David",
+    author = "Fereidouni, Moghis  and Mosharrof, Adib  and Siddique, A.b.",
+    editor = "Kumar, Sachin  and Balachandran, Vidhisha  and Park, Chan Young  and Shi, Weijia  and Hayati, Shirley Anugrah  and Tsvetkov, Yulia  and Smith, Noah  and Hajishirzi, Hannaneh  and Kang, Dongyeop  and Jurgens, David",
     booktitle = "Proceedings of the 1st Workshop on Customizable NLP: Progress and Challenges in Customizing NLP for a Domain, Application, Group, or Individual (CustomNLP4U)",
     month = nov,
     year = "2024",
