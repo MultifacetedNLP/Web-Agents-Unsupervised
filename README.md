@@ -73,3 +73,33 @@ Run the following code to perform inference on the only-ppo model (slurm work ma
 chmod +x ./experiments/bash_files/test_only_ppo/slurm_test_run.sh;
 ./experiments/bash_files/test_only_ppo/slurm_test_run.sh
 ```
+
+## Citation
+
+If you use this code or reference our study in your work, please cite:
+
+```bibtex
+@inproceedings{@inproceedings{fereidouni-etal-2024-grounded,
+    title = "Grounded Language Agent for Product Search via Intelligent Web Interactions",
+    author = "Fereidouni, Moghis  and
+      Mosharrof, Adib  and
+      Siddique, A.b.",
+    editor = "Kumar, Sachin  and
+      Balachandran, Vidhisha  and
+      Park, Chan Young  and
+      Shi, Weijia  and
+      Hayati, Shirley Anugrah  and
+      Tsvetkov, Yulia  and
+      Smith, Noah  and
+      Hajishirzi, Hannaneh  and
+      Kang, Dongyeop  and
+      Jurgens, David",
+    booktitle = "Proceedings of the 1st Workshop on Customizable NLP: Progress and Challenges in Customizing NLP for a Domain, Application, Group, or Individual (CustomNLP4U)",
+    month = nov,
+    year = "2024",
+    address = "Miami, Florida, USA",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.customnlp4u-1.7/",
+    doi = "10.18653/v1/2024.customnlp4u-1.7",
+    pages = "63--75"
+}
